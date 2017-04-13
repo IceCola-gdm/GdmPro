@@ -1,14 +1,14 @@
-package com.gdm.musicplayer;
+package com.gdm.musicplayer.activities;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
 import com.gdm.musicplayer.fragments.FragmentMy;
 import com.gdm.musicplayer.fragments.FragmentShiPing;
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         fgs.add(new FragmentShiPing());
         adapter=new MyPagerAdapter(getSupportFragmentManager(),fgs);
         mViewPager.setAdapter(adapter);
+        mViewPager.setCurrentItem(1);
     }
 
     /**

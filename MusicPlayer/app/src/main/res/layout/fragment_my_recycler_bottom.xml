@@ -4,14 +4,14 @@
     android:layout_height="80dp"
     android:background="#E4E8E7">
     <ImageView
-        android:id="@+id/img_content_arrow"
+        android:id="@+id/img_content_icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/a90"
         android:layout_centerVertical="true"
         android:layout_margin="10dp"/>
     <RelativeLayout
-        android:layout_toRightOf="@+id/img_content_arrow"
+        android:layout_toRightOf="@+id/img_content_icon"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_centerVertical="true">
@@ -19,7 +19,7 @@
             android:id="@+id/tv_bottom_gedanname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我喜欢的音乐（0）"
+            android:text="我喜欢的音乐"
             android:textSize="14sp"
             android:layout_marginTop="10dp"
             />

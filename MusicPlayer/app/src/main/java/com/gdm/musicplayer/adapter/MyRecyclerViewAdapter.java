@@ -1,7 +1,17 @@
 package com.gdm.musicplayer.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.bean.TileBean;
+
+import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2017/4/11 0011.
@@ -10,19 +20,55 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static int HEAD=0;
     private static int CONTENT=1;
     private static int BOTTOM=2;
+    private Context context;
+    private LayoutInflater inflater;
+    private ArrayList<TileBean> beens;
+
+    public MyRecyclerViewAdapter(Context context, ArrayList<TileBean> beens) {
+        this.context = context;
+        this.beens = beens;
+        inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        View view=null;
+        RecyclerView.ViewHolder holder=null;
+        switch (viewType){
+            case 0:
+                view=inflater.inflate(R.layout.fragment_my_recycler_head2,parent,false);
+                holder=new HolderOne(view);
+                break;
+            case 1:
+                view=inflater.inflate(R.layout.fragment_my_recycler_content,parent,false);
+                holder=new HolderTwo(view);
+                break;
+            case 2:
+                view=inflater.inflate(R.layout.fragment_my_recycler_bottom,parent,false);
+                holder=new HolderThree(view);
+                break;
+        }
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+        switch (getItemViewType(position)){
+            case 0:
+                HolderOne holderOne=(HolderOne)holder;
+                break;
+            case 1:
+                HolderTwo holderTwo=(HolderTwo)holder;
+                break;
+            case 2:
+                HolderThree holderThree=(HolderThree)holder;
+                break;
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return beens.size();
     }
 
     @Override
@@ -36,5 +82,45 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             res=BOTTOM;
         }
         return res;
+    }
+
+    private class HolderOne extends RecyclerView.ViewHolder {
+        public ImageView imageView;
+        public TextView textViewTitle;
+        public TextView textViewCount;
+        public HolderOne(View view) {
+            super(view);
+            imageView= (ImageView) view.findViewById(R.id.img_head_my);
+            textViewTitle= (TextView) view.findViewById(R.id.tv_head_my);
+            textViewCount= (TextView) view.findViewById(R.id.tv_head_my_count);
+        }
+    }
+
+    private class HolderTwo extends RecyclerView.ViewHolder {
+        public ImageView imageViewArrow;
+        public ImageView imageViewEdit;
+        public TextView textViewTitle;
+        public TextView textViewCount;
+        public HolderTwo(View view) {
+            super(view);
+            imageViewArrow= (ImageView) view.findViewById(R.id.img_content_arrow);
+            textViewTitle= (TextView) view.findViewById(R.id.tv_content_title);
+            textViewCount= (TextView) view.findViewById(R.id.tv_content_count);
+            imageViewEdit= (ImageView) view.findViewById(R.id.img_content_setting);
+        }
+    }
+
+    private class HolderThree extends RecyclerView.ViewHolder {
+        public ImageView imageViewIcon;
+        public ImageView imageViewSetting;
+        public TextView textViewTitle;
+        public TextView textViewCount;
+        public HolderThree(View view) {
+            super(view);
+            imageViewIcon= (ImageView) view.findViewById(R.id.img_content_icon);
+            textViewTitle= (TextView) view.findViewById(R.id.tv_bottom_gedanname);
+            textViewCount= (TextView) view.findViewById(R.id.tv_bottom_yinyuecount);
+            imageViewSetting= (ImageView) view.findViewById(R.id.img_gedanbianji);
+        }
     }
 }
