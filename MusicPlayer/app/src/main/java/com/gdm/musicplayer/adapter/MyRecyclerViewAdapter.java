@@ -1,6 +1,7 @@
 package com.gdm.musicplayer.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gdm.musicplayer.R;
-import com.gdm.musicplayer.bean.TileBean;
+import com.gdm.musicplayer.bean.MusicList;
 
 import java.util.ArrayList;
 
@@ -22,9 +24,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static int BOTTOM=2;
     private Context context;
     private LayoutInflater inflater;
-    private ArrayList<TileBean> beens;
+    private ArrayList<MusicList> beens;
 
-    public MyRecyclerViewAdapter(Context context, ArrayList<TileBean> beens) {
+    public MyRecyclerViewAdapter(Context context, ArrayList<MusicList> beens) {
         this.context = context;
         this.beens = beens;
         inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -53,16 +55,33 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        switch (getItemViewType(position)){
-            case 0:
-                HolderOne holderOne=(HolderOne)holder;
-                break;
-            case 1:
-                HolderTwo holderTwo=(HolderTwo)holder;
-                break;
-            case 2:
-                HolderThree holderThree=(HolderThree)holder;
-                break;
+//        switch (getItemViewType(position)){
+//            case 0:
+//                HolderOne holderOne=(HolderOne)holder;
+//                break;
+//            case 1:
+//                HolderTwo holderTwo=(HolderTwo)holder;
+//                break;
+//            case 2:
+//                HolderThree holderThree=(HolderThree)holder;
+//                break;
+//        }
+        final MusicList bean = beens.get(position);
+        if (holder instanceof HolderOne) {
+            //加载头部的逻辑
+            final HolderOne h= (HolderOne) holder;
+            h.textViewTitle.setText(bean.getTitle());
+            h.textViewCount.setText("("+bean.getNum()+")");
+            Glide.with(context).load(bean.getImgPath()).into(h.imageView);
+            h.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    context.startActivity(new Intent(context,bean.getmClass()));
+                }
+            });
+        }else if (holder instanceof HolderTwo){
+
         }
     }
 
@@ -73,15 +92,23 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-        int res=0;
-        if(position==0){
-            res=HEAD;
-        }else if(position==1){
-            res=CONTENT;
-        }else if(position==2){
-            res=BOTTOM;
+//        int res=0;
+//        if(position==0){
+//            res=HEAD;
+//        }else if(position==1){
+//            res=CONTENT;
+//        }else if(position==2){
+//            res=BOTTOM;
+//        }
+//        return res;
+        MusicList bean = beens.get(position);
+        switch (bean.getType()){
+            case 0:
+                return HEAD;
+            case 1:return CONTENT;
+            case 2:return BOTTOM;
         }
-        return res;
+        return 0;
     }
 
     private class HolderOne extends RecyclerView.ViewHolder {
