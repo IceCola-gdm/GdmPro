@@ -9,17 +9,19 @@
         android:background="#D33B30">
     <ImageView
         android:id="@+id/img_phone_register_back"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_centerVertical="true"
         android:layout_margin="10dp"
-        android:src="@drawable/arrow_left"/>
+        android:src="@drawable/arrow_left"
+        android:onClick="registerClick"
+        android:clickable="true"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="手机号注册"
         android:textColor="#fff"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/img_phone_register_back"
         />

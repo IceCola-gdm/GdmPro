@@ -8,7 +8,7 @@ import android.content.Intent;
  * fragment_my
  */
 public class MusicList {
-        private String imgPath;
+        private int imgPath;
         private String title;
         private String num;
         private Class mClass;
@@ -28,32 +28,27 @@ public class MusicList {
     public Class getmClass() {
         return mClass;
     }
-
-
-
-
-
-        public String getImgPath() {
+    public int getImgPath() {
             return imgPath;
         }
 
-        public void setImgPath(String imgPath) {
+    public void setImgPath(int imgPath) {
             this.imgPath = imgPath;
         }
 
-        public String getNum() {
+    public String getNum() {
             return num;
         }
 
-        public void setNum(String num) {
+    public void setNum(String num) {
             this.num = num;
         }
 
-        public String getTitle() {
+    public String getTitle() {
             return title;
         }
 
-        public void setTitle(String title) {
+    public void setTitle(String title) {
             this.title = title;
         }
 

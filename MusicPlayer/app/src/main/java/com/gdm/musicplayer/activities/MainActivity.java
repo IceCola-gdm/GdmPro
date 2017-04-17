@@ -1,21 +1,20 @@
 package com.gdm.musicplayer.activities;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.gdm.musicplayer.R;
-import com.gdm.musicplayer.adapter.MyPagerAdapter;
-import com.gdm.musicplayer.fragments.FragmentMy;
-import com.gdm.musicplayer.fragments.FragmentShiPing;
-import com.gdm.musicplayer.fragments.FragmentYinYueGuan;
+import com.gdm.musicplayer.fragments.FragmentFriend;
+import com.gdm.musicplayer.fragments.FragmentFujing;
+import com.gdm.musicplayer.fragments.FragmentMain;
+import com.gdm.musicplayer.fragments.FragmentPersonalInfo;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.gdm.musicplayer.view.MySlidingPanelLayout;
-import com.gdm.musicplayer.view.MyTitleView;
 
 import java.util.ArrayList;
 
@@ -24,26 +23,52 @@ import java.util.ArrayList;
  */
 public class MainActivity extends AppCompatActivity {
     private MySlidingPanelLayout mSlidingPaneLayout;
-    private MyTitleView myTitleView;
-    private ViewPager mViewPager;
-    private MyPagerAdapter adapter;
     private ArrayList<Fragment> fgs=new ArrayList<>();
+
+    private ImageView imgPortrait;   //头像
+    private TextView tvPiFu;    //当前皮肤
+    private TextView tvLogin;    //登录注册
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
         initData();
-        setListener();
     }
 
     private void initData() {
-        fgs.add(new FragmentMy());
-        fgs.add(new FragmentYinYueGuan());
-        fgs.add(new FragmentShiPing());
-        adapter=new MyPagerAdapter(getSupportFragmentManager(),fgs);
-        mViewPager.setAdapter(adapter);
-        mViewPager.setCurrentItem(1);
+        fgs.add(new FragmentPersonalInfo());
+        fgs.add(new FragmentFriend());
+        fgs.add(new FragmentFujing());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FragmentMain fragmentMain = new FragmentMain();
+        showFragment(fragmentMain);
+        fragmentMain.setOnImgListener(new MyListener());
+    }
+
+    private void showFragment(FragmentMain mainFragment) {
+        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if(mainFragment.isAdded()){
+            ft.show(mainFragment);
+        }else{
+            ft.add(R.id.main_container,mainFragment);
+        }
+        ft.commit();
+    }
+    private void showFragment(Fragment mainFragment) {
+        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if(mainFragment.isAdded()){
+            ft.show(mainFragment);
+        }else{
+            ft.add(R.id.main_container,mainFragment);
+        }
+        ft.commit();
     }
 
     /**
@@ -51,83 +76,67 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initView() {
         mSlidingPaneLayout= (MySlidingPanelLayout) findViewById(R.id.sliding);
-        myTitleView= (MyTitleView) findViewById(R.id.mytitleview);
-        mViewPager= (ViewPager) findViewById(R.id.viewpager);
+        imgPortrait= (ImageView) findViewById(R.id.img_main_portrait);
+        tvLogin= (TextView) findViewById(R.id.tv_main_login);
+        tvPiFu= (TextView) findViewById(R.id.tv_pifu);
     }
 
-    /**
-     * 设置监听事件
-     */
-    private void setListener() {
-        mViewPager.setOnPageChangeListener(new MyPageChangeListener());
-        myTitleView.setOnLeftImgClick(new MyLeftImgClickListener());
-        myTitleView.setOnRightImgClick(new MyRightImgClickListener());
-        myTitleView.setOnRadioGroupClick(new MyRadioGroupCheckListener());
-    }
-
-    /**
-     * 处理ViewPPager的翻页
-     */
-    private class MyPageChangeListener implements ViewPager.OnPageChangeListener {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
+    private class MyListener implements FragmentMain.OnImgListener {
 
         @Override
-        public void onPageSelected(int position) {
-            RadioGroup group = myTitleView.getRadioGroup();
-            RadioButton r= (RadioButton) group.getChildAt(position);
-            r.setChecked(true);
-            r.setTextSize(20);
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    }
-
-    /**
-     * 处理左边图片的点击事件（抽屉）
-     */
-    private class MyLeftImgClickListener implements MyTitleView.OnLeftImgClick {
-        @Override
-        public void onClick(View v) {
+        public void leftImgCallback() {
             if(mSlidingPaneLayout.isOpen()){
                 mSlidingPaneLayout.closePane();
             }else{
                 mSlidingPaneLayout.openPane();
             }
         }
-    }
 
-    /**
-     * 处理右边图片的点击事件（搜索）
-     */
-    private class MyRightImgClickListener implements MyTitleView.OnRightImgClick {
         @Override
-        public void onClick(View v) {
-            ToastUtil.toast(MainActivity.this,"点击了");
+        public void rightImgCallback() {
+            ToastUtil.toast(MainActivity.this,"还没写");
         }
     }
-
-    /**
-     * 处理RadioGroup的点击事件
-     */
-    private class MyRadioGroupCheckListener implements MyTitleView.OnRadioGroupClick {
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            int childCount = group.getChildCount();
-            for(int i=0;i<childCount;i++){
-                RadioButton r = (RadioButton) group.getChildAt(i);
-                if(r.isChecked()){
-                    r.setTextSize(20);
-                    mViewPager.setCurrentItem(i);
-                }else{
-                    r.setTextSize(18);
-                }
-            }
+    public void clickInMain(View view){
+        switch (view.getId()){
+            case R.id.img_main_portrait:  //头像
+                FragmentPersonalInfo fragmentPersonalInfo = new FragmentPersonalInfo();
+                showFragment(fragmentPersonalInfo);
+                break;
+            case R.id.tv_main_login:  //登录、注册
+                Intent intent = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
+                startActivity(intent);
+                break;
+            case R.id.main_rl_personal:  //个人中心
+                showFragment(new FragmentPersonalInfo());
+                break;
+            case R.id.main_rl_friend:  //我的好友
+                showFragment(new FragmentFriend());
+                break;
+            case R.id.main_rl_fujin:  //附近的人
+                showFragment(new FragmentFujing());
+                break;
+            case R.id.main_rl_huanfu:  //个性换肤
+                Intent intent1 = new Intent(MainActivity.this, HuanfuActivity.class);
+                startActivity(intent1);
+                break;
+            case R.id.main_rl_timer:  //定时停止
+                ToastUtil.toast(MainActivity.this,"还没写");
+                break;
+            case R.id.main_rl_naozhong:  //音乐闹钟
+                ToastUtil.toast(MainActivity.this,"还没写");
+                break;
+            case R.id.main_rl_mode:  //模式切换
+                ToastUtil.toast(MainActivity.this,"还没写");
+                break;
+            case R.id.main_rl_setting:  //切换账号
+                Intent intent2 = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
+                startActivity(intent2);
+                break;
+            case R.id.main_rl_exit:  //退出
+                finish();
+                break;
         }
+        mSlidingPaneLayout.closePane();
     }
 }

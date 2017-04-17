@@ -55,17 +55,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-//        switch (getItemViewType(position)){
-//            case 0:
-//                HolderOne holderOne=(HolderOne)holder;
-//                break;
-//            case 1:
-//                HolderTwo holderTwo=(HolderTwo)holder;
-//                break;
-//            case 2:
-//                HolderThree holderThree=(HolderThree)holder;
-//                break;
-//        }
         final MusicList bean = beens.get(position);
         if (holder instanceof HolderOne) {
             //加载头部的逻辑
@@ -92,15 +81,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-//        int res=0;
-//        if(position==0){
-//            res=HEAD;
-//        }else if(position==1){
-//            res=CONTENT;
-//        }else if(position==2){
-//            res=BOTTOM;
-//        }
-//        return res;
         MusicList bean = beens.get(position);
         switch (bean.getType()){
             case 0:

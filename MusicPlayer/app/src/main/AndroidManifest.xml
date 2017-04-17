@@ -20,20 +20,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.PersonalInfoActivity" />
         <activity android:name=".activities.EditPersonalInfoActivity" />
         <activity android:name=".activities.EditNicknameActivity" />
         <activity android:name=".activities.EditUniversityActivity" />
-        <activity
-            android:name=".activities.ChooseToLoginOrRegister"
-            android:label="@string/title_activity_choose_to_login_or_register"
-            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.ChooseToLoginOrRegister" />
         <activity android:name=".activities.PhoneLoginActivity" />
-        <activity
-            android:name=".activities.RegisterActivity"
-            android:label="@string/title_activity_register"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".activities.SetNicknameActivity"></activity>
+        <activity android:name=".activities.RegisterActivity" />
+        <activity android:name=".activities.SetNicknameActivity" />
+        <activity android:name=".activities.LocalMusicListActivity" />
+        <activity android:name=".activities.DownLoadManageActivity" />
+        <activity android:name=".activities.RecentlyPlayActivity" />
+        <activity android:name=".activities.MyCollectionActivity" />
+        <activity android:name=".activities.HuanfuActivity"/>
     </application>
 
 </manifest>
