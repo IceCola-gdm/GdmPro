@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <com.gdm.musicplayer.view.MyViewPager
+            <android.support.v4.view.ViewPager
                 android:id="@+id/yyg_tj"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"/>

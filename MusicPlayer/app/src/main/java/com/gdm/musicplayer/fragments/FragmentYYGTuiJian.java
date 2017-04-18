@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Created by Administrator on 2017/4/17 0017.
  */
 public class FragmentYYGTuiJian extends Fragment {
-    private MyViewPager viewPager;
+    private ViewPager viewPager;
     private YYGPagerAdapter adapter;
     private ArrayList<String> imgs=new ArrayList<>();  //广告图片路径
     @Override
@@ -36,7 +36,7 @@ public class FragmentYYGTuiJian extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tuijian, container, false);
-        viewPager= (MyViewPager) view.findViewById(R.id.yyg_tj);
+        viewPager= (ViewPager) view.findViewById(R.id.yyg_tj);
         return view;
     }
 

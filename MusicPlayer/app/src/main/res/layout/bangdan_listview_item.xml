@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+    <TextView
+        android:id="@+id/tv_no"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="1"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tv_no"
+        android:layout_centerVertical="true">
+        <TextView
+            android:id="@+id/tv_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ahgsxgsahgx"
+            android:textSize="14sp"
+            android:textColor="#3D3D3D"/>
+        <TextView
+            android:id="@+id/tv_item_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ahgsxgsahgx"
+            android:textSize="10sp"
+            android:textColor="#939393"
+            android:layout_below="@+id/tv_item_title"
+            android:layout_marginTop="5dp"/>
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/img_item_edit"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/edit"
+        android:layout_margin="10dp"/>
+
+</RelativeLayout>

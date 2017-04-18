@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
+import com.gdm.musicplayer.view.ChildViewPager;
 
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  */
 public class FragmentYinYueGuan extends Fragment {
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    private ChildViewPager viewPager;
     private String[] titles={"个性推荐","歌单","排行榜"};
     private MyPagerAdapter adapter;
     private ArrayList<Fragment> fgs=new ArrayList<>();
@@ -42,7 +43,7 @@ public class FragmentYinYueGuan extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText(titles[0]));
         tabLayout.addTab(tabLayout.newTab().setText(titles[1]));
         tabLayout.addTab(tabLayout.newTab().setText(titles[2]));
-        viewPager= (ViewPager) view.findViewById(R.id.yinyueguan_viewpager);
+        viewPager= (ChildViewPager) view.findViewById(R.id.yinyueguan_viewpager);
         viewPager.setCurrentItem(0);
         adapter.setTitles(titles);
         return view;

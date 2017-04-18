@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gdm.musicplayer.R;
+
 /**
  * Created by Administrator on 2017/4/17 0017.
  */
@@ -17,7 +19,8 @@ public class FragmentYYGPaiHang extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_yyg_paihang, container, false);
+        return view;
     }
 
     @Override
