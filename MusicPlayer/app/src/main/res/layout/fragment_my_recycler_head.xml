@@ -8,9 +8,9 @@
         android:layout_height="50dp">
         <ImageView
             android:id="@+id/img_head_my"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/wo"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/local"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
         <TextView
@@ -72,7 +72,7 @@
             android:id="@+id/img_head_download"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/w1"
+            android:src="@drawable/downmanage"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
         <TextView
@@ -103,7 +103,7 @@
             android:id="@+id/img_head_collect"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/w1"
+            android:src="@drawable/collectmanage"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
         <TextView
@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/img_head_collect"
             android:layout_centerVertical="true"
-            android:text="下载管理"
+            android:text="我的收藏"
             android:layout_marginRight="10dp"/>
         <TextView
             android:id="@+id/tv_head_collect_kind"
@@ -127,6 +127,4 @@
         android:layout_height="0.3dp"
         android:background="#879"
         android:layout_marginLeft="50dp"/>
-
-
 </LinearLayout>

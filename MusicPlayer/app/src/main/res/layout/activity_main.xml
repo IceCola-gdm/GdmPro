@@ -2,39 +2,39 @@
 <com.gdm.musicplayer.view.MySlidingPanelLayout
     android:id="@+id/sliding"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:MyTitleView="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/a2u"
     >
     <RelativeLayout
         android:layout_width="300dp"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:background="@drawable/a1x">
     <RelativeLayout
         android:id="@+id/rl_first"
         android:layout_width="300dp"
         android:layout_height="180dp"
         android:background="@drawable/afc"
         >
-        <ImageView
-            android:id="@+id/img_portrait"
+        <com.gdm.musicplayer.view.CircleImageView
+            android:id="@+id/img_main_portrait"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/p"
             android:layout_centerHorizontal="true"
-            android:layout_margin="20dp"/>
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:onClick="clickInMain"/>
         <TextView
-            android:id="@+id/tv_nickname"
+            android:id="@+id/tv_main_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="登录/注册"
             android:textSize="18sp"
             android:textColor="#fff"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/img_portrait"
+            android:layout_below="@+id/img_main_portrait"
             android:clickable="true"
-            android:onClick="myClick"/>
+            android:onClick="clickInMain"/>
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/ll_second"
@@ -45,8 +45,11 @@
         android:layout_marginRight="10dp"
         android:layout_below="@+id/rl_first">
         <RelativeLayout
+            android:id="@+id/main_rl_personal"
             android:layout_width="300dp"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:onClick="clickInMain">
             <ImageView
                 android:id="@+id/img_personal"
                 android:layout_width="25dp"
@@ -64,7 +67,10 @@
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="300dp"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:onClick="clickInMain"
+            android:id="@+id/main_rl_friend">
             <ImageView
                 android:id="@+id/img_friend"
                 android:layout_width="25dp"
@@ -82,7 +88,10 @@
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="300dp"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:onClick="clickInMain"
+            android:id="@+id/main_rl_fujin">
             <ImageView
                 android:id="@+id/img_fujin"
                 android:layout_width="25dp"
@@ -100,7 +109,10 @@
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="300dp"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:onClick="clickInMain"
+            android:id="@+id/main_rl_huanfu">
             <ImageView
                 android:id="@+id/img_huanfu"
                 android:layout_width="25dp"
@@ -128,7 +140,10 @@
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="300dp"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:onClick="clickInMain"
+            android:id="@+id/main_rl_timer">
             <ImageView
                 android:id="@+id/img_timer"
                 android:layout_width="22dp"
@@ -146,7 +161,10 @@
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="300dp"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:onClick="clickInMain"
+            android:id="@+id/main_rl_naozhong">
             <ImageView
                 android:id="@+id/img_alarm"
                 android:layout_width="25dp"
@@ -164,7 +182,10 @@
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="300dp"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:onClick="clickInMain"
+            android:id="@+id/main_rl_mode">
             <ImageView
                 android:id="@+id/rb_mode"
                 android:layout_width="25dp"
@@ -198,7 +219,10 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_marginLeft="10dp">
+            android:layout_marginLeft="10dp"
+            android:clickable="true"
+            android:onClick="clickInMain"
+            android:id="@+id/main_rl_setting">
             <ImageView
                 android:id="@+id/rb_setting"
                 android:layout_width="30dp"
@@ -208,7 +232,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="设置"
+                android:text="切换账号"
                 android:textSize="16sp"
                 android:textColor="#3D3D3D"
                 android:layout_toRightOf="@+id/rb_setting"
@@ -218,7 +242,10 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp">
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:onClick="clickInMain"
+            android:id="@+id/main_rl_exit">
             <ImageView
                 android:id="@+id/rb_exit"
                 android:layout_width="30dp"
@@ -236,23 +263,70 @@
         </RelativeLayout>
     </RelativeLayout>
     </RelativeLayout>
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <com.gdm.musicplayer.view.MyTitleView
-            android:id="@+id/mytitleview"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:id="@+id/main_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            MyTitleView:setLeftImage="@drawable/menu"
-            MyTitleView:setRightImage="@drawable/search"
-            MyTitleView:setLeftText="我的"
-            MyTitleView:setMidText="音乐馆"
-            MyTitleView:setRightText="视频"/>
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
+            android:layout_height="match_parent" />
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
-
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:background="#fff">
+            <ImageView
+                android:id="@+id/img_song_cover"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:src="@drawable/a8y"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/img_song_cover">
+                <TextView
+                    android:id="@+id/tv_songname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="name of song"
+                    android:textColor="#3D3D3D"
+                    android:textSize="14sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"/>
+                <TextView
+                    android:id="@+id/tv_singer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="singer"
+                    android:textColor="#939393"
+                    android:textSize="12sp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@+id/tv_songname"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true">
+                <ImageView
+                    android:id="@+id/rb_song_playicon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/play"
+                    android:layout_marginRight="15dp"
+                    />
+                <ImageView
+                    android:id="@+id/img_song_list"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_toRightOf="@+id/rb_song_playicon"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/m"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
 </com.gdm.musicplayer.view.MySlidingPanelLayout>

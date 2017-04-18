@@ -1,64 +1,67 @@
-package com.gdm.musicplayer;
+package com.gdm.musicplayer.fragments;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SlidingPaneLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
-import com.gdm.musicplayer.fragments.FragmentMy;
-import com.gdm.musicplayer.fragments.FragmentShiPing;
-import com.gdm.musicplayer.fragments.FragmentYinYueGuan;
 import com.gdm.musicplayer.utils.ToastUtil;
-import com.gdm.musicplayer.view.MySlidingPanelLayout;
 import com.gdm.musicplayer.view.MyTitleView;
 
 import java.util.ArrayList;
 
 /**
- * 主界面
+ * Created by Administrator on 2017/4/16 0016.
  */
-public class MainActivity extends AppCompatActivity {
-    private MySlidingPanelLayout mSlidingPaneLayout;
+public class FragmentMain extends Fragment {
     private MyTitleView myTitleView;
-    private ViewPager mViewPager;
-    private MyPagerAdapter adapter;
+    private ViewPager viewPager;
     private ArrayList<Fragment> fgs=new ArrayList<>();
+    private MyPagerAdapter adapter=null;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initView();
         initData();
-        setListener();
     }
 
     private void initData() {
         fgs.add(new FragmentMy());
         fgs.add(new FragmentYinYueGuan());
         fgs.add(new FragmentShiPing());
-        adapter=new MyPagerAdapter(getSupportFragmentManager(),fgs);
-        mViewPager.setAdapter(adapter);
     }
 
-    /**
-     * 初始化控件
-     */
-    private void initView() {
-        mSlidingPaneLayout= (MySlidingPanelLayout) findViewById(R.id.sliding);
-        myTitleView= (MyTitleView) findViewById(R.id.mytitleview);
-        mViewPager= (ViewPager) findViewById(R.id.viewpager);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        myTitleView= (MyTitleView) view.findViewById(R.id.mytitleview);
+        viewPager= (ViewPager) view.findViewById(R.id.viewpager);
+//        return super.onCreateView(inflater, container, savedInstanceState);
+        return view;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setAdapter();
+        setListener();
+    }
+
+    private void setAdapter() {
+        adapter=new MyPagerAdapter(getFragmentManager(),fgs);
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(1);
+    }
     /**
      * 设置监听事件
      */
     private void setListener() {
-        mViewPager.setOnPageChangeListener(new MyPageChangeListener());
+        viewPager.setOnPageChangeListener(new MyPageChangeListener());
         myTitleView.setOnLeftImgClick(new MyLeftImgClickListener());
         myTitleView.setOnRightImgClick(new MyRightImgClickListener());
         myTitleView.setOnRadioGroupClick(new MyRadioGroupCheckListener());
@@ -93,11 +96,7 @@ public class MainActivity extends AppCompatActivity {
     private class MyLeftImgClickListener implements MyTitleView.OnLeftImgClick {
         @Override
         public void onClick(View v) {
-            if(mSlidingPaneLayout.isOpen()){
-                mSlidingPaneLayout.closePane();
-            }else{
-                mSlidingPaneLayout.openPane();
-            }
+            onImgListener.leftImgCallback();
         }
     }
 
@@ -107,11 +106,11 @@ public class MainActivity extends AppCompatActivity {
     private class MyRightImgClickListener implements MyTitleView.OnRightImgClick {
         @Override
         public void onClick(View v) {
-            ToastUtil.toast(MainActivity.this,"点击了");
+            onImgListener.rightImgCallback();
         }
     }
 
-    /**
+        /**
      * 处理RadioGroup的点击事件
      */
     private class MyRadioGroupCheckListener implements MyTitleView.OnRadioGroupClick {
@@ -122,11 +121,20 @@ public class MainActivity extends AppCompatActivity {
                 RadioButton r = (RadioButton) group.getChildAt(i);
                 if(r.isChecked()){
                     r.setTextSize(20);
-                    mViewPager.setCurrentItem(i);
+                    viewPager.setCurrentItem(i);
                 }else{
                     r.setTextSize(18);
                 }
             }
         }
+    }
+
+    public interface OnImgListener{
+        void leftImgCallback();
+        void rightImgCallback();
+    }
+    private OnImgListener onImgListener=null;
+    public void setOnImgListener(OnImgListener listener){
+        this.onImgListener=listener;
     }
 }
