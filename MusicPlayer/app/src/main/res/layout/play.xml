@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#222222">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp">
@@ -13,5 +14,87 @@
             android:src="@drawable/arrow_left"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
+        <RelativeLayout
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/img_play_back"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/tv_play_song_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="hgsihxuiashui"
+                android:textColor="#fff"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/tv_play_song_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="hgsihxuiashui"
+                android:textColor="#939393"
+                android:textSize="14sp"
+                android:layout_below="@+id/tv_play_song_name"/>
+        </RelativeLayout>
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:src="@drawable/ys"/>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:orientation="horizontal"
+        android:background="#3D3D3D"/>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_play"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:id="@+id/tv_currenttime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:text="03:03"
+            android:textColor="#fff"
+            android:textSize="12sp"/>
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_currenttime"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:id="@+id/tv_totaltime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:text="03:03"
+            android:textColor="#939393"
+            android:textSize="12sp"
+            android:layout_toRightOf="@+id/seekbar"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerVertical="true">
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:src=""/>
+        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>
