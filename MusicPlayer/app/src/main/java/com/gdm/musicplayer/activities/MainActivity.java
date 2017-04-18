@@ -90,6 +90,15 @@ public class MainActivity extends AppCompatActivity {
             ft.add(R.id.main_container,mainFragment);
         }
         ft.commit();
+        lastFragment=mainFragment;
+    }
+
+    private void closeFragment(Fragment mainFragment) {
+        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if(mainFragment.isAdded()) {
+            ft.hide(mainFragment);
+        }
+        ft.commit();
     }
 
     /**
@@ -119,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void clickInMain(View view){
+        if(lastFragment!=null){
+            closeFragment(lastFragment);
+        }
         switch (view.getId()){
             case R.id.img_main_portrait:  //头像
 
