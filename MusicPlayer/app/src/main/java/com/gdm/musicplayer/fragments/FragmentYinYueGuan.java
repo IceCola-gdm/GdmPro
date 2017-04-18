@@ -42,8 +42,26 @@ public class FragmentYinYueGuan extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText(titles[0]));
         tabLayout.addTab(tabLayout.newTab().setText(titles[1]));
         tabLayout.addTab(tabLayout.newTab().setText(titles[2]));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                viewPager.setCurrentItem(position);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         viewPager= (ViewPager) view.findViewById(R.id.yinyueguan_viewpager);
         viewPager.setCurrentItem(0);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         adapter.setTitles(titles);
         return view;
     }

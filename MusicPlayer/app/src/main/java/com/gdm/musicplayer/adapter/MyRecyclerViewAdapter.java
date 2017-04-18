@@ -3,10 +3,12 @@ package com.gdm.musicplayer.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,11 +27,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private Context context;
     private LayoutInflater inflater;
     private ArrayList<MusicList> beens;
-
-    public MyRecyclerViewAdapter(Context context, ArrayList<MusicList> beens) {
+    private ArrayList<MusicList> content;
+    public MyRecyclerViewAdapter(Context context, ArrayList<MusicList> beens,ArrayList<MusicList> content) {
         this.context = context;
         this.beens = beens;
         inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.content=content;
     }
 
     @Override
@@ -55,9 +58,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        final MusicList bean = beens.get(position);
+
         if (holder instanceof HolderOne) {
             //加载头部的逻辑
+            final MusicList bean = beens.get(position);
             final HolderOne h= (HolderOne) holder;
             h.textViewTitle.setText(bean.getTitle());
             h.textViewCount.setText("("+bean.getNum()+")");
@@ -70,25 +74,37 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 }
             });
         }else if (holder instanceof HolderTwo){
-
+            final HolderTwo h= (HolderTwo) holder;
+            MusicListContentAdapter adapter = new MusicListContentAdapter(context, beens);
+            h.content.setAdapter(adapter);
+            h.content.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
+            h.title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (h.contentparent.getVisibility()==View.VISIBLE) {
+                        h.imageViewArrow.setImageResource(R.drawable.right);
+                        h.contentparent.setVisibility(View.GONE);
+                    }else{
+                        h.imageViewArrow.setImageResource(R.drawable.down);
+                        h.contentparent.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
         }
     }
 
     @Override
     public int getItemCount() {
-        return beens.size();
+        return beens.size()+1;
     }
 
     @Override
     public int getItemViewType(int position) {
-        MusicList bean = beens.get(position);
-        switch (bean.getType()){
-            case 0:
-                return HEAD;
-            case 1:return CONTENT;
-            case 2:return BOTTOM;
+        if (position==beens.size()) {
+            return CONTENT;
+        }else {
+            return HEAD;
         }
-        return 0;
     }
 
     private class HolderOne extends RecyclerView.ViewHolder {
@@ -108,12 +124,17 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public ImageView imageViewEdit;
         public TextView textViewTitle;
         public TextView textViewCount;
+        public RecyclerView content;
+        public RelativeLayout title,contentparent;
         public HolderTwo(View view) {
             super(view);
+            title= (RelativeLayout) view.findViewById(R.id.title);
             imageViewArrow= (ImageView) view.findViewById(R.id.img_content_arrow);
             textViewTitle= (TextView) view.findViewById(R.id.tv_content_title);
             textViewCount= (TextView) view.findViewById(R.id.tv_content_count);
             imageViewEdit= (ImageView) view.findViewById(R.id.img_content_setting);
+            content= (RecyclerView) view.findViewById(R.id.fragment_my_recycler_content);
+            contentparent= (RelativeLayout) view.findViewById(R.id.contentparent);
         }
     }
 

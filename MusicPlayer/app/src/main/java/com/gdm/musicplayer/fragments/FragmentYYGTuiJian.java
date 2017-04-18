@@ -1,6 +1,8 @@
 package com.gdm.musicplayer.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -20,10 +22,43 @@ public class FragmentYYGTuiJian extends Fragment {
     private MyViewPager viewPager;
     private YYGPagerAdapter adapter;
     private ArrayList<String> imgs=new ArrayList<>();  //广告图片路径
+    private boolean isvis=false;
+    Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what==500) {
+                if (viewPager!=null&&adapter!=null) {
+                    int currentItem = viewPager.getCurrentItem();
+                    int count = adapter.getCount();
+                    if (currentItem==count-1) {
+                        viewPager.setCurrentItem(0);
+                    }else {
+                        viewPager.setCurrentItem(currentItem+1);
+                    }
+                }
+            }
+        }
+    };
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initData();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (isvis) {
+                        handler.sendEmptyMessage(500);
+                    }
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     private void initData() {
@@ -31,6 +66,18 @@ public class FragmentYYGTuiJian extends Fragment {
         imgs.add("http://p3.so.qhmsg.com/t0113d1b0184e0f26c8.jpg");
         imgs.add("http://p1.so.qhmsg.com/t0185cf25692ab9abd6.jpg");
         imgs.add("http://p3.so.qhmsg.com/t014e39272903d0ea18.jpg");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isvis=false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isvis=true;
     }
 
     @Override

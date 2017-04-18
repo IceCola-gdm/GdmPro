@@ -29,6 +29,7 @@ public class FragmentMy extends Fragment {
     private MusicList musicList1=null;
     private MusicList musicList2=null;
     private String[] titles={"本地音乐","最近播放","下载管理","我的收藏"};
+    private ArrayList<MusicList> content;
     private Class[] classes={LocalMusicListActivity.class, RecentlyPlayActivity.class, DownLoadManageActivity.class, MyCollectionActivity.class};
     private int[] icons={R.drawable.local,R.drawable.w1,R.drawable.downmanage,R.drawable.collectmanage};
     @Override
@@ -48,7 +49,9 @@ public class FragmentMy extends Fragment {
             musicList1.setmClass(classes[i]);
             musicLists.add(musicList1);
         }
-        adapter=new MyRecyclerViewAdapter(getContext(),musicLists);
+        content=new ArrayList<>();
+        //TODO 从服务器上获取数据
+        adapter=new MyRecyclerViewAdapter(getContext(),musicLists,content);
     }
 
     @Override
