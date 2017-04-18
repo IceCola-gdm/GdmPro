@@ -97,7 +97,7 @@
                 android:layout_height="20dp"
                 android:layout_margin="10dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/"/>
+                />
             <TextView
                 android:id="@+id/tv_shipping_collect_count"
                 android:layout_width="wrap_content"
