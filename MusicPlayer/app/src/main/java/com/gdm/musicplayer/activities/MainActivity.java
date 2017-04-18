@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgPortrait;   //头像
     private TextView tvPiFu;    //当前皮肤
     private TextView tvLogin;    //登录注册
-    private Fragment lastFragment;
+    private FragmentMain fragmentMain;
+    private ArrayList<Fragment> menus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,18 +43,31 @@ public class MainActivity extends AppCompatActivity {
         fgs.add(new FragmentPersonalInfo());
         fgs.add(new FragmentFriend());
         fgs.add(new FragmentFujing());
+         fragmentMain = new FragmentMain();
+        showFragment(fragmentMain);
+        fragmentMain.setOnImgListener(new MyListener());
+        menus=new ArrayList<>();
+        menus.add(new FragmentPersonalInfo());
+        menus.add(new FragmentPersonalInfo());
+        menus.add(new FragmentFriend());
+        menus.add(new FragmentFujing());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        FragmentMain fragmentMain = new FragmentMain();
-        showFragment(fragmentMain);
-        fragmentMain.setOnImgListener(new MyListener());
-    }
 
+    }
+    private Fragment lastFragment=null;
     private void showFragment(FragmentMain mainFragment) {
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (lastFragment==null) {
+
+        }else{
+            getSupportFragmentManager().beginTransaction().hide(lastFragment).commit();
+
+        }
+        lastFragment=mainFragment;
         if(mainFragment.isAdded()){
             ft.show(mainFragment);
         }else{
@@ -63,6 +77,13 @@ public class MainActivity extends AppCompatActivity {
     }
     private void showFragment(Fragment mainFragment) {
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (lastFragment==null) {
+            
+        }else{
+            getSupportFragmentManager().beginTransaction().hide(lastFragment).commit();
+
+        }
+        lastFragment=mainFragment;
         if(mainFragment.isAdded()){
             ft.show(mainFragment);
         }else{
@@ -112,21 +133,21 @@ public class MainActivity extends AppCompatActivity {
         }
         switch (view.getId()){
             case R.id.img_main_portrait:  //头像
-                FragmentPersonalInfo fragmentPersonalInfo = new FragmentPersonalInfo();
-                showFragment(fragmentPersonalInfo);
+
+                showFragment(menus.get(0));
                 break;
             case R.id.tv_main_login:  //登录、注册
                 Intent intent = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
                 startActivity(intent);
                 break;
             case R.id.main_rl_personal:  //个人中心
-                showFragment(new FragmentPersonalInfo());
+                showFragment(menus.get(1));
                 break;
             case R.id.main_rl_friend:  //我的好友
-                showFragment(new FragmentFriend());
+                showFragment(menus.get(2));
                 break;
             case R.id.main_rl_fujin:  //附近的人
-                showFragment(new FragmentFujing());
+                showFragment(menus.get(3));
                 break;
             case R.id.main_rl_huanfu:  //个性换肤
                 Intent intent1 = new Intent(MainActivity.this, HuanfuActivity.class);
@@ -150,5 +171,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         mSlidingPaneLayout.closePane();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (fragmentMain.isAdded()&&fragmentMain.isVisible()) {
+            finish();
+        }else{
+            showFragment(fragmentMain);
+        }
+
     }
 }

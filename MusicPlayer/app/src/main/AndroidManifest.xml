@@ -33,6 +33,9 @@
         <activity android:name=".activities.MyCollectionActivity" />
         <activity android:name=".activities.HuanfuActivity" />
         <activity android:name=".activities.YinyueBangActivity"></activity>
-    </application>
+        <service
+            android:name=".service.Player"
+            android:enabled="true"
+            android:exported="true"></service>    </application>
 
 </manifest>

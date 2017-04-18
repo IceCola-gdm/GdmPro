@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 
@@ -37,9 +38,11 @@ public class YYGPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         ImageView imageView = new ImageView(context);
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(context).load(imgs.get(position%imgs.size())).into(imageView);
         container.addView(imageView);
-        return container;
+        return imageView;
     }
 
     @Override

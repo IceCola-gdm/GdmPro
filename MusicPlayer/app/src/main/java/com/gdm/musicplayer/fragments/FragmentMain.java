@@ -41,6 +41,7 @@ public class FragmentMain extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         myTitleView= (MyTitleView) view.findViewById(R.id.mytitleview);
         viewPager= (ViewPager) view.findViewById(R.id.viewpager);
+
 //        return super.onCreateView(inflater, container, savedInstanceState);
         return view;
     }
@@ -65,6 +66,12 @@ public class FragmentMain extends Fragment {
         myTitleView.setOnLeftImgClick(new MyLeftImgClickListener());
         myTitleView.setOnRightImgClick(new MyRightImgClickListener());
         myTitleView.setOnRadioGroupClick(new MyRadioGroupCheckListener());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 
     /**
