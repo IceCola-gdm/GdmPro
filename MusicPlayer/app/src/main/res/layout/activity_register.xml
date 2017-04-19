@@ -19,7 +19,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="手机号注册"
+        android:text="账号注册"
         android:textColor="#fff"
         android:textSize="20sp"
         android:layout_centerVertical="true"
@@ -37,27 +37,17 @@
             android:src="@drawable/a36"
             android:layout_marginLeft="20dp"
             android:layout_centerVertical="true"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+86"
-            android:textSize="18sp"
-            android:layout_toRightOf="@+id/img_phone_register_icon"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
-            android:textColor="#C0C4C3"/>
         <EditText
             android:id="@+id/ed_phone_register_number"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+           android:layout_toRightOf="@+id/img_phone_register_icon"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:hint="请输入手机号码"
+            android:layout_marginLeft="10dp"
+            android:hint="请输入账号"
             android:textColorHint="#C0C4C3"
             android:inputType="number"
-            android:background="@null"
-            android:maxLength="11"/>
+            android:background="@null" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
@@ -82,9 +72,9 @@
             android:id="@+id/ed_phone_register_pwd"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/img_register_pwd_icon"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
             android:hint="请设置密码，不少于6位"
             android:textColorHint="#C0C4C3"
             android:inputType="textPassword"
@@ -114,10 +104,10 @@
             android:id="@+id/ed_phone_register_yanzheng"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/img_register_yanzheng_icon"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:hint="请输入验证码"
+            android:layout_marginLeft="10dp"
+            android:hint="请再次输入密码"
             android:textColorHint="#C0C4C3"
             android:inputType="textPassword"
             android:background="@null"
@@ -131,15 +121,6 @@
             android:layout_marginRight="20dp"
             />
     </RelativeLayout>
-    <TextView
-        android:id="@+id/tv_getyanzhengma"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="获取验证码"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:layout_gravity="end"/>
-
     <Button
         android:id="@+id/btn_register"
         android:layout_width="match_parent"

@@ -127,6 +127,11 @@ public class MainActivity extends AppCompatActivity {
             ToastUtil.toast(MainActivity.this,"还没写");
         }
     }
+
+    /**
+     * 处理SlidingPanelLayout里面的点击事件
+     * @param view
+     */
     public void clickInMain(View view){
         if(lastFragment!=null){
             closeFragment(lastFragment);
@@ -180,6 +185,13 @@ public class MainActivity extends AppCompatActivity {
         }else{
             showFragment(fragmentMain);
         }
-
+    }
+    public void myClick(View view){
+        switch (view.getId()){
+            case R.id.rl_play_icon:
+                Intent intent = new Intent(MainActivity.this, PlayActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 }

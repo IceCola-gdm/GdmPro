@@ -271,10 +271,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
         <RelativeLayout
+            android:id="@+id/rl_play_icon"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="bottom"
-            android:background="#fff">
+            android:background="#fff"
+            android:clickable="true"
+            android:onClick="myClick">
             <ImageView
                 android:id="@+id/img_song_cover"
                 android:layout_width="40dp"
@@ -310,13 +313,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true">
-                <ImageView
+                <RadioButton
                     android:id="@+id/rb_song_playicon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/play"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginRight="10dp"
+                    android:drawableRight="@drawable/play"
+                    android:button="@null"
+                    android:scaleX="0.6"
+                    android:scaleY="0.6"
                     />
                 <ImageView
                     android:id="@+id/img_song_list"
