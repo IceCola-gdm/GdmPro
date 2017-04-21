@@ -41,9 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initData() {
         fgs.add(new FragmentPersonalInfo());
-        fgs.add(new FragmentFriend());
-        fgs.add(new FragmentFujing());
-         fragmentMain = new FragmentMain();
+        fragmentMain = new FragmentMain();
         showFragment(fragmentMain);
         fragmentMain.setOnImgListener(new MyListener());
         menus=new ArrayList<>();
@@ -138,21 +136,11 @@ public class MainActivity extends AppCompatActivity {
         }
         switch (view.getId()){
             case R.id.img_main_portrait:  //头像
-
                 showFragment(menus.get(0));
                 break;
             case R.id.tv_main_login:  //登录、注册
                 Intent intent = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
                 startActivity(intent);
-                break;
-            case R.id.main_rl_personal:  //个人中心
-                showFragment(menus.get(1));
-                break;
-            case R.id.main_rl_friend:  //我的好友
-                showFragment(menus.get(2));
-                break;
-            case R.id.main_rl_fujin:  //附近的人
-                showFragment(menus.get(3));
                 break;
             case R.id.main_rl_huanfu:  //个性换肤
                 Intent intent1 = new Intent(MainActivity.this, HuanfuActivity.class);
@@ -164,10 +152,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_rl_naozhong:  //音乐闹钟
                 ToastUtil.toast(MainActivity.this,"还没写");
                 break;
-            case R.id.main_rl_mode:  //模式切换
-                ToastUtil.toast(MainActivity.this,"还没写");
-                break;
-            case R.id.main_rl_setting:  //切换账号
+            case R.id.rl_change:  //切换账号
                 Intent intent2 = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
                 startActivity(intent2);
                 break;

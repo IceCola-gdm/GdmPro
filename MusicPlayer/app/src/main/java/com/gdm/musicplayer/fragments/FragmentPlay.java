@@ -41,29 +41,25 @@ public class FragmentPlay extends Fragment {
     private void createAnim() {
         rotate  = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotate.setInterpolator(lin);
-        rotate.setDuration(10000);//设置动画持续时间
+        rotate.setDuration(9000);//设置动画持续时间
         rotate.setRepeatCount(-1);//设置重复次数
-        rotate.setFillAfter(true);//动画执行完后是否停留在执行完的状态
-        rotate.setStartOffset(1000);//执行前的等待时间
 
         rotate2  = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotate2.setInterpolator(lin);
-        rotate2.setDuration(10000);//设置动画持续时间
+        rotate2.setDuration(9000);//设置动画持续时间
         rotate2.setRepeatCount(-1);//设置重复次数
-        rotate2.setFillAfter(true);//动画执行完后是否停留在执行完的状态
-        rotate2.setStartOffset(1000);//执行前的等待时间
 
         rotate3  = new RotateAnimation(0f,20f, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
         rotate3.setInterpolator(lin);
         rotate3.setDuration(1000);//设置动画持续时间
         rotate3.setFillAfter(true);//动画执行完后是否停留在执行完的状态
-        rotate3.setStartOffset(10);//执行前的等待时间
+//        rotate3.setStartOffset(10);//执行前的等待时间
 
         rotate4  = new RotateAnimation(0f, -20f, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
         rotate4.setInterpolator(lin);
         rotate4.setDuration(1000);//设置动画持续时间
         rotate4.setFillAfter(true);//动画执行完后是否停留在执行完的状态
-        rotate4.setStartOffset(10);//执行前的等待时间
+//        rotate4.setStartOffset(10);//执行前的等待时间
 
     }
 
