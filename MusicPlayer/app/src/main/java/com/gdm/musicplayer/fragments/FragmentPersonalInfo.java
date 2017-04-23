@@ -1,8 +1,11 @@
 package com.gdm.musicplayer.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.activities.EditPersonalInfoActivity;
+import com.gdm.musicplayer.activities.MainActivity;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
+import com.gdm.musicplayer.utils.ToastUtil;
 import com.gdm.musicplayer.view.CircleImageView;
 
 import java.util.ArrayList;
@@ -33,7 +39,6 @@ public class FragmentPersonalInfo extends Fragment {
     private ImageView imgSex;
     private TextView tvNikName;
     private TextView tvEditUserInfo;
-
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +71,8 @@ public class FragmentPersonalInfo extends Fragment {
     }
 
     private void setListener() {
-        imgBack.
+        imgBack.setOnClickListener(new MyListener());
+        tvEditUserInfo.setOnClickListener(new MyListener());
     }
 
     private void setAdapter() {
@@ -83,4 +89,28 @@ public class FragmentPersonalInfo extends Fragment {
         fgs.add(new FragmentPersonalYinyue());
         fgs.add(new FragmentPersonalAbout());
     }
+
+    private class MyListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.img_personalinfo_back:  //返回
+                    ToastUtil.toast(getContext(),"点击了");
+//                    removeFragment();
+                    break;
+                case R.id.tv_personalinfo_edit:  //修改个人信息
+                    Intent intent = new Intent(getContext(), EditPersonalInfoActivity.class);
+                    startActivity(intent);
+                    break;
+            }
+        }
+    }
+
+//    private void removeFragment() {
+//        Fragment fragmentPersonalInfo = getChildFragmentManager().findFragmentByTag("fragmentPersonalInfo");
+//        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+//        ft.remove(fragmentPersonalInfo);
+//        ft.commit();
+//
+//    }
 }

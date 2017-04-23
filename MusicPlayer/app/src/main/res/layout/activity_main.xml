@@ -17,9 +17,9 @@
         >
         <com.gdm.musicplayer.view.CircleImageView
             android:id="@+id/img_main_portrait"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/p"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/me"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:clickable="true"
