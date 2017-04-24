@@ -15,17 +15,17 @@ public class EditUniversityActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_university);
-        editText= (EditText) findViewById(R.id.et_edit_nickname_name);
+        editText= (EditText) findViewById(R.id.et_edit_university_name);
     }
     public void editUniversityClick(View view){
         switch (view.getId()){
-            case R.id.img_edit_university_back:
+            case R.id.img_edit_university_icon:
                 finish();
                 break;
-            case R.id.tv_edit_location_save:
+            case R.id.tv_edit_university_save:
                 returnUniversity();
                 break;
-            case R.id.img_edit_nickname_cancel:
+            case R.id.img_edit_university_cancel:
                 editText.setText("");
                 break;
         }

@@ -19,7 +19,7 @@ public class EditSexActivity extends AppCompatActivity {
         imgMan= (ImageView) findViewById(R.id.iv_man);
         imgWoman= (ImageView) findViewById(R.id.iv_woman);
     }
-    public void editNicknameClick(View view){
+    public void editSexClick(View view){
         switch (view.getId()){
             case R.id.img_edit_nickname_back:
                 finish();

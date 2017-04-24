@@ -46,12 +46,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (lastFragment==null||lastFragment==fragmentMain) {
+            if (fragmentMain.isAdded()) {
+                getSupportFragmentManager().beginTransaction().show(fragmentMain).commitAllowingStateLoss();
+            }
+        }else{
+            if (lastFragment.isAdded()) {
+                getSupportFragmentManager().beginTransaction().show(lastFragment).commitAllowingStateLoss();
+            }
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
     }
     private Fragment lastFragment=null;
     private void showFragment1(FragmentMain mainFragment) {
+        if (mainFragment.isVisible()) {
+            return;
+        }
         android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         if (lastFragment==null) {
 
@@ -67,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
         t.commit();
     }
     private void showFragment(Fragment mainFragment) {
+        if (mainFragment.isVisible()) {
+            return;
+        }
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (lastFragment==null) {
             

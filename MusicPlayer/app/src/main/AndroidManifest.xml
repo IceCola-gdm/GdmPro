@@ -22,6 +22,8 @@
         </activity>
         <activity android:name=".activities.EditPersonalInfoActivity" />
         <activity android:name=".activities.EditNicknameActivity" />
+        <activity android:name=".activities.EditSexActivity" />
+        <activity android:name=".activities.EditLocationActivity" />
         <activity android:name=".activities.EditUniversityActivity" />
         <activity android:name=".activities.ChooseToLoginOrRegister" />
         <activity android:name=".activities.PhoneLoginActivity" />
@@ -35,7 +37,7 @@
         <activity android:name=".activities.YinyueBangActivity" />
 
         <service
-            android:name=".service.Player"
+            android:name=".service.PlayerService"
             android:enabled="true"
             android:exported="true" />
 

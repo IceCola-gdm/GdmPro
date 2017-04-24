@@ -27,7 +27,7 @@
             android:layout_toRightOf="@+id/img_edit_university_back"
             />
         <TextView
-            android:id="@+id/tv_edit_location_save"
+            android:id="@+id/tv_edit_university_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="保存"
@@ -36,6 +36,8 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:onClick="editUniversityClick"
             />
     </RelativeLayout>
     <RelativeLayout
@@ -45,25 +47,25 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
         <ImageView
-            android:id="@+id/img_edit_nickname_icon"
+            android:id="@+id/img_edit_university_icon"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
             android:src="@drawable/user"/>
         <EditText
-            android:id="@+id/et_edit_nickname_name"
+            android:id="@+id/et_edit_university_name"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/img_edit_nickname_icon"
+            android:layout_toRightOf="@+id/img_edit_university_icon"
             android:hint="请输入新的大学名称"
             android:textColorHint="#939393"
             android:background="@null"/>
         <ImageView
-            android:id="@+id/img_edit_nickname_cancel"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:id="@+id/img_edit_university_cancel"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_centerVertical="true"

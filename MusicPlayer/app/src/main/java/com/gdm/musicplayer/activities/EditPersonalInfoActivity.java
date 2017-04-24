@@ -1,5 +1,6 @@
 package com.gdm.musicplayer.activities;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
@@ -8,11 +9,14 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.utils.ToastUtil;
+
+import java.util.Calendar;
 
 public class EditPersonalInfoActivity extends AppCompatActivity {
     private ImageView imgPortrait;
@@ -32,6 +36,9 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
     private String university;
     private Cursor c=null;
     private String tag="";
+    private int mYear;
+    private int mMonth;
+    private int mDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +82,8 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
                 startActivityForResult(intent2,200);
                 break;
             case R.id.rl_birthday:
-                ToastUtil.toast(EditPersonalInfoActivity.this,"还没写");
+//                ToastUtil.toast(EditPersonalInfoActivity.this,"还没写");
+                showDialog();
                 break;
             case R.id.rl_location:
                 tag="location";
@@ -89,15 +97,25 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    private void showDialog() {
+        final Calendar ca = Calendar.getInstance();
+        mYear = ca.get(Calendar.YEAR);
+        mMonth = ca.get(Calendar.MONTH);
+        mDay = ca.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog dialog = new DatePickerDialog(EditPersonalInfoActivity.this, new MyDatePickerListener(), mYear, mMonth, mDay);
+        dialog.show();
+    }
+
     private void resetBackground() {
-        tag="portrait";
+        tag="background";
         Intent intent= new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent,100);
     }
 
     private void resetPortrait() {
-        tag="background";
+        tag="portrait";
         Intent intent= new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent,100);
@@ -140,6 +158,14 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
                     break;
             }
             tag="";
+        }
+    }
+
+    private class MyDatePickerListener implements DatePickerDialog.OnDateSetListener {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            birthday=year+"-"+month+"-"+dayOfMonth;
+            tvBirthday.setText(birthday);
         }
     }
 }
