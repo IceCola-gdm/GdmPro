@@ -130,5 +130,6 @@
         android:layout_marginLeft="20dp"
         android:text="下一步"
         android:textColor="#fff"
-        android:background="#D33B30"/>
+        android:background="#D33B30"
+        android:onClick="registerClick"/>
 </LinearLayout>

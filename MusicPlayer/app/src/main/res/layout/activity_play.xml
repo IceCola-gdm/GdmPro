@@ -13,7 +13,9 @@
             android:layout_height="25dp"
             android:src="@drawable/arrow_left"
             android:layout_centerVertical="true"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:onClick="playClick2"/>
         <RelativeLayout
             android:layout_width="250dp"
             android:layout_height="match_parent"
@@ -42,7 +44,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
-            android:src="@drawable/ys"/>
+            android:src="@drawable/ys"
+            android:clickable="true"
+            android:onClick="playClick2"/>
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -99,35 +103,45 @@
                 android:layout_height="60dp"
                 android:layout_weight="1"
                 android:src="@drawable/a_h"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:clickable="true"
+                android:onClick="playClick"/>
             <ImageView
                 android:id="@+id/img_play_last"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:src="@drawable/agb"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:clickable="true"
+                android:onClick="playClick"/>
             <ImageView
                 android:id="@+id/img_play_play"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_weight="1"
-                android:src="@drawable/a_5"
-                android:layout_gravity="center_vertical" />
+                android:src="@drawable/a_3"
+                android:layout_gravity="center_vertical"
+                android:clickable="true"
+                android:onClick="playClick"/>
             <ImageView
                 android:id="@+id/img_play_next"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_weight="1"
                 android:src="@drawable/a_1"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:clickable="true"
+                android:onClick="playClick"/>
             <ImageView
                 android:id="@+id/img_play_menu"
                 android:layout_width="0dp"
                 android:layout_height="25dp"
                 android:layout_weight="1"
                 android:src="@drawable/menu"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:clickable="true"
+                android:onClick="playClick2"/>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

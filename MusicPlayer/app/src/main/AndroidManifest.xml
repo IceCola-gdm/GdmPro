@@ -35,13 +35,19 @@
         <activity android:name=".activities.MyCollectionActivity" />
         <activity android:name=".activities.HuanfuActivity" />
         <activity android:name=".activities.YinyueBangActivity" />
+        <activity
+            android:name=".activities.SettingGedan"
+            android:theme="@style/activity_popup" />
+        <activity android:name=".activities.PlayActivity" />
 
         <service
             android:name=".service.PlayerService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activities.PlayActivity"></activity>
+        <activity android:name=".activities.CreateGedanActivity" />
+        <activity android:name=".activities.ManageGedanActivity" />
+        <activity android:name=".activities.MenuActivity"></activity>
     </application>
 
 </manifest>

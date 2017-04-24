@@ -85,5 +85,6 @@
         android:layout_marginLeft="20dp"
         android:text="开启我的音乐之旅"
         android:textColor="#fff"
-        android:background="#D33B30"/>
+        android:background="#D33B30"
+        android:onClick="setNicknameClick"/>
 </LinearLayout>

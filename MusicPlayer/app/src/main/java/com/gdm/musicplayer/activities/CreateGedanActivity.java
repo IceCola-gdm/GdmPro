@@ -5,10 +5,11 @@ import android.os.Bundle;
 
 import com.gdm.musicplayer.R;
 
-public class YinyueBangActivity extends AppCompatActivity {
+public class CreateGedanActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_yinyue_bang);
+        setContentView(R.layout.fragment_my_newgedan);
     }
 }

@@ -10,8 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.fragments.FragmentMain;
 import com.gdm.musicplayer.fragments.FragmentPersonalInfo;
+import com.gdm.musicplayer.utils.MusicUtil;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.gdm.musicplayer.view.MySlidingPanelLayout;
 
@@ -27,10 +29,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvLogin;    //登录注册
     private FragmentMain fragmentMain;
     private ArrayList<Fragment> menus;
+    private ArrayList<Music> musics=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         initView();
         initData();
@@ -42,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentMain.setOnImgListener(new MyListener());
         menus=new ArrayList<>();
         menus.add(new FragmentPersonalInfo());
-
+        musics.addAll(MusicUtil.getAllSongs(MainActivity.this));
     }
 
     @Override
@@ -187,6 +191,8 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()){
             case R.id.rl_play_icon:
                 Intent intent = new Intent(MainActivity.this, PlayActivity.class);
+                intent.putExtra("data",musics);
+                intent.putExtra("position",0);
                 startActivity(intent);
                 break;
         }

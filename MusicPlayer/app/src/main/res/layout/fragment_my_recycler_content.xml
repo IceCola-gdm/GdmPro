@@ -38,7 +38,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_alignParentRight="true"
-            android:src="@drawable/afs"/>
+            android:src="@drawable/afs"
+            android:clickable="true"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_below="@+id/title"
