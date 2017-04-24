@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -17,7 +16,7 @@
             android:layout_margin="10dp"
             android:src="@drawable/arrow_left"
             android:clickable="true"
-            android:onClick="editPersonalInfoClick"/>
+            android:onClick="MyEditClick"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,23 +26,39 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/img_edit_personalinfo_back"
             />
+        <Button
+            android:id="@+id/btn_edit_personalinfo_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:text="提交"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:background="@null"
+            android:onClick="MyEditClick"
+            />
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/rl_portrait"
+        android:clickable="true"
+        android:onClick="MyEditClick"
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="头像"
-            android:textColor="#C9C9C9"
-            android:textSize="20sp"
+            android:textColor="#3D3D3D"
+            android:textSize="16sp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
         <ImageView
             android:id="@+id/img_edit_personalinfo_touxiang"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/a1a"
+            android:src="@drawable/me"
             android:layout_alignParentRight="true"
             android:layout_margin="10dp"
             android:layout_centerVertical="true"/>
@@ -57,14 +72,17 @@
             />
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/rl_background"
+        android:clickable="true"
+        android:onClick="MyEditClick"
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="个人主页背景"
-            android:textColor="#C9C9C9"
-            android:textSize="20sp"
+            android:textColor="#3D3D3D"
+            android:textSize="16sp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
         <ImageView
@@ -85,14 +103,17 @@
             />
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/rl_nickname"
+        android:clickable="true"
+        android:onClick="MyEditClick"
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="昵称"
-            android:textColor="#C9C9C9"
-            android:textSize="20sp"
+            android:textColor="#3D3D3D"
+            android:textSize="16sp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
         <TextView
@@ -114,14 +135,17 @@
             />
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/rl_sex"
+        android:clickable="true"
+        android:onClick="MyEditClick"
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="性别"
-            android:textColor="#C9C9C9"
-            android:textSize="20sp"
+            android:textColor="#3D3D3D"
+            android:textSize="16sp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
         <TextView
@@ -147,14 +171,17 @@
         android:layout_height="10dp"
         android:background="#F0F4F3"/>
     <RelativeLayout
+        android:id="@+id/rl_birthday"
+        android:clickable="true"
+        android:onClick="MyEditClick"
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="生日"
-            android:textColor="#C9C9C9"
-            android:textSize="20sp"
+            android:textColor="#3D3D3D"
+            android:textSize="16sp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
         <TextView
@@ -164,7 +191,7 @@
             android:layout_alignParentRight="true"
             android:layout_margin="10dp"
             android:layout_centerVertical="true"
-            android:text="为设置"
+            android:text="未设置"
             android:textColor="#D4D4D4"/>
         <RelativeLayout
             android:layout_width="match_parent"
@@ -176,14 +203,17 @@
             />
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/rl_location"
+        android:clickable="true"
+        android:onClick="MyEditClick"
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="地区"
-            android:textColor="#C9C9C9"
-            android:textSize="20sp"
+            android:textColor="#3D3D3D"
+            android:textSize="16sp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
         <TextView
@@ -205,14 +235,17 @@
             />
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/rl_university"
+        android:clickable="true"
+        android:onClick="MyEditClick"
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="大学"
-            android:textColor="#C9C9C9"
-            android:textSize="20sp"
+            android:textColor="#3D3D3D"
+            android:textSize="16sp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
         <TextView
@@ -233,5 +266,4 @@
             android:layout_marginRight="10dp"
             />
     </RelativeLayout>
-
 </LinearLayout>

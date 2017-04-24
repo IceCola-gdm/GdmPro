@@ -11,7 +11,7 @@ import com.gdm.musicplayer.bean.MusicBean;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Player extends Service implements MediaPlayer.OnBufferingUpdateListener {
+public class PlayerService extends Service implements MediaPlayer.OnBufferingUpdateListener {
     private static MediaPlayer player;
     private ArrayList<MusicBean> musicList;
     public static int SHUNXU=0;
@@ -20,12 +20,11 @@ public class Player extends Service implements MediaPlayer.OnBufferingUpdateList
     public static int DANQU=3;
     private int state=SHUNXU;
     private int pos=0;
-    public Player() {
+    public PlayerService() {
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -87,9 +86,6 @@ public class Player extends Service implements MediaPlayer.OnBufferingUpdateList
         else {
             player.prepareAsync();
         }
-    }
-    public void next(){
-
     }
     /**
      * 停止

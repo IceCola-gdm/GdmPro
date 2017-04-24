@@ -17,9 +17,9 @@
         >
         <com.gdm.musicplayer.view.CircleImageView
             android:id="@+id/img_main_portrait"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/p"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/me"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:clickable="true"
@@ -44,69 +44,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_below="@+id/rl_first">
-        <RelativeLayout
-            android:id="@+id/main_rl_personal"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:clickable="true"
-            android:onClick="clickInMain">
-            <ImageView
-                android:id="@+id/img_personal"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/person"
-                android:layout_margin="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="个人中心"
-                android:textSize="14sp"
-                android:textColor="#3D3D3D"
-                android:layout_toRightOf="@+id/img_personal"
-                android:layout_centerVertical="true"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:clickable="true"
-            android:onClick="clickInMain"
-            android:id="@+id/main_rl_friend">
-            <ImageView
-                android:id="@+id/img_friend"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/friend"
-                android:layout_margin="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="我的好友"
-                android:textSize="14sp"
-                android:layout_toRightOf="@+id/img_friend"
-                android:textColor="#3D3D3D"
-                android:layout_centerVertical="true"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:clickable="true"
-            android:onClick="clickInMain"
-            android:id="@+id/main_rl_fujin">
-            <ImageView
-                android:id="@+id/img_fujin"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/l"
-                android:layout_margin="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="附近的人"
-                android:textSize="14sp"
-                android:textColor="#3D3D3D"
-                android:layout_toRightOf="@+id/img_fujin"
-                android:layout_centerVertical="true"/>
-        </RelativeLayout>
         <RelativeLayout
             android:layout_width="300dp"
             android:layout_height="50dp"
@@ -181,87 +118,49 @@
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
         <RelativeLayout
+            android:id="@+id/rl_change"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:clickable="true"
-            android:onClick="clickInMain"
-            android:id="@+id/main_rl_mode">
-            <ImageView
-                android:id="@+id/rb_mode"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/afr"
-                android:layout_margin="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="夜间模式"
-                android:textSize="14sp"
-                android:textColor="#3D3D3D"
-                android:layout_toRightOf="@+id/rb_mode"
-                android:layout_centerVertical="true"/>
-        </RelativeLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/ll_third"
-        android:layout_width="300dp"
-        android:layout_height="0.5dp"
-        android:orientation="vertical"
-        android:background="#000"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@+id/ll_second"/>
-    <RelativeLayout
-        android:layout_below="@id/ll_third"
-        android:layout_width="300dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:clickable="true"
-            android:onClick="clickInMain"
-            android:id="@+id/main_rl_setting">
+            android:onClick="clickInMain">
             <ImageView
                 android:id="@+id/rb_setting"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/afs"
                 android:layout_margin="10dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="切换账号"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="#3D3D3D"
                 android:layout_toRightOf="@+id/rb_setting"
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:clickable="true"
             android:onClick="clickInMain"
             android:id="@+id/main_rl_exit">
             <ImageView
                 android:id="@+id/rb_exit"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/afj"
                 android:layout_margin="10dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="退出"
-                android:textSize="16sp"
+                android:text="退  出"
+                android:textSize="14sp"
                 android:textColor="#3D3D3D"
                 android:layout_toRightOf="@+id/rb_exit"
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
-    </RelativeLayout>
+    </LinearLayout>
     </RelativeLayout>
     <FrameLayout
         android:layout_width="match_parent"
@@ -313,21 +212,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true">
-                <RadioButton
+                <ImageView
                     android:id="@+id/rb_song_playicon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:src="@drawable/play"
                     android:layout_marginRight="10dp"
-                    android:drawableRight="@drawable/play"
-                    android:button="@null"
-                    android:scaleX="0.6"
-                    android:scaleY="0.6"
+                    android:layout_centerVertical="true"
                     />
                 <ImageView
                     android:id="@+id/img_song_list"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_toRightOf="@+id/rb_song_playicon"
                     android:layout_centerVertical="true"
                     android:layout_margin="10dp"

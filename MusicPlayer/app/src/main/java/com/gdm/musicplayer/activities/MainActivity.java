@@ -2,6 +2,7 @@ package com.gdm.musicplayer.activities;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gdm.musicplayer.R;
-import com.gdm.musicplayer.fragments.FragmentFriend;
-import com.gdm.musicplayer.fragments.FragmentFujing;
 import com.gdm.musicplayer.fragments.FragmentMain;
 import com.gdm.musicplayer.fragments.FragmentPersonalInfo;
 import com.gdm.musicplayer.utils.ToastUtil;
@@ -23,8 +22,6 @@ import java.util.ArrayList;
  */
 public class MainActivity extends AppCompatActivity {
     private MySlidingPanelLayout mSlidingPaneLayout;
-    private ArrayList<Fragment> fgs=new ArrayList<>();
-
     private ImageView imgPortrait;   //头像
     private TextView tvPiFu;    //当前皮肤
     private TextView tvLogin;    //登录注册
@@ -40,17 +37,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        fgs.add(new FragmentPersonalInfo());
-        fgs.add(new FragmentFriend());
-        fgs.add(new FragmentFujing());
-         fragmentMain = new FragmentMain();
-        showFragment(fragmentMain);
+        fragmentMain = new FragmentMain();
+        showFragment1(fragmentMain);
         fragmentMain.setOnImgListener(new MyListener());
         menus=new ArrayList<>();
         menus.add(new FragmentPersonalInfo());
-        menus.add(new FragmentPersonalInfo());
-        menus.add(new FragmentFriend());
-        menus.add(new FragmentFujing());
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (lastFragment==null||lastFragment==fragmentMain) {
+            if (fragmentMain.isAdded()) {
+                getSupportFragmentManager().beginTransaction().show(fragmentMain).commitAllowingStateLoss();
+            }
+        }else{
+            if (lastFragment.isAdded()) {
+                getSupportFragmentManager().beginTransaction().show(lastFragment).commitAllowingStateLoss();
+            }
+        }
     }
 
     @Override
@@ -59,29 +65,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
     private Fragment lastFragment=null;
-    private void showFragment(FragmentMain mainFragment) {
-        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    private void showFragment1(FragmentMain mainFragment) {
+        if (mainFragment.isVisible()) {
+            return;
+        }
+        android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         if (lastFragment==null) {
 
         }else{
-            getSupportFragmentManager().beginTransaction().hide(lastFragment).commit();
-
+            t.hide(lastFragment).commit();
         }
         lastFragment=mainFragment;
         if(mainFragment.isAdded()){
-            ft.show(mainFragment);
+            t.show(mainFragment);
         }else{
-            ft.add(R.id.main_container,mainFragment);
+            t.add(R.id.main_container,mainFragment);
         }
-        ft.commit();
+        t.commit();
     }
     private void showFragment(Fragment mainFragment) {
+        if (mainFragment.isVisible()) {
+            return;
+        }
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (lastFragment==null) {
             
         }else{
-            getSupportFragmentManager().beginTransaction().hide(lastFragment).commit();
-
+            ft.hide(lastFragment).commit();
         }
         lastFragment=mainFragment;
         if(mainFragment.isAdded()){
@@ -89,16 +99,16 @@ public class MainActivity extends AppCompatActivity {
         }else{
             ft.add(R.id.main_container,mainFragment);
         }
-        ft.commit();
         lastFragment=mainFragment;
+//        ft.commit();
     }
 
     private void closeFragment(Fragment mainFragment) {
-        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        android.support.v4.app.FragmentTransaction ft =getSupportFragmentManager().beginTransaction();
         if(mainFragment.isAdded()) {
             ft.hide(mainFragment);
+            ft.commit();
         }
-        ft.commit();
     }
 
     /**
@@ -138,21 +148,11 @@ public class MainActivity extends AppCompatActivity {
         }
         switch (view.getId()){
             case R.id.img_main_portrait:  //头像
-
                 showFragment(menus.get(0));
                 break;
             case R.id.tv_main_login:  //登录、注册
                 Intent intent = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
                 startActivity(intent);
-                break;
-            case R.id.main_rl_personal:  //个人中心
-                showFragment(menus.get(1));
-                break;
-            case R.id.main_rl_friend:  //我的好友
-                showFragment(menus.get(2));
-                break;
-            case R.id.main_rl_fujin:  //附近的人
-                showFragment(menus.get(3));
                 break;
             case R.id.main_rl_huanfu:  //个性换肤
                 Intent intent1 = new Intent(MainActivity.this, HuanfuActivity.class);
@@ -164,10 +164,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_rl_naozhong:  //音乐闹钟
                 ToastUtil.toast(MainActivity.this,"还没写");
                 break;
-            case R.id.main_rl_mode:  //模式切换
-                ToastUtil.toast(MainActivity.this,"还没写");
-                break;
-            case R.id.main_rl_setting:  //切换账号
+            case R.id.rl_change:  //切换账号
                 Intent intent2 = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
                 startActivity(intent2);
                 break;
@@ -183,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         if (fragmentMain.isAdded()&&fragmentMain.isVisible()) {
             finish();
         }else{
-            showFragment(fragmentMain);
+            showFragment1(fragmentMain);
         }
     }
     public void myClick(View view){

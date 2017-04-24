@@ -10,25 +10,25 @@
         android:layout_height="60dp"
         android:background="#D33B30">
         <ImageView
-            android:id="@+id/img_edit_nickname_back"
+            android:id="@+id/img_edit_location_back"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:src="@drawable/arrow_left"
             android:clickable="true"
-            android:onClick="editNicknameClick"/>
+            android:onClick="editLocationClick"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="修改昵称"
+            android:text="修改地址"
             android:textColor="#fff"
             android:textSize="20sp"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/img_edit_nickname_back"
+            android:layout_toRightOf="@+id/img_edit_location_back"
             />
         <TextView
-            android:id="@+id/tv_edit_nickname_save"
+            android:id="@+id/tv_edit_location_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="保存"
@@ -38,7 +38,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:clickable="true"
-            android:onClick="editNicknameClick"
+            android:onClick="editLocationClick"
             />
     </RelativeLayout>
     <RelativeLayout
@@ -48,23 +48,23 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
         <ImageView
-            android:id="@+id/img_edit_nickname_icon"
+            android:id="@+id/img_edit_location_icon"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:src="@drawable/user"/>
+            android:src="@drawable/l"/>
         <EditText
             android:id="@+id/et_edit_nickname_name"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/img_edit_nickname_icon"
-            android:hint="请输入新的昵称"
+            android:layout_toRightOf="@+id/img_edit_location_icon"
+            android:hint="请输入新的地址"
             android:textColorHint="#939393"
             android:background="@null"/>
         <ImageView
-            android:id="@+id/img_edit_nickname_cancel"
+            android:id="@+id/img_edit_location_cancel"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentRight="true"
@@ -72,7 +72,7 @@
             android:layout_centerVertical="true"
             android:src="@drawable/cancel"
             android:clickable="true"
-            android:onClick="editNicknameClick"/>
+            android:onClick="editLocationClick"/>
 
     </RelativeLayout>
     <RelativeLayout
