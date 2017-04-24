@@ -39,7 +39,12 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activities.PlayActivity"></activity>
+        <activity android:name=".activities.PlayActivity" />
+
+        <service
+            android:name=".service.MyService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
