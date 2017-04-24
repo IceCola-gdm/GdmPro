@@ -48,6 +48,10 @@
         <activity android:name=".activities.CreateGedanActivity" />
         <activity android:name=".activities.ManageGedanActivity" />
         <activity android:name=".activities.MenuActivity"></activity>
+	<service
+            android:name=".service.MyService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

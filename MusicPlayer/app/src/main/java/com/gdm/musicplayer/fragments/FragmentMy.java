@@ -2,6 +2,7 @@ package com.gdm.musicplayer.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -59,6 +60,7 @@ public class FragmentMy extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my, container, false);
         mRecyclerView= (RecyclerView) view.findViewById(R.id.fragment_my_recyclerview);
         return view;
+
     }
 
     @Override
