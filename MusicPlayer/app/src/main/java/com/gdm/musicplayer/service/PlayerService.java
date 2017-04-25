@@ -53,24 +53,24 @@ public class PlayerService extends Service implements MediaPlayer.OnBufferingUpd
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        cmd = intent.getStringExtra("cmd");
-        pos=intent.getIntExtra("position",-1);
-        ArrayList<Music>  musics= (ArrayList<Music>) intent.getSerializableExtra("data");
-        musicList.addAll(musics);
-        switch (cmd){
-            case "play":
-                startMusic();
-                break;
-            case "stop":
-                stop();
-                break;
-            case "last":
-
-                break;
-            case "next":
-                nextMusic();
-                break;
-        }
+//        cmd = intent.getStringExtra("cmd");
+//        pos=intent.getIntExtra("position",-1);
+//        ArrayList<Music>  musics= (ArrayList<Music>) intent.getSerializableExtra("data");
+//        musicList.addAll(musics);
+//        switch (cmd){
+//            case "play":
+//                startMusic();
+//                break;
+//            case "stop":
+//                stop();
+//                break;
+//            case "last":
+//
+//                break;
+//            case "next":
+//                nextMusic();
+//                break;
+//        }
         return super.onStartCommand(intent, flags, startId);
     }
 

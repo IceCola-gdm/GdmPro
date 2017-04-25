@@ -7,21 +7,25 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Binder;
 import android.os.IBinder;
 
+import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.MusicBean;
+import com.gdm.musicplayer.bean.MusicList;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class MyService extends Service implements MediaPlayer.OnBufferingUpdateListener {
-    private MediaPlayer player;
+    private final IBinder binder = new MyBinder();
+    public MediaPlayer player;
     //数据源
-    private static ArrayList<MusicBean> musicList;
+    private  ArrayList<Music> musicList;
     //当前播放位置
     private int pos=0;
-    public static void setMusicList(ArrayList<MusicBean> musicList) {
-        MyService.musicList = musicList;
+    public void setMusicList(ArrayList<Music> musicList) {
+        this.musicList = musicList;
     }
 
     @Override
@@ -29,6 +33,19 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
         super.onCreate();
         intPlayer();
         initBord();
+    }
+    public MyService() {
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+
+   public class MyBinder extends Binder {
+        public MyService getService(){
+            return MyService.this;
+        }
     }
     private MediaCommend commend;
     private void initBord() {
@@ -56,26 +73,18 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-
+                onPlayChangeLlistener.playComplete(pos);
             }
         });
     }
 
-    public MyService() {
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
 
     }
     //action=com.gdm.player
-    private static String mAction="com.gdm.player";
+    public static String mAction="com.gdm.player";
     class MediaCommend extends BroadcastReceiver{
 
         @Override
@@ -100,7 +109,13 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     }
 
     private void last() {
-
+        if (player.isPlaying()) {
+            player.stop();
+        }
+        player.reset();
+        pos=pos-1;
+        play();
+        onPlayChangeLlistener.playComplete(pos);
     }
 
     private void stop() {
@@ -118,7 +133,8 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
             return;
         }else{
             try {
-                player.setDataSource(musicList.get(pos).getPath());
+                String url = musicList.get(pos).getFileUrl();
+                player.setDataSource(url);
                 player.prepareAsync();
             } catch (IOException e) {
 
@@ -130,7 +146,16 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
         if (player.isPlaying()) {
             player.stop();
         }
+        player.reset();
         pos=pos+1;
         play();
+        onPlayChangeLlistener.playComplete(pos);
+    }
+    public interface OnPlayChangeLlistener{
+        void playComplete(int pos);
+    }
+    private OnPlayChangeLlistener onPlayChangeLlistener=null;
+    public void setOnPlayChangeLlistener(OnPlayChangeLlistener onPlayChangeLlistener){
+        this.onPlayChangeLlistener=onPlayChangeLlistener;
     }
 }
