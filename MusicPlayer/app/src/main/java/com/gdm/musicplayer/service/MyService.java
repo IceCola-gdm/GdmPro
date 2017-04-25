@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.MusicBean;
@@ -17,12 +18,13 @@ import com.gdm.musicplayer.bean.MusicList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MyService extends Service implements MediaPlayer.OnBufferingUpdateListener {
-    private final IBinder binder = new MyBinder();
+
     public MediaPlayer player;
     //数据源
-    private  ArrayList<Music> musicList;
+    private  static ArrayList<Music> musicList;
     //当前播放位置
     private int pos=0;
     //播放类型
@@ -44,7 +46,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
         return type;
     }
 
-    public static void setMusicList(ArrayList<MusicBean> musicList) {
+    public static void setMusicList(ArrayList<Music> musicList) {
         MyService.musicList = musicList;
     }
 
@@ -57,22 +59,29 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     }
 
     private void initTheard() {
-
+        new Thread(new PlayStateTheard()).start();
     }
 
     class PlayStateTheard implements Runnable{
-
+        /**
+         * 发送播放状态 以及播放的音乐信息
+         */
         @Override
         public void run() {
             while (true){
                 if (player.isPlaying()) {
-                    MusicBean bean = musicList.get(pos);
+                    Music bean = musicList.get(pos);
                     Intent intent = new Intent(PLAY_ACTION);
+                    intent.putExtra("state","play");
+                    intent.putExtra("pos",pos);
                     intent.putExtra("total",player.getDuration());
                     intent.putExtra("now",player.getCurrentPosition());
-                    intent.putExtra("title",bean.getTitle());
-                    intent.putExtra("icon",bean.getIcon());
-                    intent.putExtra("alter",bean.getAlter());
+                    intent.putExtra("title",bean.getName());
+                    sendBroadcast(intent);
+                }else{
+                    Intent intent = new Intent(PLAY_ACTION);
+                    intent.putExtra("state","stop");
+                    intent.putExtra("pos",pos);
                     sendBroadcast(intent);
                 }
                 try {
@@ -96,6 +105,12 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
         unregisterReceiver(commend);
     }
 
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
     private void intPlayer() {
         player=new MediaPlayer();
         player.setOnBufferingUpdateListener(this);
@@ -109,7 +124,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                onPlayChangeLlistener.playComplete(pos);
+                nextMusic();
             }
         });
     }
@@ -131,7 +146,12 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                 if (cmd.equals("next")) {
                     nextMusic();
                 }else if(cmd.equals("play")){
-                    play();
+                    if (player.isPlaying()) {
+                        pause();
+                    }else {
+                        play();
+                    }
+
                 }else if(cmd.equals("pause")){
                     pause();
                 }else if(cmd.equals("stop")){
@@ -139,7 +159,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                 }else if(cmd.equals("last")){
                     last();
                 }else if(cmd.equals("type")){
-                    int type = intent.getIntExtra("type", 0);
+                    type = intent.getIntExtra("type", 0);
                 }
             }
         }
@@ -150,18 +170,23 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
             player.stop();
         }
         player.reset();
-        pos=pos-1;
+        if (pos!=0) {
+            pos=pos-1;
+        }else{
+            pos=musicList.size()-1;
+        }
         play();
-        onPlayChangeLlistener.playComplete(pos);
     }
 
     private void stop() {
         player.stop();
+        player.reset();
     }
-
+    private int nowPos=-1;
     private void pause() {
         if (player.isPlaying()) {
             player.pause();
+            nowPos=player.getCurrentPosition();
         }
     }
 
@@ -169,31 +194,55 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
         if (player.isPlaying()) {
             return;
         }else{
-            try {
-                MusicBean bean = musicList.get(pos);
-                player.setDataSource(bean.getPath());
-                player.prepareAsync();
+            if (nowPos!=-1){
+                player.start();
+                player.seekTo(nowPos);
+                nowPos=-1;
+            }else
+            {
+                try {
+                    Music bean = musicList.get(pos);
+                    player.setDataSource(bean.getFileUrl());
+                    player.prepareAsync();
 
-            } catch (IOException e) {
+                } catch (IOException e) {
 
+                }
             }
+
         }
     }
-
+    private int tag=0;
     private void nextMusic() {
         if (player.isPlaying()) {
             player.stop();
         }
         player.reset();
-        pos=pos+1;
+        switch (type) {
+            case LIST_RECYCLE:
+                if (pos!=musicList.size()-1) {
+                    pos=pos+1;
+                }else{
+                    pos=0;
+                }
+                break;
+            case ONE_MUSIC:
+                break;
+            case RANDOM_PLAY:
+                pos = new Random().nextInt(musicList.size());
+                break;
+            case LIST_PLAY:
+                if (pos!=musicList.size()-1) {
+                    pos=pos+1;
+                }else {
+                    tag=tag+1;
+                    if (tag>1) {
+                        pos=0;
+                    }
+                }
+                break;
+        }
         play();
-        onPlayChangeLlistener.playComplete(pos);
-    }
-    public interface OnPlayChangeLlistener{
-        void playComplete(int pos);
-    }
-    private OnPlayChangeLlistener onPlayChangeLlistener=null;
-    public void setOnPlayChangeLlistener(OnPlayChangeLlistener onPlayChangeLlistener){
-        this.onPlayChangeLlistener=onPlayChangeLlistener;
+
     }
 }

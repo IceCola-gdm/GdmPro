@@ -1,8 +1,10 @@
 package com.gdm.musicplayer.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
@@ -34,7 +36,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class PlayActivity extends AppCompatActivity implements MyService.OnPlayChangeLlistener {
+public class PlayActivity extends AppCompatActivity  {
     private ImageView imgBack;
     private ImageView imgShare;
     private ImageView imgPlay;
@@ -51,6 +53,7 @@ public class PlayActivity extends AppCompatActivity implements MyService.OnPlayC
     private Music music=null;
     private MyService myService=null;
     private MyServiceConnection conn;
+    private MyBrod brod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +63,31 @@ public class PlayActivity extends AppCompatActivity implements MyService.OnPlayC
         initView();
         initData();
         setAdapter();
-        conn=new MyServiceConnection();
-        Intent intent = new Intent(PlayActivity.this, MyService.class);
-        bindService(intent,conn, Context.BIND_AUTO_CREATE);
+//        conn=new MyServiceConnection();
+        Intent intent = new Intent(this, MyService.class);
+        MyService.setMusicList(musics);
+        startService(intent);
+        brod=new MyBrod();
+        IntentFilter filter=new IntentFilter(MyService.PLAY_ACTION);
+        registerReceiver(brod,filter);
+//        bindService(intent,conn, Context.BIND_AUTO_CREATE);
     }
+    private class MyBrod extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(MyService.PLAY_ACTION)) {
+                if (intent.getStringExtra("state").equals("play")) {
 
+                    int total = intent.getIntExtra("total", 0);
+                    int now = intent.getIntExtra("now", 0);
+                    String title = intent.getStringExtra("title");
+                    Log.e("PlayActivity","正在播放"+"total="+total+"  now="+now+"  title"+title);
+                }
+            }
+        }
+    }
     private void setListener() {
         seekBar.setOnSeekBarChangeListener(new MyListener());
-        myService.setOnPlayChangeLlistener(this);
     }
 
     private void getIntentData() {
@@ -112,15 +132,15 @@ public class PlayActivity extends AppCompatActivity implements MyService.OnPlayC
                 intent.putExtra("cmd","last");
                 break;
             case R.id.img_play_play:
-                if(myService.player.isPlaying()){
-                    imgPlay.setImageResource(R.drawable.a_5);
-                    intent.putExtra("cmd","stop");
-//                    sendBroadcast(intent);
-                }else{
+//                if(myService.player.isPlaying()){
+//                    imgPlay.setImageResource(R.drawable.a_5);
+//                    intent.putExtra("cmd","stop");
+////                    sendBroadcast(intent);
+//                }else{
                     imgPlay.setImageResource(R.drawable.a_3);
                     intent.putExtra("cmd","play");
 //                    sendBroadcast(intent);
-                }
+//                }
                 break;
             case R.id.img_play_next:
                 intent.putExtra("cmd","next");
@@ -145,12 +165,12 @@ public class PlayActivity extends AppCompatActivity implements MyService.OnPlayC
         }
     }
 
-    @Override
-    public void playComplete(int pos) {
-        tvSongName.setText(musics.get(pos).getName());
-        tvTotalTime.setText(musics.get(pos).getDuration());
-        tvSongSinger.setText(musics.get(pos).getSinger());
-    }
+//    @Override
+//    public void playComplete(int pos) {
+//        tvSongName.setText(musics.get(pos).getName());
+//        tvTotalTime.setText(musics.get(pos).getDuration());
+//        tvSongSinger.setText(musics.get(pos).getSinger());
+//    }
 
     private class MyListener implements SeekBar.OnSeekBarChangeListener {
         @Override
@@ -179,10 +199,10 @@ public class PlayActivity extends AppCompatActivity implements MyService.OnPlayC
     private class MyServiceConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            MyService.MyBinder binder = (MyService.MyBinder)service;
-            myService=binder.getService();// 获取到的Service即MyService
-            myService.setMusicList(musics);
-            setListener();
+//            MyService.MyBinder binder = (MyService.MyBinder)service;
+//            myService=binder.getService();// 获取到的Service即MyService
+//            myService.setMusicList(musics);
+//            setListener();
         }
 
         @Override
@@ -194,6 +214,8 @@ public class PlayActivity extends AppCompatActivity implements MyService.OnPlayC
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(conn);
+//        unbindService(conn);
+        unregisterReceiver(brod);
     }
+
 }
