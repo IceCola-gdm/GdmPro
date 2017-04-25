@@ -6,20 +6,23 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 
+import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.MusicBean;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class PlayerService extends Service implements MediaPlayer.OnBufferingUpdateListener {
-    private static MediaPlayer player;
-    private ArrayList<MusicBean> musicList;
+    public static MediaPlayer player;
+    private ArrayList<Music> musicList=new ArrayList<>();
     public static int SHUNXU=0;
     public static int LIEBIAOXUNHUAN=1;
     public static int SUIJI=2;
     public static int DANQU=3;
     private int state=SHUNXU;
     private int pos=0;
+    private String cmd="";
     public PlayerService() {
     }
 
@@ -48,25 +51,48 @@ public class PlayerService extends Service implements MediaPlayer.OnBufferingUpd
         });
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+//        cmd = intent.getStringExtra("cmd");
+//        pos=intent.getIntExtra("position",-1);
+//        ArrayList<Music>  musics= (ArrayList<Music>) intent.getSerializableExtra("data");
+//        musicList.addAll(musics);
+//        switch (cmd){
+//            case "play":
+//                startMusic();
+//                break;
+//            case "stop":
+//                stop();
+//                break;
+//            case "last":
+//
+//                break;
+//            case "next":
+//                nextMusic();
+//                break;
+//        }
+        return super.onStartCommand(intent, flags, startId);
+    }
+
     private void nextMusic() {
         try{
             player.stop();
             if (state==SHUNXU) {
                 pos=pos+1;
                 if(pos==musicList.size()){
-                    player.setDataSource(musicList.get(pos-1).getPath());
+                    player.setDataSource(musicList.get(pos-1).getFileUrl());
                     return;
                 }else {
-                    player.setDataSource(musicList.get(pos).getPath());
+                    player.setDataSource(musicList.get(pos).getFileUrl());
                     player.prepareAsync();
                 }
             }else if(state==LIEBIAOXUNHUAN){
                 pos=pos+1;
                 if(pos==musicList.size()){
                     pos=0;
-                    player.setDataSource(musicList.get(pos).getPath());
+                    player.setDataSource(musicList.get(pos).getFileUrl());
                 }else {
-                    player.setDataSource(musicList.get(pos).getPath());
+                    player.setDataSource(musicList.get(pos).getFileUrl());
 
                 }
                 player.prepareAsync();
@@ -79,18 +105,24 @@ public class PlayerService extends Service implements MediaPlayer.OnBufferingUpd
     /**
      * 开始播放
      */
-    public static void startMusic(){
+    public void startMusic(){
         if (player.isPlaying()) {
             return;
         }
         else {
-            player.prepareAsync();
+            try {
+                player.setDataSource(musicList.get(pos).getFileUrl());
+                player.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
     /**
      * 停止
      */
-    public static void stop(){
+    public  void stop(){
         if (player.isPlaying()) {
             player.stop();
         }

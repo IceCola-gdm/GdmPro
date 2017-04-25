@@ -5,15 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TableLayout;
 
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
 import com.gdm.musicplayer.fragments.FragmentAlbum;
 import com.gdm.musicplayer.fragments.FragmentDanQu;
-import com.gdm.musicplayer.fragments.FragmentDir;
 import com.gdm.musicplayer.fragments.FragmentSinger;
 
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ public class LocalMusicListActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private MyPagerAdapter adapter;
 
-    private String[] titles={"单曲","歌手","专辑","文件夹"};
+    private String[] titles={"单曲","歌手","专辑"};
     private ArrayList<Fragment> fgs=new ArrayList<>();
 
     @Override
@@ -35,7 +32,6 @@ public class LocalMusicListActivity extends AppCompatActivity {
         initData();
         setAdapter();
     }
-
     private void setAdapter() {
         adapter=new MyPagerAdapter(getSupportFragmentManager(),fgs);
         adapter.setTitles(titles);
@@ -52,7 +48,6 @@ public class LocalMusicListActivity extends AppCompatActivity {
         fgs.add(new FragmentDanQu());
         fgs.add(new FragmentSinger());
         fgs.add(new FragmentAlbum());
-        fgs.add(new FragmentDir());
     }
 
     /**
@@ -68,8 +63,5 @@ public class LocalMusicListActivity extends AppCompatActivity {
                 finish();
                 break;
         }
-
-
-
     }
 }

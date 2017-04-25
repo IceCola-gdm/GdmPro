@@ -17,7 +17,8 @@
         android:layout_marginTop="80dp"
         android:background="#D03939"
         android:text="登  录"
-        android:textColor="#fff"/>
+        android:textColor="#fff"
+        android:onClick="chooseClick"/>
     <Button
         android:id="@+id/btn_register"
         android:layout_width="250dp"
@@ -25,11 +26,15 @@
         android:layout_marginTop="20dp"
         android:background="#D03939"
         android:text="注  册"
-        android:textColor="#fff"/>
+        android:textColor="#fff"
+        android:onClick="chooseClick"/>
     <RelativeLayout
+        android:id="@+id/rl_try"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:onClick="chooseClick">
         <TextView
             android:id="@+id/shiyong"
             android:layout_width="wrap_content"
@@ -61,25 +66,33 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/a3m"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="10dp"
+                android:clickable="true"
+                android:onClick="chooseClick"/>
             <ImageView
                 android:id="@+id/img_login_qq_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/a3i"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginLeft="20dp"
+                android:clickable="true"
+                android:onClick="chooseClick"/>
             <ImageView
                 android:id="@+id/img_login_weibo_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/a3k"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginLeft="20dp"
+                android:clickable="true"
+                android:onClick="chooseClick"/>
             <ImageView
                 android:id="@+id/img_login_wangyi_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/a3f"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginLeft="20dp"
+                android:clickable="true"
+                android:onClick="chooseClick"/>
     </LinearLayout>
 
 </LinearLayout>

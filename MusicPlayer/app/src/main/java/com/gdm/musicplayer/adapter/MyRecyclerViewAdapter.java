@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.activities.SettingGedan;
 import com.gdm.musicplayer.bean.MusicList;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private LayoutInflater inflater;
     private ArrayList<MusicList> beens;
     private ArrayList<MusicList> content;
+
     public MyRecyclerViewAdapter(Context context, ArrayList<MusicList> beens,ArrayList<MusicList> content) {
         this.context = context;
         this.beens = beens;
@@ -69,14 +71,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             h.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     context.startActivity(new Intent(context,bean.getmClass()));
                 }
             });
         }else if (holder instanceof HolderTwo){
             final HolderTwo h= (HolderTwo) holder;
-            MusicListContentAdapter adapter = new MusicListContentAdapter(context, beens);
-            h.content.setAdapter(adapter);
+//            MusicListContentAdapter adapter = new MusicListContentAdapter(context, beens);
+//            h.content.setAdapter(adapter);
             h.content.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
             h.title.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,6 +89,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         h.imageViewArrow.setImageResource(R.drawable.down);
                         h.contentparent.setVisibility(View.VISIBLE);
                     }
+                }
+            });
+            h.imageViewEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //创建歌单
+                    context.startActivity(new Intent(context,SettingGedan.class));
                 }
             });
         }
