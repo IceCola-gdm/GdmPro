@@ -1,5 +1,6 @@
 package com.gdm.musicplayer.activities;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,15 +13,22 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.adapter.MenuAdapter;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.fragments.FragmentLyric;
@@ -51,6 +59,7 @@ public class PlayActivity extends AppCompatActivity implements MyService.OnPlayC
     private Music music=null;
     private MyService myService=null;
     private MyServiceConnection conn;
+    private MenuAdapter adapter2=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +98,7 @@ public class PlayActivity extends AppCompatActivity implements MyService.OnPlayC
         tvSongSinger.setText(music.getSinger());
         tvSongName.setText(music.getName());
         tvTotalTime.setText(music.getDuration()+"");
+        adapter2=new MenuAdapter(musics,PlayActivity.this);
     }
 
     private void initView() {
@@ -115,11 +125,10 @@ public class PlayActivity extends AppCompatActivity implements MyService.OnPlayC
                 if(myService.player.isPlaying()){
                     imgPlay.setImageResource(R.drawable.a_5);
                     intent.putExtra("cmd","stop");
-//                    sendBroadcast(intent);
+
                 }else{
                     imgPlay.setImageResource(R.drawable.a_3);
                     intent.putExtra("cmd","play");
-//                    sendBroadcast(intent);
                 }
                 break;
             case R.id.img_play_next:
@@ -137,12 +146,40 @@ public class PlayActivity extends AppCompatActivity implements MyService.OnPlayC
                 ToastUtil.toast(PlayActivity.this,"还没写");
                 break;
             case R.id.img_play_menu:
-                Intent intent = new Intent(PlayActivity.this, MenuActivity.class);
-                intent.putExtra("pos",currentIndex);
-                intent.putExtra("data",musics);
-                startActivity(intent);
+                show();
                 break;
         }
+    }
+    private void show() {
+        AlertDialog.Builder bd=new AlertDialog.Builder(this);
+        View v = getLayoutInflater().inflate(R.layout.activity_menu, null, false);
+
+        bd.setView(v);
+        int height = v.getHeight()/4;
+//        v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,height));
+//        AlertDialog dialog = new AlertDialog.Builder(PlayActivity.this).create();
+//        dialog.show();
+//        dialog.getWindow().setContentView(R.layout.activity_menu);
+
+//        ListView listView = (ListView) dialog.getWindow().findViewById(R.id.mListView_menu);
+        ListView listView = (ListView) v.findViewById(R.id.mListView_menu);
+
+        View view = LayoutInflater.from(PlayActivity.this).inflate(R.layout.menu_header, listView, false);
+        listView.addHeaderView(view);
+        listView.setAdapter(adapter2);
+        WindowManager wm= (WindowManager) getSystemService(WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        int height1 = wm.getDefaultDisplay().getHeight()/4;
+        AlertDialog dialog = bd.create();
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams ab =
+                window.getAttributes();
+        ab.width=width;
+        ab.height=height1;
+        ab.x=0;
+        ab.y=height1*3/4;
+        window.setAttributes(ab);
+        dialog.show();
     }
 
     @Override

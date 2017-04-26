@@ -219,6 +219,8 @@
                     android:src="@drawable/play"
                     android:layout_marginRight="10dp"
                     android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:onClick="myClick"
                     />
                 <ImageView
                     android:id="@+id/img_song_list"
@@ -227,7 +229,9 @@
                     android:layout_toRightOf="@+id/rb_song_playicon"
                     android:layout_centerVertical="true"
                     android:layout_margin="10dp"
-                    android:src="@drawable/m"/>
+                    android:src="@drawable/m"
+                    android:clickable="true"
+                    android:onClick="myClick"/>
             </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>

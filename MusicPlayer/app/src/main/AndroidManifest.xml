@@ -40,18 +40,21 @@
             android:theme="@style/activity_popup" />
         <activity android:name=".activities.PlayActivity" />
 
-        <!--<service-->
-            <!--android:name=".service.PlayerService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true" />-->
+        <!-- <service -->
+        <!-- android:name=".service.PlayerService" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true" /> -->
 
         <activity android:name=".activities.CreateGedanActivity" />
         <activity android:name=".activities.ManageGedanActivity" />
-        <activity android:name=".activities.MenuActivity"></activity>
-	<service
+        <activity android:name=".activities.MenuActivity" />
+
+        <service
             android:name=".service.MyService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".activities.IndexActivity"></activity>
     </application>
 
 </manifest>

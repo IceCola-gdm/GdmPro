@@ -24,6 +24,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     private  ArrayList<Music> musicList;
     //当前播放位置
     private int pos=0;
+    public static boolean isPlay=false;
     public void setMusicList(ArrayList<Music> musicList) {
         this.musicList = musicList;
     }
@@ -119,7 +120,11 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     }
 
     private void stop() {
-        player.stop();
+        if (player.isPlaying()){
+            player.stop();
+            isPlay=false;
+        }
+
     }
 
     private void pause() {
@@ -140,6 +145,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
 
             }
         }
+        isPlay=true;
     }
 
     private void nextMusic() {

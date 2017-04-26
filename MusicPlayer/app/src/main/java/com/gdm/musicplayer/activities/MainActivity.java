@@ -1,18 +1,26 @@
 package com.gdm.musicplayer.activities;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.adapter.MenuAdapter;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.fragments.FragmentMain;
 import com.gdm.musicplayer.fragments.FragmentPersonalInfo;
+import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.utils.MusicUtil;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.gdm.musicplayer.view.MySlidingPanelLayout;
@@ -30,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private FragmentMain fragmentMain;
     private ArrayList<Fragment> menus;
     private ArrayList<Music> musics=new ArrayList<>();
+    private ImageView imgPlay;
+    private MenuAdapter adapter=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         menus=new ArrayList<>();
         menus.add(new FragmentPersonalInfo());
         musics.addAll(MusicUtil.getAllSongs(MainActivity.this));
+        adapter=new MenuAdapter(musics,MainActivity.this);
     }
 
     @Override
@@ -123,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         imgPortrait= (ImageView) findViewById(R.id.img_main_portrait);
         tvLogin= (TextView) findViewById(R.id.tv_main_login);
         tvPiFu= (TextView) findViewById(R.id.tv_pifu);
+        imgPlay= (ImageView) findViewById(R.id.rb_song_playicon);
     }
 
     private class MyListener implements FragmentMain.OnImgListener {
@@ -195,6 +207,30 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("position",0);
                 startActivity(intent);
                 break;
+            case R.id.rb_song_playicon:
+                Intent intent1 = new Intent(MainActivity.this, MyService.class);
+                if(MyService.isPlay){
+                    imgPlay.setImageResource(R.drawable.play);
+                    intent1.putExtra("cmd","stop");
+                }else{
+                    imgPlay.setImageResource(R.drawable.stop);
+                    intent1.putExtra("cmd","play");
+                }
+                sendBroadcast(intent1);
+                break;
+            case R.id.img_song_list:
+                show();
+                break;
         }
+    }
+
+    private void show() {
+        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
+        dialog.show();
+        dialog.getWindow().setContentView(R.layout.activity_menu);
+        ListView listView = (ListView) dialog.getWindow().findViewById(R.id.mListView_menu);
+        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_header, listView, false);
+        listView.addHeaderView(view);
+        listView.setAdapter(adapter);
     }
 }
