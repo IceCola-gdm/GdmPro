@@ -23,13 +23,6 @@ import java.util.Random;
 public class MyService extends Service implements MediaPlayer.OnBufferingUpdateListener {
 
     public MediaPlayer player;
-<<<<<<< HEAD
-    private  ArrayList<Music> musicList;  //数据源
-    private int pos=0;   //当前播放位置
-    public static boolean isPlay=false;    //当前播放状态
-    public void setMusicList(ArrayList<Music> musicList) {
-        this.musicList = musicList;
-=======
     //数据源
     private  static ArrayList<Music> musicList;
     //当前播放位置
@@ -56,7 +49,6 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
 
     public static void setMusicList(ArrayList<Music> musicList) {
         MyService.musicList = musicList;
->>>>>>> 5be479d31f6eea5642be83a052337ccd875550ae
     }
 
     @Override
