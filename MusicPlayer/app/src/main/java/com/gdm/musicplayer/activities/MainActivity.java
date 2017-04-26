@@ -229,8 +229,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
         dialog.getWindow().setContentView(R.layout.activity_menu);
         ListView listView = (ListView) dialog.getWindow().findViewById(R.id.mListView_menu);
-        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_header, listView, false);
-        listView.addHeaderView(view);
         listView.setAdapter(adapter);
     }
 }

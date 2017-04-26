@@ -20,11 +20,9 @@ import java.util.ArrayList;
 public class MyService extends Service implements MediaPlayer.OnBufferingUpdateListener {
     private final IBinder binder = new MyBinder();
     public MediaPlayer player;
-    //数据源
-    private  ArrayList<Music> musicList;
-    //当前播放位置
-    private int pos=0;
-    public static boolean isPlay=false;
+    private  ArrayList<Music> musicList;  //数据源
+    private int pos=0;   //当前播放位置
+    public static boolean isPlay=false;    //当前播放状态
     public void setMusicList(ArrayList<Music> musicList) {
         this.musicList = musicList;
     }

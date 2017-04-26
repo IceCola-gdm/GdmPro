@@ -152,33 +152,11 @@ public class PlayActivity extends AppCompatActivity implements MyService.OnPlayC
     }
     private void show() {
         AlertDialog.Builder bd=new AlertDialog.Builder(this);
-        View v = getLayoutInflater().inflate(R.layout.activity_menu, null, false);
-
-        bd.setView(v);
-        int height = v.getHeight()/4;
-//        v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,height));
-//        AlertDialog dialog = new AlertDialog.Builder(PlayActivity.this).create();
-//        dialog.show();
-//        dialog.getWindow().setContentView(R.layout.activity_menu);
-
-//        ListView listView = (ListView) dialog.getWindow().findViewById(R.id.mListView_menu);
-        ListView listView = (ListView) v.findViewById(R.id.mListView_menu);
-
-        View view = LayoutInflater.from(PlayActivity.this).inflate(R.layout.menu_header, listView, false);
-        listView.addHeaderView(view);
-        listView.setAdapter(adapter2);
-        WindowManager wm= (WindowManager) getSystemService(WINDOW_SERVICE);
-        int width = wm.getDefaultDisplay().getWidth();
-        int height1 = wm.getDefaultDisplay().getHeight()/4;
         AlertDialog dialog = bd.create();
-        Window window = dialog.getWindow();
-        WindowManager.LayoutParams ab =
-                window.getAttributes();
-        ab.width=width;
-        ab.height=height1;
-        ab.x=0;
-        ab.y=height1*3/4;
-        window.setAttributes(ab);
+        View v = getLayoutInflater().inflate(R.layout.activity_menu, null, false);
+        bd.setView(v);
+        ListView listView = (ListView) v.findViewById(R.id.mListView_menu);
+        listView.setAdapter(adapter2);
         dialog.show();
     }
 

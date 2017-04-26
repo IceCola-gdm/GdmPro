@@ -118,6 +118,27 @@
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
         <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:onClick="clickInMain"
+            android:id="@+id/main_rl_pwd">
+            <ImageView
+                android:id="@+id/img_pwd"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/nz"
+                android:layout_margin="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="修改密码"
+                android:textSize="14sp"
+                android:textColor="#3D3D3D"
+                android:layout_toRightOf="@+id/img_pwd"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+        <RelativeLayout
             android:id="@+id/rl_change"
             android:layout_width="300dp"
             android:layout_height="50dp"
