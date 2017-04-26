@@ -59,10 +59,13 @@ public class PlayActivity extends AppCompatActivity  {
     private ArrayList<Music> musics=new ArrayList<>();
     private int currentIndex=-1;
     private Music music=null;
-    private MyService myService=null;
-    private MyServiceConnection conn;
     private MyBrod brod;
     private MenuAdapter adapter2=null;
+    private String state;
+    private String pos;
+    private String total;
+    private String now;
+    private String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,14 +75,12 @@ public class PlayActivity extends AppCompatActivity  {
         initView();
         initData();
         setAdapter();
-//        conn=new MyServiceConnection();
         Intent intent = new Intent(this, MyService.class);
         MyService.setMusicList(musics);
         startService(intent);
         brod=new MyBrod();
         IntentFilter filter=new IntentFilter(MyService.PLAY_ACTION);
         registerReceiver(brod,filter);
-//        bindService(intent,conn, Context.BIND_AUTO_CREATE);
     }
     private class MyBrod extends BroadcastReceiver{
         @Override
@@ -142,14 +143,8 @@ public class PlayActivity extends AppCompatActivity  {
                 intent.putExtra("cmd","last");
                 break;
             case R.id.img_play_play:
-//                if(myService.player.isPlaying()){
-//                    imgPlay.setImageResource(R.drawable.a_5);
-//                    intent.putExtra("cmd","stop");
-////                    sendBroadcast(intent);
-//                }else{
-                    imgPlay.setImageResource(R.drawable.a_3);
-                    intent.putExtra("cmd","play");
-//                }
+                imgPlay.setImageResource(R.drawable.a_3);
+                intent.putExtra("cmd","play");
                 break;
             case R.id.img_play_next:
                 intent.putExtra("cmd","next");
@@ -179,14 +174,6 @@ public class PlayActivity extends AppCompatActivity  {
         listView.setAdapter(adapter2);
         dialog.show();
     }
-
-    @Override
-    public void playComplete(int pos) {
-        tvSongName.setText(musics.get(pos).getName());
-        tvTotalTime.setText(musics.get(pos).getDuration());
-        tvSongSinger.setText(musics.get(pos).getSinger());
-    }
-
     private class MyListener implements SeekBar.OnSeekBarChangeListener {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -211,26 +198,25 @@ public class PlayActivity extends AppCompatActivity  {
         }
     }
 
-    private class MyServiceConnection implements ServiceConnection {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-//            MyService.MyBinder binder = (MyService.MyBinder)service;
-//            myService=binder.getService();// 获取到的Service即MyService
-//            myService.setMusicList(musics);
-//            setListener();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            myService=null;
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        unbindService(conn);
         unregisterReceiver(brod);
+    }
+    private class MyPlayStateReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()){
+                case MyService.PLAY_ACTION:
+                    state=intent.getStringExtra("state");
+                    pos=intent.getStringExtra("pos");
+                    total=intent.getStringExtra("total");
+                    now=intent.getStringExtra("now");
+                    title=intent.getStringExtra("title");
+                    break;
+            }
+        }
     }
 
 }

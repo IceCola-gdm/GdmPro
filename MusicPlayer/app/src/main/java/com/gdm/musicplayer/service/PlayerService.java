@@ -7,11 +7,9 @@ import android.media.MediaPlayer;
 import android.os.IBinder;
 
 import com.gdm.musicplayer.bean.Music;
-import com.gdm.musicplayer.bean.MusicBean;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class PlayerService extends Service implements MediaPlayer.OnBufferingUpdateListener {
     public static MediaPlayer player;

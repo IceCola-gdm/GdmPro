@@ -2,6 +2,8 @@ package com.gdm.musicplayer.activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
@@ -40,6 +42,12 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Music> musics=new ArrayList<>();
     private ImageView imgPlay;
     private MenuAdapter adapter=null;
+
+    private String state="";  //播放状态
+    private String pos="";  //当前播放位置
+    private String total="";  //当前播放的总时间
+    private String now="";  //当前播放时间
+    private String title="";  //歌名
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,11 +217,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.rb_song_playicon:
                 Intent intent1 = new Intent(MainActivity.this, MyService.class);
-                if(MyService.isPlay){
-                    imgPlay.setImageResource(R.drawable.play);
+                if(state.equals("play")){
+                    imgPlay.setImageResource(R.drawable.stop);
                     intent1.putExtra("cmd","stop");
                 }else{
-                    imgPlay.setImageResource(R.drawable.stop);
+                    imgPlay.setImageResource(R.drawable.play);
                     intent1.putExtra("cmd","play");
                 }
                 sendBroadcast(intent1);
@@ -230,5 +238,21 @@ public class MainActivity extends AppCompatActivity {
         dialog.getWindow().setContentView(R.layout.activity_menu);
         ListView listView = (ListView) dialog.getWindow().findViewById(R.id.mListView_menu);
         listView.setAdapter(adapter);
+    }
+    private class MyPlayStateReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()){
+                case MyService.PLAY_ACTION:
+                    state=intent.getStringExtra("state");
+                    if(state.equals("play")){
+                        imgPlay.setImageResource(R.drawable.stop);
+                    }else if(state.equals("stop")){
+                        imgPlay.setImageResource(R.drawable.play);
+                    }
+                    break;
+            }
+        }
     }
 }
