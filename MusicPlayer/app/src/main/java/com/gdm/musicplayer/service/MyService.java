@@ -37,6 +37,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     public static final int RANDOM_PLAY=3;
     //顺序播放
     public static final int LIST_PLAY=0;
+    private boolean isPlay;
 
     public static void setType(int type) {
         MyService.type = type;
@@ -179,7 +180,11 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     }
 
     private void stop() {
-        player.stop();
+        if (player.isPlaying()){
+            player.stop();
+            isPlay=false;
+        }
+
         player.reset();
     }
     private int nowPos=-1;
@@ -211,6 +216,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
             }
 
         }
+        isPlay=true;
     }
     private int tag=0;
     private void nextMusic() {
