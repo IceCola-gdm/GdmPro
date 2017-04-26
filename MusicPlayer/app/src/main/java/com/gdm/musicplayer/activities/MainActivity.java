@@ -5,14 +5,18 @@ import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,20 +46,26 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Music> musics=new ArrayList<>();
     private ImageView imgPlay;
     private MenuAdapter adapter=null;
+    private ImageView imgPor;
+    private TextView tvSong;
+    private TextView tvSinger;
 
-    private String state="";  //播放状态
-    private String pos="";  //当前播放位置
-    private String total="";  //当前播放的总时间
-    private String now="";  //当前播放时间
-    private String title="";  //歌名
+    public static String state="stop";  //播放状态
+    private String title;
+    private int pos=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+        MyPlayStateReceiver receiver = new MyPlayStateReceiver();
+        IntentFilter filter = new IntentFilter(MyService.PLAY_ACTION);
+        registerReceiver(receiver,filter);
         initView();
         initData();
+        Intent intent = new Intent(this, MyService.class);
+        MyService.setMusicList(musics);
+        startService(intent);
     }
 
     private void initData() {
@@ -143,6 +153,9 @@ public class MainActivity extends AppCompatActivity {
         tvLogin= (TextView) findViewById(R.id.tv_main_login);
         tvPiFu= (TextView) findViewById(R.id.tv_pifu);
         imgPlay= (ImageView) findViewById(R.id.rb_song_playicon);
+        imgPor= (ImageView) findViewById(R.id.img_song_cover);
+        tvSong= (TextView) findViewById(R.id.tv_songname);
+        tvSinger= (TextView) findViewById(R.id.tv_singer);
     }
 
     private class MyListener implements FragmentMain.OnImgListener {
@@ -195,6 +208,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_rl_exit:  //退出
                 finish();
                 break;
+            case R.id.main_rl_pwd:
+                Intent intent3 = new Intent(MainActivity.this, ResetPwdActivity.class);
+                startActivity(intent3);
+                break;
         }
         mSlidingPaneLayout.closePane();
     }
@@ -212,17 +229,19 @@ public class MainActivity extends AppCompatActivity {
             case R.id.rl_play_icon:
                 Intent intent = new Intent(MainActivity.this, PlayActivity.class);
                 intent.putExtra("data",musics);
-                intent.putExtra("position",0);
+                intent.putExtra("position",pos);
                 startActivity(intent);
                 break;
             case R.id.rb_song_playicon:
-                Intent intent1 = new Intent(MainActivity.this, MyService.class);
+                Intent intent1 = new Intent(MyService.mAction);
                 if(state.equals("play")){
-                    imgPlay.setImageResource(R.drawable.stop);
-                    intent1.putExtra("cmd","stop");
-                }else{
                     imgPlay.setImageResource(R.drawable.play);
                     intent1.putExtra("cmd","play");
+                    state="stop";
+                }else{
+                    imgPlay.setImageResource(R.drawable.stop);
+                    intent1.putExtra("cmd","play");
+                    state="play";
                 }
                 sendBroadcast(intent1);
                 break;
@@ -236,8 +255,10 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
         dialog.show();
         dialog.getWindow().setContentView(R.layout.activity_menu);
-        ListView listView = (ListView) dialog.getWindow().findViewById(R.id.mListView_menu);
-        listView.setAdapter(adapter);
+        RecyclerView recyclerView = (RecyclerView) dialog.getWindow().findViewById(R.id.mListView_menu);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        adapter.setListener(new MyItemClickListener());
     }
     private class MyPlayStateReceiver extends BroadcastReceiver{
 
@@ -246,6 +267,9 @@ public class MainActivity extends AppCompatActivity {
             switch (intent.getAction()){
                 case MyService.PLAY_ACTION:
                     state=intent.getStringExtra("state");
+                    pos = intent.getIntExtra("pos", 0);
+                    title = intent.getStringExtra("title");
+                    tvSong.setText(title);
                     if(state.equals("play")){
                         imgPlay.setImageResource(R.drawable.stop);
                     }else if(state.equals("stop")){
@@ -253,6 +277,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
             }
+        }
+    }
+
+    private class MyItemClickListener implements MenuAdapter.OnMyItemClickListener {
+        @Override
+        public void itemClick(int pos) {
+            Intent intent = new Intent(MyService.mAction);
+            intent.putExtra("pos",pos);
+            sendBroadcast(intent);
         }
     }
 }

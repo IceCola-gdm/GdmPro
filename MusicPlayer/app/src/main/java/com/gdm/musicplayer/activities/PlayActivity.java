@@ -14,6 +14,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,11 +63,12 @@ public class PlayActivity extends AppCompatActivity  {
     private Music music=null;
     private MyBrod brod;
     private MenuAdapter adapter2=null;
-    private String state;
-    private String pos;
-    private String total;
-    private String now;
+    private String state="stop";
     private String title;
+    private int pos;
+    private int total;
+    private int now;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,23 +78,24 @@ public class PlayActivity extends AppCompatActivity  {
         initView();
         initData();
         setAdapter();
-        Intent intent = new Intent(this, MyService.class);
-        MyService.setMusicList(musics);
-        startService(intent);
         brod=new MyBrod();
         IntentFilter filter=new IntentFilter(MyService.PLAY_ACTION);
         registerReceiver(brod,filter);
+        setListener();
     }
     private class MyBrod extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(MyService.PLAY_ACTION)) {
-                if (intent.getStringExtra("state").equals("play")) {
-
-                    int total = intent.getIntExtra("total", 0);
-                    int now = intent.getIntExtra("now", 0);
-                    String title = intent.getStringExtra("title");
+                state=intent.getStringExtra("state");
+                if (state.equals("play")) {
+                    total = intent.getIntExtra("total", 0);
+                    now = intent.getIntExtra("now", 0);
+                    pos = intent.getIntExtra("pos", 0);
+                    title = intent.getStringExtra("title");
                     Log.e("PlayActivity","正在播放"+"total="+total+"  now="+now+"  title"+title);
+                }else if(state.equals("stop")){
+                    pos=intent.getIntExtra("pos", 0);
                 }
             }
         }
@@ -132,6 +136,11 @@ public class PlayActivity extends AppCompatActivity  {
         tvSongSinger= (TextView) findViewById(R.id.tv_play_song_info);
         seekBar= (SeekBar) findViewById(R.id.seekbar);
         imgPlay= (ImageView) findViewById(R.id.img_play_play);
+        if(MainActivity.state.equals("stop")){
+            imgPlay.setImageResource(R.drawable.a_5);
+        }else if(MainActivity.state.equals("play")){
+            imgPlay.setImageResource(R.drawable.a_3);
+        }
     }
     public void playClick(View view){
         Intent intent = new Intent(MyService.mAction);
@@ -143,8 +152,16 @@ public class PlayActivity extends AppCompatActivity  {
                 intent.putExtra("cmd","last");
                 break;
             case R.id.img_play_play:
-                imgPlay.setImageResource(R.drawable.a_3);
-                intent.putExtra("cmd","play");
+                if(MainActivity.state.equals("stop")){
+                    imgPlay.setImageResource(R.drawable.a_3);
+                    intent.putExtra("cmd","play");
+                    state="play";
+                }else if(MainActivity.state.equals("play")){
+                    imgPlay.setImageResource(R.drawable.a_5);
+                    intent.putExtra("cmd","play");
+                    state="stop";
+                }
+
                 break;
             case R.id.img_play_next:
                 intent.putExtra("cmd","next");
@@ -166,33 +183,34 @@ public class PlayActivity extends AppCompatActivity  {
         }
     }
     private void show() {
-        AlertDialog.Builder bd=new AlertDialog.Builder(this);
-        AlertDialog dialog = bd.create();
-        View v = getLayoutInflater().inflate(R.layout.activity_menu, null, false);
-        bd.setView(v);
-        ListView listView = (ListView) v.findViewById(R.id.mListView_menu);
-        listView.setAdapter(adapter2);
+        AlertDialog dialog = new AlertDialog.Builder(PlayActivity.this).create();
         dialog.show();
+        dialog.getWindow().setContentView(R.layout.activity_menu);
+        RecyclerView recyclerView = (RecyclerView) dialog.getWindow().findViewById(R.id.mListView_menu);
+        recyclerView.setAdapter(adapter2);
+        recyclerView.setLayoutManager(new LinearLayoutManager(PlayActivity.this));
+        adapter2.setListener(new MyItemClickListener());
     }
     private class MyListener implements SeekBar.OnSeekBarChangeListener {
+        Intent intent = new Intent(MyService.mAction);
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser){
                 seekBar.setProgress(progress);
                 tvCurrentTime.setText(progress+"");
+//                intent.putExtra("cmd","play");
+//                sendBroadcast(intent);
             }
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-            Intent intent = new Intent(MyService.mAction);
             intent.putExtra("cmd","stop");
             sendBroadcast(intent);
         }
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            Intent intent = new Intent(MyService.mAction);
             intent.putExtra("cmd","play");
             sendBroadcast(intent);
         }
@@ -203,20 +221,13 @@ public class PlayActivity extends AppCompatActivity  {
         super.onDestroy();
         unregisterReceiver(brod);
     }
-    private class MyPlayStateReceiver extends BroadcastReceiver{
 
+    private class MyItemClickListener implements MenuAdapter.OnMyItemClickListener {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            switch (intent.getAction()){
-                case MyService.PLAY_ACTION:
-                    state=intent.getStringExtra("state");
-                    pos=intent.getStringExtra("pos");
-                    total=intent.getStringExtra("total");
-                    now=intent.getStringExtra("now");
-                    title=intent.getStringExtra("title");
-                    break;
-            }
+        public void itemClick(int pos) {
+            Intent intent = new Intent(MyService.mAction);
+            intent.putExtra("pos",pos);
+            sendBroadcast(intent);
         }
     }
-
 }

@@ -47,14 +47,14 @@
 
         <activity android:name=".activities.CreateGedanActivity" />
         <activity android:name=".activities.ManageGedanActivity" />
-        <activity android:name=".activities.MenuActivity" />
 
         <service
             android:name=".service.MyService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activities.IndexActivity"></activity>
+        <activity android:name=".activities.IndexActivity" />
+        <activity android:name=".activities.ResetPwdActivity"></activity>
     </application>
 
 </manifest>

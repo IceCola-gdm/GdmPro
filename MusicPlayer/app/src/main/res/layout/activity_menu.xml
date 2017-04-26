@@ -60,7 +60,7 @@
                 />
         </RelativeLayout>
     </RelativeLayout>
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/mListView_menu"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
