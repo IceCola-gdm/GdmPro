@@ -13,7 +13,7 @@
             android:id="@+id/img_content_arrow"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/down"
+            android:src="@drawable/right"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
         <TextView

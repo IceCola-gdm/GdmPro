@@ -9,9 +9,14 @@ import android.view.View;
 
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
+import com.gdm.musicplayer.bean.Album;
+import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.bean.MusicList;
+import com.gdm.musicplayer.bean.Singer;
 import com.gdm.musicplayer.fragments.FragmentAlbum;
 import com.gdm.musicplayer.fragments.FragmentDanQu;
 import com.gdm.musicplayer.fragments.FragmentSinger;
+import com.gdm.musicplayer.utils.MusicUtil;
 
 import java.util.ArrayList;
 
@@ -45,9 +50,12 @@ public class LocalMusicListActivity extends AppCompatActivity {
         for(int i=0;i<titles.length;i++){
             mTabLayout.addTab(mTabLayout.newTab().setText(titles[i]));
         }
-        fgs.add(new FragmentDanQu());
-        fgs.add(new FragmentSinger());
-        fgs.add(new FragmentAlbum());
+        FragmentDanQu danQu = new FragmentDanQu();
+        FragmentSinger singer = new FragmentSinger();
+        FragmentAlbum album = new FragmentAlbum();
+        fgs.add(danQu);
+        fgs.add(singer);
+        fgs.add(album);
     }
 
     /**

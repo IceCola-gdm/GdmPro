@@ -53,12 +53,13 @@ public class MainActivity extends AppCompatActivity {
     public static String state="stop";  //播放状态
     private String title;
     private int pos=0;
+    private MyPlayStateReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MyPlayStateReceiver receiver = new MyPlayStateReceiver();
+        receiver = new MyPlayStateReceiver();
         IntentFilter filter = new IntentFilter(MyService.PLAY_ACTION);
         registerReceiver(receiver,filter);
         initView();
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentMain.setOnImgListener(new MyListener());
         menus=new ArrayList<>();
         menus.add(new FragmentPersonalInfo());
-        musics.addAll(MusicUtil.getAllSongs(MainActivity.this));
+        musics.addAll((ArrayList<Music>)MusicUtil.getAllSongs(MainActivity.this,"song"));
         adapter=new MenuAdapter(musics,MainActivity.this);
     }
 
@@ -287,5 +288,11 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("pos",pos);
             sendBroadcast(intent);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 }
