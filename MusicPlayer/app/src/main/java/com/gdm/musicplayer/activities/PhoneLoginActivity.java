@@ -1,6 +1,7 @@
 package com.gdm.musicplayer.activities;
 
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,12 +12,15 @@ import android.widget.ImageView;
 
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.utils.ToastUtil;
-import com.squareup.okhttp.Request;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
+import com.lzy.okhttputils.OkHttpUtils;
+import com.lzy.okhttputils.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import okhttp3.Call;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class PhoneLoginActivity extends AppCompatActivity {
     private static final String TAG="PhoneLoginActivity";
@@ -86,20 +90,18 @@ public class PhoneLoginActivity extends AppCompatActivity {
                             edPwd.setFocusable(true);
                         }
                     }else{
-                        OkHttpUtils.post()
-                                .url(url)
-                                .addParams("username",account)
-                                .addParams("password",pwd)
-                                .build()
+                        OkHttpUtils.post(url)
+                                .params("username",account)
+                                .params("password",pwd)
                                 .execute(new StringCallback() {
                                     @Override
-                                    public void onError(Request request, Exception e) {
-                                        Log.e(TAG,e.getMessage());
+                                    public void onResponse(boolean isFromCache, String s, Request request, @Nullable Response response) {
+                                        Log.e(TAG,"casjdckla");
                                     }
 
                                     @Override
-                                    public void onResponse(String response) {
-                                        Log.e(TAG,response);
+                                    public void onError(boolean isFromCache, Call call, @Nullable Response response, @Nullable Exception e) {
+                                        Log.e(TAG,"=======");
                                     }
                                 });
                     }

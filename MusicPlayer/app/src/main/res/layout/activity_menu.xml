@@ -14,7 +14,8 @@
             android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
-            android:src="@drawable/sx"/>
+            android:src="@drawable/sx2"
+            android:clickable="true"/>
         <TextView
             android:id="@+id/tv_mode"
             android:layout_width="wrap_content"
@@ -40,7 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp">
+            android:layout_marginRight="10dp"
+            android:clickable="true">
             <ImageView
                 android:id="@+id/img_delete_all"
                 android:layout_width="18dp"

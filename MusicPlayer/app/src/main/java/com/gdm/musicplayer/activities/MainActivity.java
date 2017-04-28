@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gdm.musicplayer.R;
@@ -55,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
     private String title;
     private int pos=0;
     private MyPlayStateReceiver receiver;
+    private ImageView imgType;
+    private TextView tvType;
+    private TextView tvCount;
+    private int type=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -258,9 +263,29 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
         dialog.getWindow().setContentView(R.layout.activity_menu);
         RecyclerView recyclerView = (RecyclerView) dialog.getWindow().findViewById(R.id.mListView_menu);
+        imgType = (ImageView) dialog.getWindow().findViewById(R.id.img_mode);
+        tvType= (TextView) dialog.getWindow().findViewById(R.id.tv_mode);
+        tvCount= (TextView) dialog.getWindow().findViewById(R.id.tv_account);
+        RelativeLayout rlDelete= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_delete);
+        if(type==MyService.LIST_PLAY){  //顺序播放
+            imgType.setImageResource(R.drawable.sx2);
+            tvType.setText("顺序播放");
+        }else if(type==MyService.LIST_RECYCLE){  //列表循环
+            imgType.setImageResource(R.drawable.xh2);
+            tvType.setText("列表循环");
+        }else if(type==MyService.ONE_MUSIC){    //单曲
+            imgType.setImageResource(R.drawable.dq2);
+            tvType.setText("单曲循环");
+        }else if(type==MyService.RANDOM_PLAY){  //随机
+            imgType.setImageResource(R.drawable.sj2);
+            tvType.setText("随机播放");
+        }
+        tvCount.setText("("+musics.size()+"首)");
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         adapter.setListener(new MyItemClickListener());
+        imgType.setOnClickListener(new MyClickListener());
+        rlDelete.setOnClickListener(new MyClickListener());
     }
     private class MyPlayStateReceiver extends BroadcastReceiver{
 
@@ -285,9 +310,10 @@ public class MainActivity extends AppCompatActivity {
     private class MyItemClickListener implements MenuAdapter.OnMyItemClickListener {
         @Override
         public void itemClick(int pos) {
-//            Intent intent = new Intent(MyService.mAction);
-//            intent.putExtra("cmd","play");
-//            sendBroadcast(intent);
+            Intent intent = new Intent(MyService.mAction);
+            intent.putExtra("cmd","chose_pos");
+            intent.putExtra("pos",pos);
+            sendBroadcast(intent);
         }
     }
 
@@ -295,5 +321,43 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
+    }
+
+    private class MyClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.img_mode:
+                    sendBroadcastWithType();
+                    break;
+                case R.id.rl_delete:
+
+                    break;
+            }
+        }
+    }
+
+    private void sendBroadcastWithType() {
+        Intent intent = new Intent(MyService.mAction);
+        if(type==MyService.LIST_PLAY){  //顺序播放
+            type=MyService.LIST_RECYCLE;
+            imgType.setImageResource(R.drawable.xh2);
+            tvType.setText("列表循环");
+        }else if(type==MyService.LIST_RECYCLE){  //列表循环
+            type=MyService.ONE_MUSIC;
+            imgType.setImageResource(R.drawable.dq2);
+            tvType.setText("单曲循环");
+        }else if(type==MyService.ONE_MUSIC){    //单曲
+            type=MyService.RANDOM_PLAY;
+            imgType.setImageResource(R.drawable.sj2);
+            tvType.setText("随机播放");
+        }else if(type==MyService.RANDOM_PLAY){  //随机
+            type=MyService.LIST_PLAY;
+            imgType.setImageResource(R.drawable.sx2);
+            tvType.setText("顺序播放");
+        }
+        intent.putExtra("cmd","type");
+        intent.putExtra("type",type);
+        sendBroadcast(intent);
     }
 }
