@@ -152,7 +152,6 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                     }else {
                         play();
                     }
-
                 }else if(cmd.equals("pause")){
                     pause();
                 }else if(cmd.equals("stop")){

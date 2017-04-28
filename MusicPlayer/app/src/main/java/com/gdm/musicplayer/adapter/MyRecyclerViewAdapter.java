@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
@@ -23,7 +22,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.activities.ManageGedanActivity;
-import com.gdm.musicplayer.activities.SettingGedan;
 import com.gdm.musicplayer.bean.MusicList;
 
 import java.util.ArrayList;

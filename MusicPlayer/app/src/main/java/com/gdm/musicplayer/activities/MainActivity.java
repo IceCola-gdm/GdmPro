@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -284,9 +285,9 @@ public class MainActivity extends AppCompatActivity {
     private class MyItemClickListener implements MenuAdapter.OnMyItemClickListener {
         @Override
         public void itemClick(int pos) {
-            Intent intent = new Intent(MyService.mAction);
-            intent.putExtra("pos",pos);
-            sendBroadcast(intent);
+//            Intent intent = new Intent(MyService.mAction);
+//            intent.putExtra("cmd","play");
+//            sendBroadcast(intent);
         }
     }
 

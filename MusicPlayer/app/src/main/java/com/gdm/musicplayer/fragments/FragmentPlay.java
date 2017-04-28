@@ -41,7 +41,7 @@ public class FragmentPlay extends Fragment {
         super.onCreate(savedInstanceState);
         initData();
         receiver = new MyBroadcastReceiver();
-        IntentFilter filter = new IntentFilter(MyService.PLAY_ACTION);
+        IntentFilter filter = new IntentFilter("palyactivity");
         getActivity().registerReceiver(receiver,filter);
     }
 
@@ -68,7 +68,7 @@ public class FragmentPlay extends Fragment {
         rotate3.setDuration(1000);//设置动画持续时间
         rotate3.setFillAfter(true);//动画执行完后是否停留在执行完的状态
 
-        rotate4  = new RotateAnimation(0f, -20f, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
+        rotate4  = new RotateAnimation(20f, 0f, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
         rotate4.setInterpolator(lin);
         rotate4.setDuration(1000);//设置动画持续时间
         rotate4.setFillAfter(true);//动画执行完后是否停留在执行完的状态
@@ -87,15 +87,6 @@ public class FragmentPlay extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        if (state.equals("play")) {
-//            imgBar.setAnimation(rotate3);
-//            imgCD.setAnimation(rotate);
-//            imgPortrait.setAnimation(rotate2);
-//        }else if(state.equals("stop")){
-//            imgCD.clearAnimation();
-//            imgPortrait.clearAnimation();
-//            imgBar.setAnimation(rotate4);
-//        }
     }
 
     @Override
@@ -107,7 +98,19 @@ public class FragmentPlay extends Fragment {
     private class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            if(intent.getAction().equals("palyactivity")){
+                Log.e("---","收到广播");
+                state=intent.getStringExtra("state");
+                if (state.equals("play")) {
+                    imgBar.startAnimation(rotate3);
+                    imgCD.startAnimation(rotate);
+                    imgPortrait.startAnimation(rotate2);
+                }else if(state.equals("stop")){
+                    imgCD.clearAnimation();
+                    imgPortrait.clearAnimation();
+                    imgBar.setAnimation(rotate4);
+                }
+            }
         }
     }
 }

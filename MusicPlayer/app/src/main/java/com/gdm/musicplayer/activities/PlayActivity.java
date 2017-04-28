@@ -152,16 +152,19 @@ public class PlayActivity extends AppCompatActivity  {
                 intent.putExtra("cmd","last");
                 break;
             case R.id.img_play_play:
+                Intent intent1 = new Intent("palyactivity");
                 if(MainActivity.state.equals("stop")){
                     imgPlay.setImageResource(R.drawable.a_3);
                     intent.putExtra("cmd","play");
+                    intent1.putExtra("state","play");
                     state="play";
                 }else if(MainActivity.state.equals("play")){
                     imgPlay.setImageResource(R.drawable.a_5);
                     intent.putExtra("cmd","play");
+                    intent1.putExtra("state","stop");
                     state="stop";
                 }
-
+                sendBroadcast(intent1);
                 break;
             case R.id.img_play_next:
                 intent.putExtra("cmd","next");
@@ -185,8 +188,8 @@ public class PlayActivity extends AppCompatActivity  {
     private void show() {
         AlertDialog dialog = new AlertDialog.Builder(PlayActivity.this).create();
         dialog.show();
-        dialog.getWindow().setContentView(R.layout.activity_menu);
-        RecyclerView recyclerView = (RecyclerView) dialog.getWindow().findViewById(R.id.mListView_menu);
+        dialog.getWindow().setContentView(R.layout.activity_menu2);
+        RecyclerView recyclerView = (RecyclerView) dialog.getWindow().findViewById(R.id.mListView_menu2);
         recyclerView.setAdapter(adapter2);
         recyclerView.setLayoutManager(new LinearLayoutManager(PlayActivity.this));
         adapter2.setListener(new MyItemClickListener());
@@ -225,9 +228,9 @@ public class PlayActivity extends AppCompatActivity  {
     private class MyItemClickListener implements MenuAdapter.OnMyItemClickListener {
         @Override
         public void itemClick(int pos) {
-            Intent intent = new Intent(MyService.mAction);
-            intent.putExtra("pos",pos);
-            sendBroadcast(intent);
+//            Intent intent = new Intent(MyService.mAction);
+//            intent.putExtra("cmd","play");
+//            sendBroadcast(intent);
         }
     }
 }

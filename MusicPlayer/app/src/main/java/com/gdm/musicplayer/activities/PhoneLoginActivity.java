@@ -1,28 +1,50 @@
 package com.gdm.musicplayer.activities;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.utils.ToastUtil;
+import com.squareup.okhttp.Request;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class PhoneLoginActivity extends AppCompatActivity {
+    private static final String TAG="PhoneLoginActivity";
     private ImageView imgBack;
     private Button btnLogin;
     private EditText edAccount;
     private EditText edPwd;
     private String account="";
     private String pwd="";
+    private SharedPreferences sp=null;
+    private String url="http://120.24.220.119:8080/music/user/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_login);
+        sp=getSharedPreferences("myaccount",MODE_PRIVATE);
         initView();
         setListener();
+    }
+
+    private void getInitData() {
+        account=sp.getString("account","");
+        pwd=sp.getString("pwd","");
+        if(account!=""&&pwd!=""){
+            edAccount.setText(account);
+            edPwd.setText(pwd);
+        }
     }
 
     private void setListener() {
@@ -35,6 +57,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
         btnLogin= (Button) findViewById(R.id.btn_phone_login);
         edAccount= (EditText) findViewById(R.id.ed_phone_login_number);
         edPwd= (EditText) findViewById(R.id.ed_phone_login_pwd);
+        getInitData();
     }
 
     public void phoneloginClick(View view){
@@ -55,8 +78,42 @@ public class PhoneLoginActivity extends AppCompatActivity {
                 case R.id.btn_phone_login:
                     account=edAccount.getText().toString();
                     pwd=edPwd.getText().toString();
+                    if(account==null||pwd==null){
+                        ToastUtil.toast(PhoneLoginActivity.this,"输入信息不能为空");
+                        if(account==null){
+                            edAccount.setFocusable(true);
+                        }else if(pwd==null){
+                            edPwd.setFocusable(true);
+                        }
+                    }else{
+                        OkHttpUtils.post()
+                                .url(url)
+                                .addParams("username",account)
+                                .addParams("password",pwd)
+                                .build()
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        Log.e(TAG,e.getMessage());
+                                    }
+
+                                    @Override
+                                    public void onResponse(String response) {
+                                        Log.e(TAG,response);
+                                    }
+                                });
+                    }
                     break;
             }
+        }
+    }
+
+    private void parse(String s) {
+        try {
+            JSONObject job = new JSONObject(s.trim());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }

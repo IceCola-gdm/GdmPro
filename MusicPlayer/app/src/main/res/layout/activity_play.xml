@@ -122,7 +122,6 @@
                 android:layout_weight="1"
                 android:src="@drawable/a_5"
                 android:layout_gravity="center_vertical"
-                android:clickable="true"
                 android:onClick="playClick"/>
             <ImageView
                 android:id="@+id/img_play_next"
