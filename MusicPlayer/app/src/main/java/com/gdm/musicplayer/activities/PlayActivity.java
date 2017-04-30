@@ -10,10 +10,13 @@ import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.Parcelable;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +28,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -49,6 +53,7 @@ public class PlayActivity extends AppCompatActivity  {
     private ImageView imgShare;
     private ImageView imgPlay;
     private ViewPager viewPager;
+    private ImageView imgPlayType;
     private ArrayList<Fragment> fgs=new ArrayList<>();
     private TextView tvCurrentTime;
     private TextView tvTotalTime;
@@ -59,10 +64,18 @@ public class PlayActivity extends AppCompatActivity  {
     private ArrayList<Music> musics=new ArrayList<>();
     private int currentIndex=-1;
     private Music music=null;
-    private MyService myService=null;
-    private MyServiceConnection conn;
     private MyBrod brod;
     private MenuAdapter adapter2=null;
+    private String state="stop";
+    private String title;
+    private int type=0;  //默认为全部播放
+    private int pos;
+    private int total;
+    private int now;
+    private ImageView imgType2;
+    private TextView tvType;
+    private TextView tvCount;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,25 +85,24 @@ public class PlayActivity extends AppCompatActivity  {
         initView();
         initData();
         setAdapter();
-//        conn=new MyServiceConnection();
-        Intent intent = new Intent(this, MyService.class);
-        MyService.setMusicList(musics);
-        startService(intent);
         brod=new MyBrod();
         IntentFilter filter=new IntentFilter(MyService.PLAY_ACTION);
         registerReceiver(brod,filter);
-//        bindService(intent,conn, Context.BIND_AUTO_CREATE);
+        setListener();
     }
     private class MyBrod extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(MyService.PLAY_ACTION)) {
-                if (intent.getStringExtra("state").equals("play")) {
-
-                    int total = intent.getIntExtra("total", 0);
-                    int now = intent.getIntExtra("now", 0);
-                    String title = intent.getStringExtra("title");
-                    Log.e("PlayActivity","正在播放"+"total="+total+"  now="+now+"  title"+title);
+                state=intent.getStringExtra("state");
+                if (state.equals("play")) {
+                    total = intent.getIntExtra("total", 0);
+                    now = intent.getIntExtra("now", 0);
+                    pos = intent.getIntExtra("pos", 0);
+                    title = intent.getStringExtra("title");
+//                    Log.e("PlayActivity","正在播放"+"total="+total+"  now="+now+"  title"+title);
+                }else if(state.equals("stop")){
+                    pos=intent.getIntExtra("pos", 0);
                 }
             }
         }
@@ -131,25 +143,50 @@ public class PlayActivity extends AppCompatActivity  {
         tvSongSinger= (TextView) findViewById(R.id.tv_play_song_info);
         seekBar= (SeekBar) findViewById(R.id.seekbar);
         imgPlay= (ImageView) findViewById(R.id.img_play_play);
+        imgPlayType= (ImageView) findViewById(R.id.img_play_type);
+        if(MainActivity.state.equals("stop")){
+            imgPlay.setImageResource(R.drawable.a_5);
+        }else if(MainActivity.state.equals("play")){
+            imgPlay.setImageResource(R.drawable.a_3);
+        }
     }
     public void playClick(View view){
         Intent intent = new Intent(MyService.mAction);
         switch (view.getId()){
             case R.id.img_play_type:
+                if(type==MyService.LIST_PLAY){  //顺序播放
+                    type=MyService.LIST_RECYCLE;
+                    imgPlayType.setImageResource(R.drawable.a_h);
+                }else if(type==MyService.LIST_RECYCLE){  //列表循环
+                    type=MyService.ONE_MUSIC;
+                    imgPlayType.setImageResource(R.drawable.a_p);
+                }else if(type==MyService.ONE_MUSIC){    //单曲
+                    type=MyService.RANDOM_PLAY;
+                    imgPlayType.setImageResource(R.drawable.a_z);
+                }else if(type==MyService.RANDOM_PLAY){  //随机
+                    type=MyService.LIST_PLAY;
+                    imgPlayType.setImageResource(R.drawable.a_r);
+                }
                 intent.putExtra("cmd","type");
+                intent.putExtra("type",type);
                 break;
             case R.id.img_play_last:
                 intent.putExtra("cmd","last");
                 break;
             case R.id.img_play_play:
-//                if(myService.player.isPlaying()){
-//                    imgPlay.setImageResource(R.drawable.a_5);
-//                    intent.putExtra("cmd","stop");
-////                    sendBroadcast(intent);
-//                }else{
+                Intent intent1 = new Intent("palyactivity");
+                if(MainActivity.state.equals("stop")){
                     imgPlay.setImageResource(R.drawable.a_3);
                     intent.putExtra("cmd","play");
-//                }
+                    intent1.putExtra("state","play");
+                    state="play";
+                }else if(MainActivity.state.equals("play")){
+                    imgPlay.setImageResource(R.drawable.a_5);
+                    intent.putExtra("cmd","play");
+                    intent1.putExtra("state","stop");
+                    state="stop";
+                }
+                sendBroadcast(intent1);
                 break;
             case R.id.img_play_next:
                 intent.putExtra("cmd","next");
@@ -171,88 +208,111 @@ public class PlayActivity extends AppCompatActivity  {
         }
     }
     private void show() {
-        AlertDialog.Builder bd=new AlertDialog.Builder(this);
-        View v = getLayoutInflater().inflate(R.layout.activity_menu, null, false);
-
-        bd.setView(v);
-        int height = v.getHeight()/4;
-//        v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,height));
-//        AlertDialog dialog = new AlertDialog.Builder(PlayActivity.this).create();
-//        dialog.show();
-//        dialog.getWindow().setContentView(R.layout.activity_menu);
-
-//        ListView listView = (ListView) dialog.getWindow().findViewById(R.id.mListView_menu);
-        ListView listView = (ListView) v.findViewById(R.id.mListView_menu);
-
-        View view = LayoutInflater.from(PlayActivity.this).inflate(R.layout.menu_header, listView, false);
-        listView.addHeaderView(view);
-        listView.setAdapter(adapter2);
-        WindowManager wm= (WindowManager) getSystemService(WINDOW_SERVICE);
-        int width = wm.getDefaultDisplay().getWidth();
-        int height1 = wm.getDefaultDisplay().getHeight()/4;
-        AlertDialog dialog = bd.create();
-        Window window = dialog.getWindow();
-        WindowManager.LayoutParams ab =
-                window.getAttributes();
-        ab.width=width;
-        ab.height=height1;
-        ab.x=0;
-        ab.y=height1*3/4;
-        window.setAttributes(ab);
+        AlertDialog dialog = new AlertDialog.Builder(PlayActivity.this).create();
         dialog.show();
+        dialog.getWindow().setContentView(R.layout.activity_menu2);
+        RecyclerView recyclerView = (RecyclerView) dialog.getWindow().findViewById(R.id.mListView_menu2);
+        imgType2 = (ImageView) dialog.getWindow().findViewById(R.id.img_mode2);
+        tvType= (TextView) dialog.getWindow().findViewById(R.id.tv_mode2);
+        tvCount= (TextView) dialog.getWindow().findViewById(R.id.tv_account2);
+        RelativeLayout rlDelete= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_delete2);
+        if(type==MyService.LIST_PLAY){  //顺序播放
+            imgType2.setImageResource(R.drawable.sx2);
+            tvType.setText("顺序播放");
+        }else if(type==MyService.LIST_RECYCLE){  //列表循环
+            imgType2.setImageResource(R.drawable.xh2);
+            tvType.setText("列表循环");
+        }else if(type==MyService.ONE_MUSIC){    //单曲
+            imgType2.setImageResource(R.drawable.dq2);
+            tvType.setText("单曲循环");
+        }else if(type==MyService.RANDOM_PLAY){  //随机
+            imgType2.setImageResource(R.drawable.sj2);
+            tvType.setText("随机播放");
+        }
+        tvCount.setText("("+musics.size()+"首)");
+        recyclerView.setAdapter(adapter2);
+        recyclerView.setLayoutManager(new LinearLayoutManager(PlayActivity.this));
+        adapter2.setListener(new MyItemClickListener());
+        imgType2.setOnClickListener(new MyClickListener());
+        rlDelete.setOnClickListener(new MyClickListener());
     }
-
-//    @Override
-//    public void playComplete(int pos) {
-//        tvSongName.setText(musics.get(pos).getName());
-//        tvTotalTime.setText(musics.get(pos).getDuration());
-//        tvSongSinger.setText(musics.get(pos).getSinger());
-//    }
-
     private class MyListener implements SeekBar.OnSeekBarChangeListener {
+        Intent intent = new Intent(MyService.mAction);
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser){
                 seekBar.setProgress(progress);
                 tvCurrentTime.setText(progress+"");
+                intent.putExtra("cmd","seek_pos");
+                intent.putExtra("pos",progress);
+                sendBroadcast(intent);
             }
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-            Intent intent = new Intent(MyService.mAction);
-            intent.putExtra("cmd","stop");
+            intent.putExtra("cmd","seek_stop");
             sendBroadcast(intent);
         }
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            Intent intent = new Intent(MyService.mAction);
-            intent.putExtra("cmd","play");
-            sendBroadcast(intent);
-        }
-    }
-
-    private class MyServiceConnection implements ServiceConnection {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-//            MyService.MyBinder binder = (MyService.MyBinder)service;
-//            myService=binder.getService();// 获取到的Service即MyService
-//            myService.setMusicList(musics);
-//            setListener();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            myService=null;
+//            intent.putExtra("cmd","play");
+//            sendBroadcast(intent);
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        unbindService(conn);
         unregisterReceiver(brod);
     }
 
+    private class MyItemClickListener implements MenuAdapter.OnMyItemClickListener {
+        @Override
+        public void itemClick(int pos) {
+            Intent intent = new Intent(MyService.mAction);
+            intent.putExtra("cmd","chose_pos");
+            intent.putExtra("pos",pos);
+            sendBroadcast(intent);
+        }
+    }
+
+    private class MyClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.img_mode2:
+                    sendBroadcastwithType();
+                    break;
+                case R.id.rl_delete2:
+
+                    break;
+            }
+        }
+    }
+
+    private void sendBroadcastwithType() {
+        Intent intent = new Intent(MyService.mAction);
+        if(type==MyService.LIST_PLAY){  //顺序播放
+            type=MyService.LIST_RECYCLE;
+            imgType2.setImageResource(R.drawable.xh2);
+            tvType.setText("列表循环");
+        }else if(type==MyService.LIST_RECYCLE){  //列表循环
+            type=MyService.ONE_MUSIC;
+            imgType2.setImageResource(R.drawable.dq2);
+            tvType.setText("单曲循环");
+        }else if(type==MyService.ONE_MUSIC){    //单曲
+            type=MyService.RANDOM_PLAY;
+            imgType2.setImageResource(R.drawable.sj2);
+            tvType.setText("随机播放");
+        }else if(type==MyService.RANDOM_PLAY){  //随机
+            type=MyService.LIST_PLAY;
+            imgType2.setImageResource(R.drawable.sx2);
+            tvType.setText("顺序播放");
+        }
+        intent.putExtra("cmd","type");
+        intent.putExtra("type",type);
+        sendBroadcast(intent);
+    }
 }

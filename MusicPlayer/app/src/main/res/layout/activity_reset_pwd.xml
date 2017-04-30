@@ -8,81 +8,43 @@
         android:layout_height="40dp"
         android:background="#D33B30">
     <ImageView
-        android:id="@+id/img_phone_register_back"
+        android:id="@+id/img_pwd_back"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_centerVertical="true"
         android:layout_margin="10dp"
         android:src="@drawable/arrow_left"
-        android:onClick="registerClick"
-        android:clickable="true"/>
+        android:clickable="true" />
     <TextView
+        android:id="@+id/tv_pwd_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="账号注册"
+        android:text="修改密码"
         android:textColor="#fff"
         android:textSize="20sp"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/img_phone_register_back"
+        android:layout_toRightOf="@+id/img_pwd_back"
         />
     </RelativeLayout>
-    <ImageView
-        android:id="@+id/img_register_icon"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:src="@drawable/pp"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="50dp">
         <ImageView
-            android:id="@+id/img_phone_register_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/a36"
-            android:layout_marginLeft="20dp"
-            android:layout_centerVertical="true"/>
-        <EditText
-            android:id="@+id/ed_phone_register_number"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-           android:layout_toRightOf="@+id/img_phone_register_icon"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:hint="请输入账号"
-            android:textColorHint="#C0C4C3"
-            android:inputType="number"
-            android:background="@null" />
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0.1dp"
-            android:layout_alignParentBottom="true"
-            android:background="#C0C4C3"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp">
-        <ImageView
-            android:id="@+id/img_register_pwd_icon"
+            android:id="@+id/img_reset_pwd_icon"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/a38"
             android:layout_marginLeft="20dp"
             android:layout_centerVertical="true"/>
         <EditText
-            android:id="@+id/ed_phone_register_pwd"
+            android:id="@+id/ed_reset_pwd"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/img_register_pwd_icon"
+            android:layout_toRightOf="@+id/img_reset_pwd_icon"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:hint="请设置密码，不少于6位"
+            android:hint="请输入旧的密码"
             android:textColorHint="#C0C4C3"
             android:inputType="textPassword"
             android:background="@null"
@@ -101,20 +63,52 @@
         android:layout_height="60dp"
         android:layout_marginTop="10dp">
         <ImageView
-            android:id="@+id/img_register_yanzheng_icon"
+            android:id="@+id/img_reset_new_icon"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/a34"
             android:layout_marginLeft="20dp"
             android:layout_centerVertical="true"/>
         <EditText
-            android:id="@+id/ed_phone_register_yanzheng"
+            android:id="@+id/ed_reset_new"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/img_register_yanzheng_icon"
+            android:layout_toRightOf="@+id/img_reset_new_icon"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:hint="请再次输入密码"
+            android:hint="请输入新的密码"
+            android:textColorHint="#C0C4C3"
+            android:inputType="textPassword"
+            android:background="@null"
+            android:maxLength="11"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:layout_alignParentBottom="true"
+            android:background="#C0C4C3"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:id="@+id/img_reset_new_again"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/a34"
+            android:layout_marginLeft="20dp"
+            android:layout_centerVertical="true"/>
+        <EditText
+            android:id="@+id/ed_reset_new_again"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/img_reset_new_again"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:hint="请再次输入新的密码"
             android:textColorHint="#C0C4C3"
             android:inputType="textPassword"
             android:background="@null"
@@ -129,14 +123,13 @@
             />
     </RelativeLayout>
     <Button
-        android:id="@+id/btn_register"
+        android:id="@+id/btn_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:text="下一步"
+        android:text="提  交"
         android:textColor="#fff"
-        android:background="#D33B30"
-        android:onClick="registerClick"/>
+        android:background="#D33B30" />
 </LinearLayout>

@@ -5,11 +5,11 @@
     android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="40dp">
         <ImageView
             android:id="@+id/img_manage_back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:src="@drawable/back"
             android:layout_margin="10dp"/>
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="已选择0项"
             android:textColor="#3D3D3D"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:layout_toRightOf="@+id/img_manage_back"
             android:layout_centerVertical="true"/>
         <Button
@@ -32,7 +32,7 @@
             android:layout_marginRight="10dp"
             android:text="全选"
             android:textColor="#3D3D3D"
-            android:textSize="18sp"/>
+            android:textSize="14sp"/>
     </RelativeLayout>
     <ListView
         android:id="@+id/listview"
@@ -45,8 +45,8 @@
         android:layout_height="60dp">
         <ImageView
             android:id="@+id/img_delete"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/delete"
             android:layout_margin="5dp"
             android:layout_centerHorizontal="true"/>

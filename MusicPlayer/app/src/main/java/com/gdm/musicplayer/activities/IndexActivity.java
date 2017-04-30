@@ -41,7 +41,9 @@ public class IndexActivity extends AppCompatActivity {
 //            super.handleMessage(msg);
             switch (msg.what){
                 case 100:
-                    imgAds.setImageResource(imgs[index++]);
+                    if(index!=imgs.length){
+                        imgAds.setImageResource(imgs[index++]);
+                    }
                     break;
             }
         }

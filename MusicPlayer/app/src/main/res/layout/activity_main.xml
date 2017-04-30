@@ -3,8 +3,7 @@
     android:id="@+id/sliding"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="300dp"
         android:layout_height="match_parent"
@@ -13,28 +12,54 @@
         android:id="@+id/rl_first"
         android:layout_width="300dp"
         android:layout_height="180dp"
-        android:background="@drawable/afc"
-        >
+        android:background="@drawable/afc">
         <com.gdm.musicplayer.view.CircleImageView
             android:id="@+id/img_main_portrait"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/me"
-            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:clickable="true"
             android:onClick="clickInMain"/>
-        <TextView
-            android:id="@+id/tv_main_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="登录/注册"
-            android:textSize="18sp"
-            android:textColor="#fff"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/img_main_portrait"
-            android:clickable="true"
-            android:onClick="clickInMain"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/img_main_portrait">
+            <RelativeLayout
+                android:id="@+id/rl_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:visibility="invisible">
+                <ImageView
+                    android:id="@+id/img_sex"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ab2"
+                    android:layout_margin="10dp"/>
+                <TextView
+                    android:id="@+id/tv_heart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="gasjahsjahsjkkj"
+                    android:layout_below="@+id/img_sex"
+                    android:textColor="#fff"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="10dp"/>
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_main_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="登录/注册"
+                android:textSize="18sp"
+                android:textColor="#fff"
+                android:layout_gravity="center_vertical"
+                android:clickable="true"
+                android:onClick="clickInMain"
+                android:layout_marginLeft="10dp"/>
+            </FrameLayout>
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/ll_second"
@@ -49,38 +74,8 @@
             android:layout_height="50dp"
             android:clickable="true"
             android:onClick="clickInMain"
-            android:id="@+id/main_rl_huanfu">
-            <ImageView
-                android:id="@+id/img_huanfu"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/f"
-                android:layout_margin="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="个性换肤"
-                android:textSize="14sp"
-                android:textColor="#3D3D3D"
-                android:layout_toRightOf="@+id/img_huanfu"
-                android:layout_centerVertical="true"/>
-            <TextView
-                android:id="@+id/tv_pifu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="经典红"
-                android:textSize="12sp"
-                android:textColor="#939393"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:layout_centerVertical="true"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:clickable="true"
-            android:onClick="clickInMain"
-            android:id="@+id/main_rl_timer">
+            android:id="@+id/main_rl_timer"
+            android:layout_marginTop="20dp">
             <ImageView
                 android:id="@+id/img_timer"
                 android:layout_width="22dp"
@@ -115,6 +110,79 @@
                 android:textSize="14sp"
                 android:textColor="#3D3D3D"
                 android:layout_toRightOf="@+id/img_alarm"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:onClick="clickInMain"
+            android:id="@+id/main_rl_huanfu">
+            <ImageView
+                android:id="@+id/img_huanfu"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/hf"
+                android:layout_margin="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个性换肤"
+                android:textSize="14sp"
+                android:textColor="#3D3D3D"
+                android:layout_toRightOf="@+id/img_huanfu"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:id="@+id/tv_pifu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="经典红"
+                android:textSize="12sp"
+                android:textColor="#939393"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:onClick="clickInMain"
+            android:id="@+id/main_rl_logout">
+            <ImageView
+                android:id="@+id/img_logout"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/e"
+                android:layout_margin="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="退出登录"
+                android:textSize="14sp"
+                android:textColor="#3D3D3D"
+                android:layout_toRightOf="@+id/img_logout"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:onClick="clickInMain"
+            android:id="@+id/main_rl_pwd">
+            <ImageView
+                android:id="@+id/img_pwd"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/pwd"
+                android:layout_margin="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="修改密码"
+                android:textSize="14sp"
+                android:textColor="#3D3D3D"
+                android:layout_toRightOf="@+id/img_pwd"
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
         <RelativeLayout
@@ -224,8 +292,8 @@
                     />
                 <ImageView
                     android:id="@+id/img_song_list"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_toRightOf="@+id/rb_song_playicon"
                     android:layout_centerVertical="true"
                     android:layout_margin="10dp"

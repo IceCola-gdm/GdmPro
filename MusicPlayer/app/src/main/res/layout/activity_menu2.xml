@@ -9,34 +9,34 @@
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <ImageView
-            android:id="@+id/img_mode"
+            android:id="@+id/img_mode2"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
-            android:src="@drawable/sx2"
+            android:src="@drawable/xh2"
             android:clickable="true"/>
         <TextView
-            android:id="@+id/tv_mode"
+            android:id="@+id/tv_mode2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#3D3D3D"
             android:textSize="14sp"
             android:text="循环播放"
-            android:layout_toRightOf="@+id/img_mode"
+            android:layout_toRightOf="@+id/img_mode2"
             android:layout_centerVertical="true"/>
         <TextView
-            android:id="@+id/tv_account"
+            android:id="@+id/tv_account2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#3D3D3D"
             android:textSize="14sp"
             android:text="(96)"
-            android:layout_toRightOf="@+id/tv_mode"
+            android:layout_toRightOf="@+id/tv_mode2"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
         <RelativeLayout
-            android:id="@+id/rl_delete"
+            android:id="@+id/rl_delete2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -44,7 +44,7 @@
             android:layout_marginRight="10dp"
             android:clickable="true">
             <ImageView
-                android:id="@+id/img_delete_all"
+                android:id="@+id/img_delete_all2"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_centerVertical="true"
@@ -57,13 +57,13 @@
                 android:text="清空全部"
                 android:textColor="#3D3D3D"
                 android:textSize="14sp"
-                android:layout_toRightOf="@+id/img_delete_all"
+                android:layout_toRightOf="@+id/img_delete_all2"
                 android:layout_centerVertical="true"
                 />
         </RelativeLayout>
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/mListView_menu"
+        android:id="@+id/mListView_menu2"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

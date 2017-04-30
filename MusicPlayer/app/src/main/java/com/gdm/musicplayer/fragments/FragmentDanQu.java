@@ -16,6 +16,7 @@ import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.activities.PlayActivity;
 import com.gdm.musicplayer.adapter.MyLocalDanquAdapter;
 import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.utils.MusicUtil;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class FragmentDanQu extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        musics.addAll(MusicUtil.getAllSongs(getContext()));
+        musics.addAll((ArrayList<Music>)MusicUtil.getAllSongs(getContext(),"song"));
         setAdapter();
     }
 
@@ -60,6 +61,9 @@ public class FragmentDanQu extends Fragment {
     private class MyListener implements android.widget.AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent1 = new Intent(MyService.mAction);
+            intent1.putExtra("cmd","play");
+            getActivity().sendBroadcast(intent1);
             Intent intent = new Intent(getContext(), PlayActivity.class);
             intent.putExtra("data",musics);
             intent.putExtra("position",position);

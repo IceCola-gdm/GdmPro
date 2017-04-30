@@ -3,16 +3,28 @@ package com.gdm.musicplayer.bean;
 import android.content.Context;
 import android.content.Intent;
 
+import java.util.ArrayList;
+
 /**
  * Created by Administrator on 2017/4/12 0012.
  * fragment_my
  */
 public class MusicList {
-        private int imgPath;
-        private String title;
-        private String num;
-        private Class mClass;
-        private int type;//头部为0 内容为1
+    private int imgPath;
+    private String title;
+    private String num;
+    private Class mClass;
+    private int type;//头部为0 内容为1
+    private ArrayList<Music> m;
+
+    public ArrayList<Music> getM() {
+        return m;
+    }
+
+    public void setM(ArrayList<Music> m) {
+        this.m = m;
+    }
+
     public void setmClass(Class mClass) {
         this.mClass = mClass;
     }
@@ -52,4 +64,15 @@ public class MusicList {
             this.title = title;
         }
 
+    @Override
+    public String toString() {
+        return "MusicList{" +
+                "imgPath=" + imgPath +
+                ", title='" + title + '\'' +
+                ", num='" + num + '\'' +
+                ", mClass=" + mClass +
+                ", type=" + type +
+                ", m=" + m +
+                '}';
+    }
 }

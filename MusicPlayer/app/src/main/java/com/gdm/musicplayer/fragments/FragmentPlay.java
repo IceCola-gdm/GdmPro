@@ -1,7 +1,12 @@
 package com.gdm.musicplayer.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +17,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.view.RoundImageView;
 
 /**
@@ -26,11 +32,17 @@ public class FragmentPlay extends Fragment {
     RotateAnimation rotate3;
     RotateAnimation rotate4;
     LinearInterpolator lin;
+    private String state;
+    private int pos;
+    private MyBroadcastReceiver receiver;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initData();
+        receiver = new MyBroadcastReceiver();
+        IntentFilter filter = new IntentFilter("palyactivity");
+        getActivity().registerReceiver(receiver,filter);
     }
 
     private void initData() {
@@ -43,23 +55,23 @@ public class FragmentPlay extends Fragment {
         rotate.setInterpolator(lin);
         rotate.setDuration(9000);//设置动画持续时间
         rotate.setRepeatCount(-1);//设置重复次数
+        rotate.setStartOffset(1000);
 
         rotate2  = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotate2.setInterpolator(lin);
         rotate2.setDuration(9000);//设置动画持续时间
         rotate2.setRepeatCount(-1);//设置重复次数
+        rotate.setStartOffset(1000);
 
         rotate3  = new RotateAnimation(0f,20f, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
         rotate3.setInterpolator(lin);
         rotate3.setDuration(1000);//设置动画持续时间
         rotate3.setFillAfter(true);//动画执行完后是否停留在执行完的状态
-//        rotate3.setStartOffset(10);//执行前的等待时间
 
-        rotate4  = new RotateAnimation(0f, -20f, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
+        rotate4  = new RotateAnimation(20f, 0f, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
         rotate4.setInterpolator(lin);
         rotate4.setDuration(1000);//设置动画持续时间
         rotate4.setFillAfter(true);//动画执行完后是否停留在执行完的状态
-//        rotate4.setStartOffset(10);//执行前的等待时间
 
     }
 
@@ -75,8 +87,30 @@ public class FragmentPlay extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        imgBar.setAnimation(rotate3);
-        imgCD.setAnimation(rotate);
-        imgPortrait.startAnimation(rotate2);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(receiver);
+    }
+
+    private class MyBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals("palyactivity")){
+                Log.e("---","收到广播");
+                state=intent.getStringExtra("state");
+                if (state.equals("play")) {
+                    imgBar.startAnimation(rotate3);
+                    imgCD.startAnimation(rotate);
+                    imgPortrait.startAnimation(rotate2);
+                }else if(state.equals("stop")){
+                    imgCD.clearAnimation();
+                    imgPortrait.clearAnimation();
+                    imgBar.setAnimation(rotate4);
+                }
+            }
+        }
     }
 }

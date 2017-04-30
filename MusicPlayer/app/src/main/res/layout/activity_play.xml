@@ -102,7 +102,7 @@
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_weight="1"
-                android:src="@drawable/a_h"
+                android:src="@drawable/a_r"
                 android:layout_gravity="center_vertical"
                 android:clickable="true"
                 android:onClick="playClick"/>
@@ -120,9 +120,8 @@
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_weight="1"
-                android:src="@drawable/a_3"
+                android:src="@drawable/a_5"
                 android:layout_gravity="center_vertical"
-                android:clickable="true"
                 android:onClick="playClick"/>
             <ImageView
                 android:id="@+id/img_play_next"

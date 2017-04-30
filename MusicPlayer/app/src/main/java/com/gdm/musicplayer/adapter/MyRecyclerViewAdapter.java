@@ -1,19 +1,27 @@
 package com.gdm.musicplayer.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gdm.musicplayer.R;
-import com.gdm.musicplayer.activities.SettingGedan;
+import com.gdm.musicplayer.activities.ManageGedanActivity;
 import com.gdm.musicplayer.bean.MusicList;
 
 import java.util.ArrayList;
@@ -29,6 +37,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private LayoutInflater inflater;
     private ArrayList<MusicList> beens;
     private ArrayList<MusicList> content;
+    private AlertDialog myDialog;
+    private EditText ed;
+    private Button btn_submit;
+    private Button btn_cancel;
+    private String gedan;
+    private AlertDialog dialog;
 
     public MyRecyclerViewAdapter(Context context, ArrayList<MusicList> beens,ArrayList<MusicList> content) {
         this.context = context;
@@ -59,7 +73,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
         if (holder instanceof HolderOne) {
             //加载头部的逻辑
@@ -71,13 +85,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             h.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    context.startActivity(new Intent(context,bean.getmClass()));
+                    Intent intent = new Intent(context, bean.getmClass());
+                    intent.putExtra("data",beens.get(position).getM());
+                    context.startActivity(intent);
                 }
             });
         }else if (holder instanceof HolderTwo){
             final HolderTwo h= (HolderTwo) holder;
-//            MusicListContentAdapter adapter = new MusicListContentAdapter(context, beens);
-//            h.content.setAdapter(adapter);
             h.content.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
             h.title.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -95,10 +109,22 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 @Override
                 public void onClick(View v) {
                     //创建歌单
-                    context.startActivity(new Intent(context,SettingGedan.class));
+                    show();
                 }
             });
         }
+
+    }
+
+    private void show() {
+        dialog = new AlertDialog.Builder(context).create();
+        dialog.show();
+        View view = LayoutInflater.from(context).inflate(R.layout.fragment_my_gedan_setting, null);
+        dialog.getWindow().setContentView(view);
+        RelativeLayout rl_new= (RelativeLayout) view.findViewById(R.id.rl_new);
+        RelativeLayout rl_manage= (RelativeLayout) view.findViewById(R.id.rl_manage);
+        rl_new.setOnClickListener(new MyListener());
+        rl_manage.setOnClickListener(new MyListener());
     }
 
     @Override
@@ -157,6 +183,70 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             textViewTitle= (TextView) view.findViewById(R.id.tv_bottom_gedanname);
             textViewCount= (TextView) view.findViewById(R.id.tv_bottom_yinyuecount);
             imageViewSetting= (ImageView) view.findViewById(R.id.img_gedanbianji);
+        }
+    }
+
+    private class MyListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.rl_new:
+                    showDialog();
+                    dialog.dismiss();
+                    break;
+                case R.id.rl_manage:
+                    Intent intent = new Intent();
+                    intent.setClass(context,ManageGedanActivity.class);
+                    context.startActivity(intent);
+                    dialog.dismiss();
+                    break;
+                case R.id.btn_submit:
+                    gedan=ed.getText().toString();
+                    myDialog.dismiss();
+                    break;
+                case R.id.btn_cancel:
+                    myDialog.dismiss();
+                    break;
+            }
+        }
+    }
+    private void showDialog() {
+        myDialog = new AlertDialog.Builder(context).create();
+        myDialog.show();
+        WindowManager.LayoutParams params = myDialog.getWindow().getAttributes();
+        params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        myDialog.getWindow().setAttributes(params);
+        myDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        myDialog.getWindow().setContentView(R.layout.fragment_my_newgedan);
+        ed = (EditText) myDialog.getWindow().findViewById(R.id.et_gedan_title);
+        btn_submit = (Button) myDialog.getWindow().findViewById(R.id.btn_submit);
+        btn_cancel = (Button) myDialog.getWindow().findViewById(R.id.btn_cancel);
+        btn_submit.setOnClickListener(new MyListener());
+        btn_cancel.setOnClickListener(new MyListener());
+        ed.addTextChangedListener(new ChangeListener());
+    }
+
+    private class ChangeListener implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s.toString()!=null&&s.toString()!="") {
+                btn_submit.setClickable(true);
+                btn_submit.setTextColor(Color.RED);
+            }else{
+                btn_submit.setTextColor(Color.GRAY);
+                btn_submit.setClickable(false);
+            }
         }
     }
 }

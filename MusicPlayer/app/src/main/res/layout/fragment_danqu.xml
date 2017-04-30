@@ -6,12 +6,12 @@
     <RelativeLayout
         android:id="@+id/rl_all"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:background="#EFF3F2">
         <ImageView
             android:id="@+id/img_danqu_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_margin="10dp"
             android:scaleType="fitXY"
             android:layout_centerVertical="true"

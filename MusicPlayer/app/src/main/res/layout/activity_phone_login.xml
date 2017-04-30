@@ -5,7 +5,7 @@
     android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:background="#D33B30">
     <ImageView
         android:id="@+id/img_phone_login_back"
@@ -26,6 +26,12 @@
         android:layout_toRightOf="@+id/img_phone_login_back"
         />
     </RelativeLayout>
+    <ImageView
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/pp"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
