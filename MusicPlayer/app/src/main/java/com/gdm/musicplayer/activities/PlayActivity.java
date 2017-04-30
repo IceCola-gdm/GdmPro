@@ -202,12 +202,12 @@ public class PlayActivity extends AppCompatActivity  {
         dialog.show();
     }
 
-    @Override
-    public void playComplete(int pos) {
-        tvSongName.setText(musics.get(pos).getName());
-        tvTotalTime.setText(musics.get(pos).getDuration());
-        tvSongSinger.setText(musics.get(pos).getSinger());
-    }
+//    @Override
+//    public void playComplete(int pos) {
+//        tvSongName.setText(musics.get(pos).getName());
+//        tvTotalTime.setText(musics.get(pos).getDuration());
+//        tvSongSinger.setText(musics.get(pos).getSinger());
+//    }
 
     private class MyListener implements SeekBar.OnSeekBarChangeListener {
         @Override

@@ -69,26 +69,28 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
          */
         @Override
         public void run() {
-            while (true){
-                if (player.isPlaying()) {
-                    Music bean = musicList.get(pos);
-                    Intent intent = new Intent(PLAY_ACTION);
-                    intent.putExtra("state","play");
-                    intent.putExtra("pos",pos);
-                    intent.putExtra("total",player.getDuration());
-                    intent.putExtra("now",player.getCurrentPosition());
-                    intent.putExtra("title",bean.getName());
-                    sendBroadcast(intent);
-                }else{
-                    Intent intent = new Intent(PLAY_ACTION);
-                    intent.putExtra("state","stop");
-                    intent.putExtra("pos",pos);
-                    sendBroadcast(intent);
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            while (true) {
+                if (musicList != null && musicList.size() != 0) {
+                    if (player.isPlaying()) {
+                        Music bean = musicList.get(pos);
+                        Intent intent = new Intent(PLAY_ACTION);
+                        intent.putExtra("state", "play");
+                        intent.putExtra("pos", pos);
+                        intent.putExtra("total", player.getDuration());
+                        intent.putExtra("now", player.getCurrentPosition());
+                        intent.putExtra("title", bean.getName());
+                        sendBroadcast(intent);
+                    } else {
+                        Intent intent = new Intent(PLAY_ACTION);
+                        intent.putExtra("state", "stop");
+                        intent.putExtra("pos", pos);
+                        sendBroadcast(intent);
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -144,28 +146,40 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(mAction)) {
                 String cmd = intent.getStringExtra("cmd");
-                if (cmd.equals("next")) {
+                if (cmd.equals("next")) {//下一首命令
                     nextMusic();
-                }else if(cmd.equals("play")){
+                }else if(cmd.equals("play")){//播放命令
                     if (player.isPlaying()) {
                         pause();
                     }else {
                         play();
                     }
 
-                }else if(cmd.equals("pause")){
+                }else if(cmd.equals("pause")){//暂停命令
                     pause();
-                }else if(cmd.equals("stop")){
+                }else if(cmd.equals("stop")){//停止命令
                     stop();
-                }else if(cmd.equals("last")){
+                }else if(cmd.equals("last")){//上一首命令
                     last();
-                }else if(cmd.equals("type")){
+                }else if(cmd.equals("type")){//设置播放类型
                     type = intent.getIntExtra("type", 0);
+                }else if(cmd.equals("seek_stop")){//拖动时要先暂停播放
+                    player.pause();
+                }else if(cmd.equals("seek_pos")){//拖动完成之后
+                    int pos = intent.getIntExtra("pos", 0);
+                    player.seekTo(pos);
+                    if (!player.isPlaying()) {
+                        player.start();
+                    }
+                }else if(cmd.equals("chose_pos")){//从列表位置开始播放
+                    int pos = intent.getIntExtra("pos", 0);
+                    stop();
+                    MyService.this.pos=pos;
+                    play();
                 }
             }
         }
     }
-
     private void last() {
         if (player.isPlaying()) {
             player.stop();
@@ -200,8 +214,8 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
             return;
         }else{
             if (nowPos!=-1){
-                player.start();
                 player.seekTo(nowPos);
+                player.start();
                 nowPos=-1;
             }else
             {
@@ -231,8 +245,6 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                 }else{
                     pos=0;
                 }
-                break;
-            case ONE_MUSIC:
                 break;
             case RANDOM_PLAY:
                 pos = new Random().nextInt(musicList.size());
