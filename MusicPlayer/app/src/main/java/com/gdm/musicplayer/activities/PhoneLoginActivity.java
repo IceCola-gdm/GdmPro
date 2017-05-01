@@ -15,6 +15,7 @@ import com.gdm.musicplayer.utils.ToastUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
 
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,14 +95,10 @@ public class PhoneLoginActivity extends AppCompatActivity {
                                 .params("username",account)
                                 .params("password",pwd)
                                 .execute(new StringCallback() {
-                                    @Override
-                                    public void onResponse(boolean isFromCache, String s, Request request, @Nullable Response response) {
-                                        Log.e(TAG,"casjdckla");
-                                    }
 
                                     @Override
-                                    public void onError(boolean isFromCache, Call call, @Nullable Response response, @Nullable Exception e) {
-                                        Log.e(TAG,"=======");
+                                    public void onSuccess(String s, Call call, Response response) {
+
                                     }
                                 });
                     }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/activity_play_list_title"
+        android:layout_width="match_parent"
+        android:background="#234567"
+        android:layout_height="200dp">
+        <ImageView
+            android:id="@+id/activity_play_list_img"
+            android:layout_width="150dp"
+            android:layout_marginLeft="20dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_centerVertical="true"
+            android:layout_height="150dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_toRightOf="@+id/activity_play_list_img"
+            android:text="小轩的歌单"
+            android:id="@+id/activity_play_list_name"
+            android:layout_marginLeft="20dp"
+            android:layout_alignTop="@+id/activity_play_list_img"
+            android:layout_marginTop="20dp"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="#eee"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/activity_play_list_discription"
+            android:text="小轩的测试1234567890123456789123456789123456789123111111111111111111111111111111111111111111111111111111111111"
+            android:layout_alignLeft="@+id/activity_play_list_name"
+            android:layout_below="@+id/activity_play_list_name"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</LinearLayout>

@@ -100,6 +100,7 @@ public class PlayActivity extends AppCompatActivity  {
                     now = intent.getIntExtra("now", 0);
                     pos = intent.getIntExtra("pos", 0);
                     title = intent.getStringExtra("title");
+            
 //                    Log.e("PlayActivity","正在播放"+"total="+total+"  now="+now+"  title"+title);
                 }else if(state.equals("stop")){
                     pos=intent.getIntExtra("pos", 0);

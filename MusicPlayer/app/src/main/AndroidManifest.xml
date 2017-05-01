@@ -51,7 +51,8 @@
             android:exported="true" />
 
         <activity android:name=".activities.IndexActivity" />
-        <activity android:name=".activities.ResetPwdActivity"></activity>
+        <activity android:name=".activities.ResetPwdActivity" />
+        <activity android:name=".activities.PlayListActivity"></activity>
     </application>
 
 </manifest>

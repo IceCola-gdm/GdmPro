@@ -7,6 +7,16 @@ import java.io.Serializable;
  */
 public class Music implements Serializable{
     private String name;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     private int duration;
     private String singer;
     private String album;
