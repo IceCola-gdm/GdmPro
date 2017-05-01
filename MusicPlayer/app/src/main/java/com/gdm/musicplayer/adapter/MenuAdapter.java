@@ -1,6 +1,7 @@
 package com.gdm.musicplayer.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,16 +35,34 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
-
+    private RecyclerView.ViewHolder buffer;
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         Music music=musics.get(position);
         holder.tvName.setText(music.getName());
         holder.tvSinger.setText(music.getSinger());
+        holder.tvName.setTextColor(Color.BLACK);
+        holder.tvSinger.setTextColor(Color.BLACK);
         holder.imgDelete.setOnClickListener(new MyListener());
-        if (itemClickListener!=null){
-            itemClickListener.itemClick(position);
+//        if (itemClickListener!=null){
+//            itemClickListener.itemClick(position);
+//        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemClickListener!=null){
+                    if (buffer!=null) {
+                        ViewHolder b= (ViewHolder) buffer;
+                        b.tvName.setTextColor(Color.BLACK);
+                        b.tvSinger.setTextColor(Color.BLACK);
+                    }
+                    itemClickListener.itemClick(position);
+                    holder.tvName.setTextColor(Color.RED);
+                    holder.tvSinger.setTextColor(Color.RED);
+                    buffer=holder;
         }
+            }
+        });
     }
 
     @Override

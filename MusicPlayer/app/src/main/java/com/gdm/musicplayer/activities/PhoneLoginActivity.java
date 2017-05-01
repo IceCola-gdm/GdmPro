@@ -1,5 +1,6 @@
 package com.gdm.musicplayer.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.bean.User;
+import com.gdm.musicplayer.bean.UserInfro;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
@@ -90,30 +94,53 @@ public class PhoneLoginActivity extends AppCompatActivity {
                             edPwd.setFocusable(true);
                         }
                     }else{
-                        OkHttpUtils.post(url)
-                                .params("username",account)
-                                .params("password",pwd)
-                                .execute(new StringCallback() {
-                                    @Override
-                                    public void onResponse(boolean isFromCache, String s, Request request, @Nullable Response response) {
-                                        Log.e(TAG,"casjdckla");
-                                    }
-
-                                    @Override
-                                    public void onError(boolean isFromCache, Call call, @Nullable Response response, @Nullable Exception e) {
-                                        Log.e(TAG,"=======");
-                                    }
-                                });
+                        login();
                     }
                     break;
             }
         }
     }
 
+    private void login() {
+        OkHttpUtils.post(url)
+                .params("username",account)
+                .params("password",pwd)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        parse(s);
+                    }
+                });
+    }
+
     private void parse(String s) {
         try {
             JSONObject job = new JSONObject(s.trim());
-
+            String message = job.getString("message");
+            if(message.equals("登录成功")){
+                User user = new User();
+                JSONObject data = job.getJSONObject("data");
+                user.setId(data.getInt("id"));
+                user.setNickname(data.getString("nickname"));
+                user.setPassword(data.getString("password"));
+                user.setAddress(data.getString("address"));
+                user.setBirthday(data.getString("birthday"));
+                user.setDaxue(data.getString("daxue"));
+                user.setHeart(data.getString("heart"));
+                user.setSex(data.getString("sex"));
+                user.setUsername(data.getString("username"));
+                UserInfro.setUser(user);
+                SharedPreferences sp = getSharedPreferences("myaccount", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("account",account).commit();
+                editor.putString("pwd",pwd).commit();
+                MyApplication.isLogin=true;
+                Intent intent = new Intent(PhoneLoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }else{
+                ToastUtil.toast(PhoneLoginActivity.this,message);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

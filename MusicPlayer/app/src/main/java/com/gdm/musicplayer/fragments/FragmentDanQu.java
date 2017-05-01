@@ -62,11 +62,13 @@ public class FragmentDanQu extends Fragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent1 = new Intent(MyService.mAction);
-            intent1.putExtra("cmd","play");
+            intent1.putExtra("cmd","chose_pos");
+            intent1.putExtra("pos",position);
             getActivity().sendBroadcast(intent1);
             Intent intent = new Intent(getContext(), PlayActivity.class);
             intent.putExtra("data",musics);
             intent.putExtra("position",position);
+            intent.putExtra("state","play");
             startActivity(intent);
         }
     }

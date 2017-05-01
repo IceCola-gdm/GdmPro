@@ -26,6 +26,8 @@ import android.widget.TextView;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MenuAdapter;
 import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.bean.User;
+import com.gdm.musicplayer.bean.UserInfro;
 import com.gdm.musicplayer.fragments.FragmentMain;
 import com.gdm.musicplayer.fragments.FragmentPersonalInfo;
 import com.gdm.musicplayer.service.MyService;
@@ -41,8 +43,13 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private MySlidingPanelLayout mSlidingPaneLayout;
     private ImageView imgPortrait;   //头像
+    private ImageView imgSex;
+    private TextView tvHeart;
+    private TextView tvNickname;
     private TextView tvPiFu;    //当前皮肤
     private TextView tvLogin;    //登录注册
+    private RelativeLayout rl_info;
+
     private FragmentMain fragmentMain;
     private ArrayList<Fragment> menus;
     private ArrayList<Music> musics=new ArrayList<>();
@@ -157,12 +164,29 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         mSlidingPaneLayout= (MySlidingPanelLayout) findViewById(R.id.sliding);
         imgPortrait= (ImageView) findViewById(R.id.img_main_portrait);
+        imgSex= (ImageView) findViewById(R.id.img_sex);
+        tvNickname= (TextView) findViewById(R.id.tv_nickname);
+        tvHeart= (TextView) findViewById(R.id.tv_heart);
+
         tvLogin= (TextView) findViewById(R.id.tv_main_login);
         tvPiFu= (TextView) findViewById(R.id.tv_pifu);
         imgPlay= (ImageView) findViewById(R.id.rb_song_playicon);
         imgPor= (ImageView) findViewById(R.id.img_song_cover);
         tvSong= (TextView) findViewById(R.id.tv_songname);
         tvSinger= (TextView) findViewById(R.id.tv_singer);
+        rl_info= (RelativeLayout) findViewById(R.id.rl_info);
+
+        User user = UserInfro.getUser();
+        if(user!=null){
+            tvLogin.setVisibility(View.INVISIBLE);
+            rl_info.setVisibility(View.VISIBLE);
+            if(user.getNickname()!=null&&user.getNickname()!=""){
+                tvNickname.setText(user.getNickname());
+            }
+            if(user.getHeart()!=null&&user.getHeart()!=""){
+                tvHeart.setText(user.getHeart());
+            }
+        }
     }
 
     private class MyListener implements FragmentMain.OnImgListener {
@@ -237,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, PlayActivity.class);
                 intent.putExtra("data",musics);
                 intent.putExtra("position",pos);
+                intent.putExtra("state",state);
                 startActivity(intent);
                 break;
             case R.id.rb_song_playicon:

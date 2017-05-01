@@ -57,6 +57,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
         intPlayer();
         initBord();
         initTheard();
+
     }
 
     private void initTheard() {
@@ -128,6 +129,14 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
             @Override
             public void onCompletion(MediaPlayer mp) {
                 nextMusic();
+                Music bean = musicList.get(pos);
+                Intent intent = new Intent(PLAY_ACTION);
+                intent.putExtra("state", "next");
+                intent.putExtra("pos", pos);
+                intent.putExtra("total", player.getDuration());
+                intent.putExtra("now", 0);
+                intent.putExtra("title", bean.getName());
+                sendBroadcast(intent);
             }
         });
     }
@@ -154,7 +163,6 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                     }else {
                         play();
                     }
-
                 }else if(cmd.equals("pause")){//暂停命令
                     pause();
                 }else if(cmd.equals("stop")){//停止命令
@@ -222,7 +230,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                 try {
                     Music bean = musicList.get(pos);
                     player.setDataSource(bean.getFileUrl());
-                    player.prepareAsync();
+                    player.prepare();
 
                 } catch (IOException e) {
 

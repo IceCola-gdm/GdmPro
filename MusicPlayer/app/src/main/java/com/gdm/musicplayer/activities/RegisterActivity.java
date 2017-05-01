@@ -1,5 +1,6 @@
 package com.gdm.musicplayer.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,9 +9,14 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.bean.User;
+import com.gdm.musicplayer.bean.UserInfro;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import okhttp3.Call;
 import okhttp3.Request;
@@ -44,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
             case R.id.img_phone_register_back:
                 finish();
                 break;
-            case R.id.btn_register:
+            case R.id.btn_reg:
                 account=edAccount.getText().toString();
                 pwd=edpwd.getText().toString();
                 pwdAgain=edPwdAgain.getText().toString();
@@ -55,13 +61,14 @@ public class RegisterActivity extends AppCompatActivity {
                                 .params("password",pwd)
                                 .execute(new StringCallback() {
                                     @Override
-                                    public void onResponse(boolean isFromCache, String s, Request request, @Nullable Response response) {
-                                        Log.e(TAG,"执行了");
+                                    public void onSuccess(String s, Call call, Response response) {
+                                        parse(s);
                                     }
 
                                     @Override
-                                    public void onError(boolean isFromCache, Call call, @Nullable Response response, @Nullable Exception e) {
-                                        Log.e(TAG,"=========");
+                                    public void onError(Call call, Response response, Exception e) {
+                                        super.onError(call, response, e);
+                                        Log.e("Register",e.getMessage());
                                     }
                                 });
 
@@ -79,9 +86,32 @@ public class RegisterActivity extends AppCompatActivity {
                     ToastUtil.toast(RegisterActivity.this,"输入信息不能为空");
                     edPwdAgain.setFocusable(true);
                 }
-//                Intent intent = new Intent(RegisterActivity.this,SetNicknameActivity.class);
-//                startActivity(intent);
                 break;
+        }
+    }
+
+    private void parse(String s) {
+        try {
+            JSONObject job = new JSONObject(s.trim());
+            String message = job.getString("message");
+            if(message.equals("注册成功")){
+                JSONObject data = job.getJSONObject("data");
+                String username = data.getString("username");
+                String password = data.getString("password");
+                int id = data.getInt("id");
+                User u = new User();
+                u.setUsername(username);
+                u.setPassword(password);
+                u.setId(id);
+                UserInfro.setUser(u);
+                Intent intent = new Intent(RegisterActivity.this,SetNicknameActivity.class);
+                startActivity(intent);
+                finish();
+            }else{
+                ToastUtil.toast(RegisterActivity.this,message);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG,"注册数据解析出错");
         }
     }
 
