@@ -16,7 +16,7 @@ public class ScrollerPager extends ViewPager {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             try{
-                if (ScrollerPager.this.getChildCount()>ScrollerPager.this.getCurrentItem()+2) {
+                if (ScrollerPager.this.getChildCount()-1>ScrollerPager.this.getCurrentItem()) {
                     ScrollerPager.this.setCurrentItem(ScrollerPager.this.getCurrentItem()+1);
                 }else {
                     ScrollerPager.this.setCurrentItem(0);

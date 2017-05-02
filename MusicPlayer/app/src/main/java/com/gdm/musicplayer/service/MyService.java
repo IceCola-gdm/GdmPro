@@ -7,20 +7,30 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
+import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.MusicBean;
 import com.gdm.musicplayer.bean.MusicList;
+import com.lzy.okhttputils.OkHttpUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import okhttp3.internal.framed.Ping;
+
 public class MyService extends Service implements MediaPlayer.OnBufferingUpdateListener {
+    public static ArrayList<Music> getMusicList() {
+        return musicList;
+    }
 
     public MediaPlayer player;
     //数据源
@@ -57,6 +67,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
         intPlayer();
         initBord();
         initTheard();
+
     }
 
     private void initTheard() {
@@ -98,6 +109,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     private MediaCommend commend;
     private void initBord() {
         IntentFilter filter=new IntentFilter(mAction);
+        filter.addAction(MyApplication.CHANGELIST);
         commend=new MediaCommend();
         registerReceiver(commend,filter);
     }
@@ -128,6 +140,14 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
             @Override
             public void onCompletion(MediaPlayer mp) {
                 nextMusic();
+                Music bean = musicList.get(pos);
+                Intent intent = new Intent(PLAY_ACTION);
+                intent.putExtra("state", "next");
+                intent.putExtra("pos", pos);
+                intent.putExtra("total", player.getDuration());
+                intent.putExtra("now", 0);
+                intent.putExtra("title", bean.getName());
+                sendBroadcast(intent);
             }
         });
     }
@@ -154,7 +174,6 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                     }else {
                         play();
                     }
-
                 }else if(cmd.equals("pause")){//暂停命令
                     pause();
                 }else if(cmd.equals("stop")){//停止命令
@@ -177,6 +196,9 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                     MyService.this.pos=pos;
                     play();
                 }
+            }else if(intent.getAction().equals(MyApplication.CHANGELIST)){
+                MyApplication ap= (MyApplication) getApplication();
+                musicList=ap.getMusics();
             }
         }
     }
@@ -221,8 +243,14 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
             {
                 try {
                     Music bean = musicList.get(pos);
+                    if (bean.isnet()) {
+                        if (checkNet()) {
+                            Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
                     player.setDataSource(bean.getFileUrl());
-                    player.prepareAsync();
+                    player.prepare();
 
                 } catch (Exception e) {
 
@@ -231,6 +259,21 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
 
         }
         isPlay=true;
+    }
+
+    private boolean checkNet() {
+        return isNetworkConnected(this);
+    }
+    public boolean isNetworkConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            if (mNetworkInfo != null) {
+                return mNetworkInfo.isAvailable();
+            }
+        }
+        return false;
     }
     private int tag=0;
     private void nextMusic() {

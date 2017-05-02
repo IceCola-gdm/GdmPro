@@ -23,9 +23,12 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MenuAdapter;
 import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.bean.User;
+import com.gdm.musicplayer.bean.UserInfro;
 import com.gdm.musicplayer.fragments.FragmentMain;
 import com.gdm.musicplayer.fragments.FragmentPersonalInfo;
 import com.gdm.musicplayer.service.MyService;
@@ -41,8 +44,13 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private MySlidingPanelLayout mSlidingPaneLayout;
     private ImageView imgPortrait;   //头像
+    private ImageView imgSex;
+    private TextView tvHeart;
+    private TextView tvNickname;
     private TextView tvPiFu;    //当前皮肤
     private TextView tvLogin;    //登录注册
+    private RelativeLayout rl_info;
+
     private FragmentMain fragmentMain;
     private ArrayList<Fragment> menus;
     private ArrayList<Music> musics=new ArrayList<>();
@@ -67,11 +75,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         receiver = new MyPlayStateReceiver();
         IntentFilter filter = new IntentFilter(MyService.PLAY_ACTION);
+        filter.addAction(MyApplication.CHANGELIST);
         registerReceiver(receiver,filter);
         initView();
         initData();
         Intent intent = new Intent(this, MyService.class);
-        MyService.setMusicList(musics);
+        MyApplication ap= (MyApplication) getApplication();
+        ap.setMusics(musics);
         startService(intent);
     }
 
@@ -81,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
         fragmentMain.setOnImgListener(new MyListener());
         menus=new ArrayList<>();
         menus.add(new FragmentPersonalInfo());
-        musics.addAll((ArrayList<Music>)MusicUtil.getAllSongs(MainActivity.this,"song"));
+        musics.addAll(((MyApplication)getApplication()).getMusics());
         adapter=new MenuAdapter(musics,MainActivity.this);
+
     }
 
     @Override
@@ -157,12 +168,29 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         mSlidingPaneLayout= (MySlidingPanelLayout) findViewById(R.id.sliding);
         imgPortrait= (ImageView) findViewById(R.id.img_main_portrait);
+        imgSex= (ImageView) findViewById(R.id.img_sex);
+        tvNickname= (TextView) findViewById(R.id.tv_nickname);
+        tvHeart= (TextView) findViewById(R.id.tv_heart);
+
         tvLogin= (TextView) findViewById(R.id.tv_main_login);
         tvPiFu= (TextView) findViewById(R.id.tv_pifu);
         imgPlay= (ImageView) findViewById(R.id.rb_song_playicon);
         imgPor= (ImageView) findViewById(R.id.img_song_cover);
         tvSong= (TextView) findViewById(R.id.tv_songname);
         tvSinger= (TextView) findViewById(R.id.tv_singer);
+        rl_info= (RelativeLayout) findViewById(R.id.rl_info);
+
+        User user = UserInfro.getUser();
+        if(user!=null){
+            tvLogin.setVisibility(View.INVISIBLE);
+            rl_info.setVisibility(View.VISIBLE);
+            if(user.getNickname()!=null&&user.getNickname()!=""){
+                tvNickname.setText(user.getNickname());
+            }
+            if(user.getHeart()!=null&&user.getHeart()!=""){
+                tvHeart.setText(user.getHeart());
+            }
+        }
     }
 
     private class MyListener implements FragmentMain.OnImgListener {
@@ -237,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, PlayActivity.class);
                 intent.putExtra("data",musics);
                 intent.putExtra("position",pos);
+                intent.putExtra("state",state);
                 startActivity(intent);
                 break;
             case R.id.rb_song_playicon:
@@ -281,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
             tvType.setText("随机播放");
         }
         tvCount.setText("("+musics.size()+"首)");
+        adapter=new MenuAdapter(musics,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         adapter.setListener(new MyItemClickListener());
@@ -296,12 +326,20 @@ public class MainActivity extends AppCompatActivity {
                     state=intent.getStringExtra("state");
                     pos = intent.getIntExtra("pos", 0);
                     title = intent.getStringExtra("title");
+                    tvSinger.setText(intent.getStringExtra("author"));
                     tvSong.setText(title);
                     if(state.equals("play")){
                         imgPlay.setImageResource(R.drawable.stop);
                     }else if(state.equals("stop")){
                         imgPlay.setImageResource(R.drawable.play);
                     }
+                    break;
+                case MyApplication.CHANGELIST:
+                    MyApplication ap= (MyApplication) getApplication();
+
+                    musics=ap.getMusics();
+                    adapter.notifyDataSetChanged();
+                    Log.e("MainActivity","列表已经改变"+musics.size());
                     break;
             }
         }

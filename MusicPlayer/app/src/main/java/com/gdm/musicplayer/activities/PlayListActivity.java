@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.bean.MList;
 import com.gdm.musicplayer.bean.Music;
@@ -108,7 +109,8 @@ public class PlayListActivity extends AppCompatActivity {
                 h.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MyService.setMusicList(list);
+                        MyApplication ap= (MyApplication) getApplication();
+                        ap.setMusics(list);
                         Intent intent = new Intent(MyService.mAction);
                         intent.putExtra("cmd","chose_pos");
                         intent.putExtra("pos",position-1);

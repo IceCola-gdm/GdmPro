@@ -99,16 +99,17 @@ public class FragmentPlay extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals("palyactivity")){
-                Log.e("---","收到广播");
                 state=intent.getStringExtra("state");
-                if (state.equals("play")) {
-                    imgBar.startAnimation(rotate3);
-                    imgCD.startAnimation(rotate);
-                    imgPortrait.startAnimation(rotate2);
-                }else if(state.equals("stop")){
-                    imgCD.clearAnimation();
-                    imgPortrait.clearAnimation();
-                    imgBar.setAnimation(rotate4);
+                if(state!=null){
+                    if (state.equals("play")) {
+                        imgBar.startAnimation(rotate3);
+                        imgCD.startAnimation(rotate);
+                        imgPortrait.startAnimation(rotate2);
+                    }else if(state.equals("stop")){
+                        imgCD.clearAnimation();
+                        imgPortrait.clearAnimation();
+                        imgBar.setAnimation(rotate4);
+                    }
                 }
             }
         }

@@ -16,11 +16,19 @@ public class Music implements Serializable{
     public void setId(int id) {
         this.id = id;
     }
-
+    private boolean isnet=true;
     private int duration;
     private String singer;
     private String album;
     private String fileUrl;
+
+    public boolean isnet() {
+        return isnet;
+    }
+
+    public void setIsnet(boolean isnet) {
+        this.isnet = isnet;
+    }
 
     public Music(String name, int duration, String singer, String album, String fileUrl) {
         this.name = name;
