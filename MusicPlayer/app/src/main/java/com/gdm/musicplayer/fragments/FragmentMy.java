@@ -33,11 +33,7 @@ public class FragmentMy extends Fragment {
     private ArrayList<MusicList> content;
     private Class[] classes={LocalMusicListActivity.class, RecentlyPlayActivity.class, DownLoadManageActivity.class, MyCollectionActivity.class};
     private int[] icons={R.drawable.local,R.drawable.w1,R.drawable.downmanage,R.drawable.collectmanage};
-    private ArrayList<Music> musics=new ArrayList<>();  //数据源1
-    private ArrayList<Music> musics2=new ArrayList<>();  //数据源2
-    private ArrayList<Music> musics3=new ArrayList<>();  //数据源3
-    private ArrayList<Music> musics4=new ArrayList<>();  //数据源4
-    private ArrayList<ArrayList<?>> datas=new ArrayList<>();  //总的数据源
+    private ArrayList<Music> musicsLocal=new ArrayList<>();  //数据源1
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,20 +41,16 @@ public class FragmentMy extends Fragment {
     }
 
     private void initData() {
-        datas.add(musics);
-        datas.add(musics2);
-        datas.add(musics3);
-        datas.add(musics4);
-        musics.addAll((ArrayList<Music>)MusicUtil.getAllSongs(getContext(),"song"));
+        musicsLocal.addAll((ArrayList<Music>)MusicUtil.getAllSongs(getContext(),"song"));
         for(int i=0;i<titles.length;i++){
             String title = titles[i];
             musicList1=new MusicList();
             musicList1.setImgPath(icons[i]);
             musicList1.setTitle(title);
-            musicList1.setNum(musics.size()+"");
+            musicList1.setNum(musicsLocal.size()+"");
             musicList1.setType(0);
             musicList1.setmClass(classes[i]);
-            musicList1.setM((ArrayList<Music>) datas.get(i));
+            musicList1.setM(musicsLocal);
             musicLists.add(musicList1);
         }
         content=new ArrayList<>();

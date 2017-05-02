@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MenuAdapter;
 import com.gdm.musicplayer.bean.Music;
@@ -177,14 +178,16 @@ public class MainActivity extends AppCompatActivity {
         rl_info= (RelativeLayout) findViewById(R.id.rl_info);
 
         User user = UserInfro.getUser();
-        if(user!=null){
-            tvLogin.setVisibility(View.INVISIBLE);
-            rl_info.setVisibility(View.VISIBLE);
-            if(user.getNickname()!=null&&user.getNickname()!=""){
-                tvNickname.setText(user.getNickname());
-            }
-            if(user.getHeart()!=null&&user.getHeart()!=""){
-                tvHeart.setText(user.getHeart());
+        if(MyApplication.isLogin) {
+            if (user != null) {
+                tvLogin.setVisibility(View.INVISIBLE);
+                rl_info.setVisibility(View.VISIBLE);
+                if (user.getNickname() != null && user.getNickname() != "") {
+                    tvNickname.setText(user.getNickname());
+                }
+                if (user.getHeart() != null && user.getHeart() != "") {
+                    tvHeart.setText(user.getHeart());
+                }
             }
         }
     }
@@ -346,6 +349,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
+        MyApplication.isLogin=false;
     }
 
     private class MyClickListener implements View.OnClickListener {
