@@ -49,6 +49,7 @@ public class MusicUtil {
                 if (cursor.getString(4) != null) {
                     song.setFileUrl(cursor.getString(4));  // 文件路径
                 }
+                song.setIsnet(false);
                 songs.add(song);
             } while (cursor.moveToNext());
             cursor.close();

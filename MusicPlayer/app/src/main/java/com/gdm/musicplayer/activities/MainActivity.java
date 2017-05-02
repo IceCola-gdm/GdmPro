@@ -75,11 +75,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         receiver = new MyPlayStateReceiver();
         IntentFilter filter = new IntentFilter(MyService.PLAY_ACTION);
+        filter.addAction(MyApplication.CHANGELIST);
         registerReceiver(receiver,filter);
         initView();
         initData();
         Intent intent = new Intent(this, MyService.class);
-        MyService.setMusicList(musics);
+        MyApplication ap= (MyApplication) getApplication();
+        ap.setMusics(musics);
         startService(intent);
     }
 
@@ -89,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
         fragmentMain.setOnImgListener(new MyListener());
         menus=new ArrayList<>();
         menus.add(new FragmentPersonalInfo());
-        musics.addAll((ArrayList<Music>)MusicUtil.getAllSongs(MainActivity.this,"song"));
+        musics.addAll(((MyApplication)getApplication()).getMusics());
         adapter=new MenuAdapter(musics,MainActivity.this);
+
     }
 
     @Override
@@ -309,6 +312,7 @@ public class MainActivity extends AppCompatActivity {
             tvType.setText("随机播放");
         }
         tvCount.setText("("+musics.size()+"首)");
+        adapter=new MenuAdapter(musics,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         adapter.setListener(new MyItemClickListener());
@@ -324,12 +328,20 @@ public class MainActivity extends AppCompatActivity {
                     state=intent.getStringExtra("state");
                     pos = intent.getIntExtra("pos", 0);
                     title = intent.getStringExtra("title");
+                    tvSinger.setText(intent.getStringExtra("author"));
                     tvSong.setText(title);
                     if(state.equals("play")){
                         imgPlay.setImageResource(R.drawable.stop);
                     }else if(state.equals("stop")){
                         imgPlay.setImageResource(R.drawable.play);
                     }
+                    break;
+                case MyApplication.CHANGELIST:
+                    MyApplication ap= (MyApplication) getApplication();
+
+                    musics=ap.getMusics();
+                    adapter.notifyDataSetChanged();
+                    Log.e("MainActivity","列表已经改变"+musics.size());
                     break;
             }
         }

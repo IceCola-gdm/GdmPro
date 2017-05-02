@@ -33,9 +33,11 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MenuAdapter;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
+import com.gdm.musicplayer.bean.MList;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.fragments.FragmentLyric;
 import com.gdm.musicplayer.fragments.FragmentPlay;
@@ -83,6 +85,7 @@ public class PlayActivity extends AppCompatActivity  {
         setAdapter();
         brod=new MyBrod();
         IntentFilter filter=new IntentFilter(MyService.PLAY_ACTION);
+        filter.addAction(MyApplication.CHANGELIST);
         registerReceiver(brod,filter);
         setListener();
     }
@@ -95,9 +98,16 @@ public class PlayActivity extends AppCompatActivity  {
                     total = intent.getIntExtra("total", 0);
                     now = intent.getIntExtra("now", 0);
                     tvCurrentTime.setText(TimeUtil.parse(now));
+                    seekBar.setMax(total);
                     seekBar.setProgress(now);
+                    tvTotalTime.setText(TimeUtil.parse(total));
                     pos = intent.getIntExtra("pos", 0);
                     title = intent.getStringExtra("title");
+                    tvSongName.setText(title);
+                    musics=MyService.getMusicList();
+                    if (adapter2!=null) {
+                        adapter2.notifyDataSetChanged();
+                    }
                 }else if(state.equals("stop")){
                     pos=intent.getIntExtra("pos", 0);
                 }else if(state.equals("next")){
@@ -107,7 +117,16 @@ public class PlayActivity extends AppCompatActivity  {
                     tvSongSinger.setText(musics.get(p).getSinger());
                     seekBar.setMax(intent.getIntExtra("total",0));
                     seekBar.setProgress(0);
+                }else if (state.equals("changeList")){
+                    musics=MyService.getMusicList();
+                    if (adapter2!=null) {
+                        adapter2.notifyDataSetChanged();
+                    }
                 }
+            }else if(intent.getAction().equals(MyApplication.CHANGELIST)){
+                MyApplication ap= (MyApplication) getApplication();
+                musics=ap.getMusics();
+                adapter2.notifyDataSetChanged();
             }
         }
     }
