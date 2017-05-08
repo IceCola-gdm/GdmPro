@@ -202,9 +202,18 @@ public class FragmentYYGTuiJian extends Fragment {
             @Override
             public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
                 ContentHolder h= (ContentHolder) holder;
-                MList mList = data.get(position);
+                final MList mList = data.get(position);
                 h.title.setText(mList.getName());
                 Glide.with(getActivity()).load(mList.getImgpath()).into(h.iv);
+                h.iv.setClickable(true);
+                h.iv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), PlayListActivity.class);
+                        intent.putExtra("data",mList);
+                        getActivity().startActivity(intent);
+                    }
+                });
             }
 
 
@@ -218,6 +227,7 @@ public class FragmentYYGTuiJian extends Fragment {
                 public ContentHolder(View itemView) {
                     super(itemView);
                     iv= (ImageView) itemView.findViewById(R.id.list_image);
+                    iv.setScaleType(ImageView.ScaleType.FIT_XY);
                     title= (TextView) itemView.findViewById(R.id.list_name);
                 }
             }

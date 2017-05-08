@@ -244,7 +244,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                 try {
                     Music bean = musicList.get(pos);
                     if (bean.isnet()) {
-                        if (checkNet()) {
+                        if (!checkNet()) {
                             Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
                             return;
                         }

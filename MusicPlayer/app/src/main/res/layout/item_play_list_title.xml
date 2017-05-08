@@ -5,8 +5,12 @@
     <RelativeLayout
         android:id="@+id/activity_play_list_title"
         android:layout_width="match_parent"
-        android:background="#234567"
         android:layout_height="200dp">
+        <ImageView
+            android:id="@+id/background"
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
         <ImageView
             android:id="@+id/activity_play_list_img"
             android:layout_width="150dp"
