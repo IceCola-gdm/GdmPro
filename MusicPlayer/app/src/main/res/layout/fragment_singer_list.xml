@@ -5,14 +5,15 @@
     android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="40dp"
+        android:background="#D33B30">
     <ImageView
         android:id="@+id/img_singername_back"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_centerVertical="true"
         android:layout_margin="10dp"
-        android:src="@drawable/back"
+        android:src="@drawable/arrow_left"
         android:clickable="true"
         android:onClick="localmusicClick"/>
     <TextView
@@ -20,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="name"
-        android:textColor="#3D3D3D"
+        android:textColor="#fff"
         android:textSize="20sp"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/img_singername_back"
