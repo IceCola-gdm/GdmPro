@@ -1,17 +1,22 @@
 package com.gdm.musicplayer.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.activities.SingerListActivity;
 import com.gdm.musicplayer.adapter.MyLocalSingerAdapter;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.Singer;
 import com.gdm.musicplayer.utils.MusicUtil;
+import com.gdm.musicplayer.utils.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -40,5 +45,15 @@ public class FragmentSinger extends Fragment {
         singers= (ArrayList<Singer>) MusicUtil.getAllSongs(getContext(),"singer");
         adapter=new MyLocalSingerAdapter(getContext(),singers);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new MyItemListener());
+    }
+
+    private class MyItemListener implements android.widget.AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = new Intent(getContext(), SingerListActivity.class);
+            intent.putExtra("singer",singers.get(position));
+            startActivity(intent);
+        }
     }
 }

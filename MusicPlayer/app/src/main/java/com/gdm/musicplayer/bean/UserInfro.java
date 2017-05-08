@@ -5,7 +5,6 @@ package com.gdm.musicplayer.bean;
  */
 public class UserInfro {
     public static User user;
-
     public static void setUser(User user) {
         UserInfro.user = user;
     }

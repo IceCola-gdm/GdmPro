@@ -15,12 +15,14 @@ import java.util.ArrayList;
  */
 public class MusicUtil {
     public static ArrayList<?> getAllSongs(Context context,String type) {
-        ArrayList<Music> songs = null;
-        ArrayList<Singer> singers=null;
-        ArrayList<Album> albums=null;
+        ArrayList<Music> songs = new ArrayList<>();
+        ArrayList<String> singerNames=new ArrayList<>();
+        ArrayList<String> albumNames=new ArrayList<>();
+        ArrayList<Singer> singers=new ArrayList<>();
+        ArrayList<Album> albums=new ArrayList<>();
         Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[]{
-                        MediaStore.Audio.Media.TITLE,
+                        MediaStore.Audio.Media.DISPLAY_NAME,
                         MediaStore.Audio.Media.DURATION,
                         MediaStore.Audio.Media.ARTIST,
                         MediaStore.Audio.Media.ALBUM,
@@ -28,27 +30,22 @@ public class MusicUtil {
                 MediaStore.Audio.Media.MIME_TYPE + "=? or "
                         + MediaStore.Audio.Media.MIME_TYPE + "=?",
                 new String[]{"audio/mpeg", "audio/x-ms-wma"}, null);
-        songs = new ArrayList<>();
-        singers=new ArrayList<>();
-        albums=new ArrayList<>();
         if (cursor.moveToFirst()) {
             Music song = null;
-            Singer singer=null;
-            Album album=null;
             do {
                 song = new Music();
-                singer=new Singer();
-                album=new Album();
-
-                song.setName(cursor.getString(0));  // 文件名
+                String[] split = cursor.getString(0).split(".mp3");
+                song.setName(split[0]);  // 文件名
 //              song.setTitle(cursor.getString(2));  // 歌曲名
                 song.setDuration(cursor.getInt(1));  // 时长
                 song.setSinger(cursor.getString(2)); // 歌手名
                 song.setAlbum(cursor.getString(3));  // 专辑名
-                singer.setName(cursor.getString(2));
-                singers.add(singer);
-                album.setName(cursor.getString(3));
-                albums.add(album);
+                if(!cursor.getString(2).equals("<unknown>")&&!singerNames.contains(cursor.getString(2))){
+                    singerNames.add(cursor.getString(2));
+                }
+                if(!cursor.getString(3).equals("<unknown>")&&!albumNames.contains(cursor.getString(3))){
+                    albumNames.add(cursor.getString(3));
+                }
                 if (cursor.getString(4) != null) {
                     song.setFileUrl(cursor.getString(4));  // 文件路径
                 }
@@ -57,26 +54,33 @@ public class MusicUtil {
             } while (cursor.moveToNext());
             cursor.close();
         }
-        for(int i=0;i<singers.size();i++){
-            ArrayList<Music> musics=new ArrayList<>();
+
+        for(int i=0;i<singerNames.size();i++){
+            Singer singer = new Singer();
+            singer.setName(singerNames.get(i));
+            ArrayList<Music> musics = new ArrayList<>();
             for(int j=0;j<songs.size();j++){
-                Music music = songs.get(j);
-                if(music.getSinger().equals(singers.get(j).getName())){
-                    musics.add(music);
+                if (songs.get(j).getSinger().equals(singerNames.get(i))) {
+                    musics.add(songs.get(j));
                 }
-                singers.get(j).setMusics(musics);
             }
+            singer.setMusics(musics);
+            singers.add(singer);
         }
-        for(int i=0;i<albums.size();i++){
-            ArrayList<Music> musics=new ArrayList<>();
+
+        for(int i=0;i<albumNames.size();i++){
+            Album album = new Album();
+            album.setName(albumNames.get(i));
+            ArrayList<Music> musics = new ArrayList<>();
             for(int j=0;j<songs.size();j++){
-                Music music = songs.get(j);
-                if(music.getAlbum().equals(albums.get(j).getName())){
-                    musics.add(music);
+                if (songs.get(j).getAlbum().equals(albumNames.get(i))) {
+                    musics.add(songs.get(j));
                 }
-                albums.get(j).setMusics(musics);
             }
+            album.setMusics(musics);
+            albums.add(album);
         }
+
 
         if(type.equals("song")){
             return songs;

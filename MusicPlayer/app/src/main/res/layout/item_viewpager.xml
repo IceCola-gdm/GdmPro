@@ -5,5 +5,5 @@
     <com.gdm.musicplayer.view.ScrollerPager
         android:layout_width="match_parent"
         android:id="@+id/mypager"
-        android:layout_height="150dp"></com.gdm.musicplayer.view.ScrollerPager>
+        android:layout_height="150dp"/>
 </LinearLayout>

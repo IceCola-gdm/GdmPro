@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.bean.UserInfro;
@@ -104,6 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
                 u.setPassword(password);
                 u.setId(id);
                 UserInfro.setUser(u);
+                MyApplication.isLogin=true;
                 Intent intent = new Intent(RegisterActivity.this,SetNicknameActivity.class);
                 startActivity(intent);
                 finish();
