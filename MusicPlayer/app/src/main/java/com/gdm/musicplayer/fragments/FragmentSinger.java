@@ -1,5 +1,6 @@
 package com.gdm.musicplayer.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.activities.SingerListActivity;
 import com.gdm.musicplayer.adapter.MyLocalSingerAdapter;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.Singer;
@@ -49,14 +51,9 @@ public class FragmentSinger extends Fragment {
     private class MyItemListener implements android.widget.AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            ToastUtil.toast(getContext(),"点击了");
-            Singer singer = singers.get(position);
-            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-            FragmentSingerList singerList = new FragmentSingerList();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("singer",singer);
-            singerList.setArguments(bundle);
-            ft.show(singerList);
+            Intent intent = new Intent(getContext(), SingerListActivity.class);
+            intent.putExtra("singer",singers.get(position));
+            startActivity(intent);
         }
     }
 }
