@@ -13,11 +13,11 @@
         android:layout_width="300dp"
         android:layout_height="180dp"
         android:background="@drawable/afc">
-        <com.gdm.musicplayer.view.CircleImageView
+        <ImageView
             android:id="@+id/img_main_portrait"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/me"
+            android:src="@drawable/pp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:clickable="true"
@@ -153,27 +153,6 @@
                 android:layout_marginRight="20dp"
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
-        <!--<RelativeLayout-->
-            <!--android:layout_width="300dp"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:clickable="true"-->
-            <!--android:onClick="clickInMain"-->
-            <!--android:id="@+id/main_rl_logout">-->
-            <!--<ImageView-->
-                <!--android:id="@+id/img_logout"-->
-                <!--android:layout_width="25dp"-->
-                <!--android:layout_height="25dp"-->
-                <!--android:src="@drawable/e"-->
-                <!--android:layout_margin="10dp"/>-->
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="退出登录"-->
-                <!--android:textSize="14sp"-->
-                <!--android:textColor="#3D3D3D"-->
-                <!--android:layout_toRightOf="@+id/img_logout"-->
-                <!--android:layout_centerVertical="true"/>-->
-        <!--</RelativeLayout>-->
         <RelativeLayout
             android:layout_width="300dp"
             android:layout_height="50dp"

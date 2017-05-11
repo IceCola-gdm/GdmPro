@@ -1,13 +1,16 @@
 package com.gdm.musicplayer.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.activities.AlbumListActivity;
 import com.gdm.musicplayer.adapter.MyLocalAlbumAdapter;
 import com.gdm.musicplayer.adapter.MyLocalSingerAdapter;
 import com.gdm.musicplayer.bean.Album;
@@ -40,6 +43,15 @@ public class FragmentAlbum extends Fragment {
         albums=(ArrayList<Album>) MusicUtil.getAllSongs(getContext(),"album");
         adapter=new MyLocalAlbumAdapter(getContext(),albums);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Album album = albums.get(position);
+                Intent intent = new Intent(getContext(), AlbumListActivity.class);
+                intent.putExtra("data",album);
+                startActivity(intent);
+            }
+        });
     }
     public void setAlbums(ArrayList<Album> albums){
         this.albums=albums;

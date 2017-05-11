@@ -38,6 +38,8 @@ public class PlayListActivity extends AppCompatActivity {
     private MList data;
     private ArrayList<Music> list;
     private RecyclerView show;
+    private String musicpath="http://120.24.220.119:8080/music/data/music/";
+    private String musicpath2="http://120.24.220.119:8080/music/music/selectListContent";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +51,7 @@ public class PlayListActivity extends AppCompatActivity {
 
     private void initData() {
         list=new ArrayList<>();
-        OkHttpUtils.get("http://120.24.220.119:8080/music/music/selectListContent")
+        OkHttpUtils.get(musicpath2)
                 .params("listid",data.getId())
                 .execute(new StringCallback() {
                     @Override
@@ -58,7 +60,6 @@ public class PlayListActivity extends AppCompatActivity {
                     }
                 });
     }
-    private String musicpath="http://120.24.220.119:8080/music/data/music/";
     private void parse(String s) {
         try {
             JSONObject js = new JSONObject(s);
@@ -94,7 +95,7 @@ public class PlayListActivity extends AppCompatActivity {
                 View v = getLayoutInflater().inflate(R.layout.item_play_list_title, null, false);
                 return new TitleHolder(v);
             }else {
-                View v = getLayoutInflater().inflate(R.layout.localmusiclist_listview_item, null, false);
+                View v = getLayoutInflater().inflate(R.layout.tuijian_listview_item, null, false);
                 return new ContentHolder(v);
             }
 //            return null;
@@ -108,19 +109,32 @@ public class PlayListActivity extends AppCompatActivity {
                 Glide.with(PlayListActivity.this).load(data.getImgpath()).bitmapTransform(new BlurTransformation(PlayListActivity.this)).into(h.background);
                 Glide.with(PlayListActivity.this).load(data.getImgpath()).into(h.icon);
                 h.title.setText(data.getName());
+                h.back.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
             }else if(holder instanceof ContentHolder){
                 ContentHolder h= (ContentHolder) holder;
                 Music music = list.get(position-1);
                 h.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Intent intent1 = new Intent(PlayListActivity.this, PlayActivity.class);
+                        intent1.putExtra("data",list);
+                        intent1.putExtra("position",position-1);
+                        intent1.putExtra("anim","start");
+                        startActivity(intent1);
+                        finish();
+
                         MyApplication ap= (MyApplication) getApplication();
                         ap.setMusics(list);
                         Intent intent = new Intent(MyService.mAction);
                         intent.putExtra("cmd","chose_pos");
                         intent.putExtra("pos",position-1);
+                        intent.putExtra("data",list);
                         sendBroadcast(intent);
-
                     }
                 });
                 h.name.setText(music.getName());
@@ -144,13 +158,14 @@ public class PlayListActivity extends AppCompatActivity {
 
         class TitleHolder extends RecyclerView.ViewHolder{
             TextView title,desc;
-            ImageView icon,background;
+            ImageView icon,background,back;
             public TitleHolder(View itemView) {
                 super(itemView);
                 title= (TextView) itemView.findViewById(R.id.activity_play_list_name);
                 desc= (TextView) itemView.findViewById(R.id.activity_play_list_discription);
                 icon= (ImageView) itemView.findViewById(R.id.activity_play_list_img);
                 background= (ImageView) itemView.findViewById(R.id.background);
+                back= (ImageView) itemView.findViewById(R.id.img_song_list_back);
             }
         }
         class ContentHolder extends RecyclerView.ViewHolder{

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="70dp">
     <TextView
         android:id="@+id/tv_song_name"
         android:layout_width="wrap_content"
@@ -11,22 +11,21 @@
         android:layout_margin="10dp"
         android:textSize="16sp"/>
     <ImageView
-        android:id="@+id/img_icon"
+        android:id="@+id/img_l"
         android:layout_width="15dp"
         android:layout_height="15dp"
-        android:layout_below="@+id/tv_song_name"
         android:src="@drawable/z4"
-        android:layout_marginLeft="10dp"
-        />
+        android:layout_below="@+id/tv_song_name"
+        android:layout_marginLeft="10dp"/>
     <TextView
         android:id="@+id/tv_song_singer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/img_icon"
         android:layout_below="@+id/tv_song_name"
         android:text="gaga"
         android:textColor="#A5A9A8"
         android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/img_l"
         android:textSize="14sp"/>
     <ImageView
         android:id="@+id/img_song_setting"

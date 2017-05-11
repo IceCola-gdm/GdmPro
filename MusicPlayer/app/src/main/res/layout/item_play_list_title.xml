@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/activity_play_list_title"
         android:layout_width="match_parent"
         android:layout_height="200dp">
@@ -11,33 +12,53 @@
             android:scaleType="fitXY"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-        <ImageView
-            android:id="@+id/activity_play_list_img"
-            android:layout_width="150dp"
-            android:layout_marginLeft="20dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_centerVertical="true"
-            android:layout_height="150dp" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_toRightOf="@+id/activity_play_list_img"
-            android:text="小轩的歌单"
-            android:id="@+id/activity_play_list_name"
-            android:layout_marginLeft="20dp"
-            android:layout_alignTop="@+id/activity_play_list_img"
-            android:layout_marginTop="20dp"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="#eee"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:id="@+id/activity_play_list_discription"
-            android:text="小轩的测试1234567890123456789123456789123456789123111111111111111111111111111111111111111111111111111111111111"
-            android:layout_alignLeft="@+id/activity_play_list_name"
-            android:layout_below="@+id/activity_play_list_name"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#3f999999">
+            <ImageView
+                android:id="@+id/img_song_list_back"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:src="@drawable/arrow_left"/>
+            <ImageView
+                android:id="@+id/activity_play_list_img"
+                android:layout_width="100dp"
+                android:layout_margin="10dp"
+                android:src="@mipmap/ic_launcher"
+                android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:layout_height="100dp" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/activity_play_list_img"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp">
+                <TextView
+                    android:id="@+id/activity_play_list_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="小轩的歌单"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="#fff"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+                <TextView
+                    android:id="@+id/activity_play_list_discription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:text="小轩的测试"
+                    android:textColor="#fff"
+                    android:layout_marginRight="10dp"
+                    android:layout_below="@+id/activity_play_list_name"
+                    />
+            </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
 </LinearLayout>

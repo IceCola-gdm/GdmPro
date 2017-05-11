@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.bean.UserInfro;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.lzy.okhttputils.OkHttpUtils;
@@ -33,12 +34,17 @@ public class SetNicknameActivity extends AppCompatActivity {
     private static final String PATH="http://120.24.220.119:8080/music/user/updateUser";
     private List<File> files=new ArrayList<>();   //背景图片文件
     private String img= Environment.getExternalStorageDirectory()+File.separator+"a.jpg";
+    private MyApplication app;
+    private User user=null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_nickname);
+        app= (MyApplication) getApplication();
+        user=app.getUser();
         edNickname= (EditText) findViewById(R.id.et_set_nickname_name);
-        MyApplication.isLogin=true;
+
     }
     public void setNicknameClick(View view){
         switch (view.getId()){
@@ -90,7 +96,7 @@ public class SetNicknameActivity extends AppCompatActivity {
             if(message.equals("修改成功")){
                 JSONObject data = job.getJSONObject("data");
                 String name = data.getString("nickname");
-                UserInfro.getUser().setNickname(name);
+                user.setNickname(name);
             }else{
                 ToastUtil.toast(SetNicknameActivity.this,message);
             }

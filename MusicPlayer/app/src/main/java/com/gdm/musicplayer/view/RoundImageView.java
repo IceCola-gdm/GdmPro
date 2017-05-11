@@ -13,6 +13,8 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+
 /**
  * Created by Administrator on 2017/4/19 0019.
  */
@@ -43,7 +45,7 @@ public class RoundImageView extends ImageView {
             return;
         }
 
-        Bitmap b =  ((BitmapDrawable)drawable).getBitmap();
+        Bitmap b =  ((GlideBitmapDrawable)drawable).getBitmap();
 
         if(null == b)
         {
@@ -51,10 +53,7 @@ public class RoundImageView extends ImageView {
         }
 
         Bitmap bitmap = b.copy(Bitmap.Config.ARGB_8888, true);
-
         int w = getWidth(), h = getHeight();
-
-
         Bitmap roundBitmap =  getCroppedBitmap(bitmap, w);
         canvas.drawBitmap(roundBitmap, 0,0, null);
 

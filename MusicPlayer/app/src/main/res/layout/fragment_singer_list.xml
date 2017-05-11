@@ -31,7 +31,7 @@
         android:id="@+id/rl_all2"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#EFF3F2">
+        android:background="#fff">
         <ImageView
             android:id="@+id/img_singername_icon"
             android:layout_width="20dp"

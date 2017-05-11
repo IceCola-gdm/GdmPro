@@ -37,8 +37,12 @@ public class SingerListActivity extends AppCompatActivity {
         musics.addAll(singer.getMusics());
         initView();
         setListener();
+        setAdapter();
+    }
 
-
+    private void setAdapter() {
+        adapter=new MySingerListAdapter(SingerListActivity.this,musics);
+        listView.setAdapter(adapter);
     }
 
     private void setListener() {
@@ -74,10 +78,18 @@ public class SingerListActivity extends AppCompatActivity {
     private class MyItemListener implements android.widget.AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(MyService.mAction);
-            intent.putExtra("cmd","chose_pos");
-            intent.putExtra("pos",position);
-            sendBroadcast(intent);
+            Intent intent1 = new Intent(MyService.mAction);
+            intent1.putExtra("cmd","chose_pos");
+            intent1.putExtra("pos",position);
+            intent1.putExtra("data",musics);
+            sendBroadcast(intent1);
+
+            Intent intent = new Intent(SingerListActivity.this, PlayActivity.class);
+            intent.putExtra("data",musics);
+            intent.putExtra("position",position);
+            intent.putExtra("state","play");
+            startActivity(intent);
+            finish();
         }
     }
 }

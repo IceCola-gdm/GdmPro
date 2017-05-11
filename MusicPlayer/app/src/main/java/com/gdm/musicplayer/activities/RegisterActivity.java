@@ -31,12 +31,14 @@ public class RegisterActivity extends AppCompatActivity {
     private String account="";
     private String pwd="";
     private String pwdAgain="";
+    private MyApplication app;
     private static final String PATH="http://120.24.220.119:8080/music/user/register";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        app= (MyApplication) getApplication();
         initView();
     }
 
@@ -104,8 +106,8 @@ public class RegisterActivity extends AppCompatActivity {
                 u.setUsername(username);
                 u.setPassword(password);
                 u.setId(id);
-                UserInfro.setUser(u);
-                MyApplication.isLogin=true;
+                app.setLogin(true);
+                app.setUser(u);
                 Intent intent = new Intent(RegisterActivity.this,SetNicknameActivity.class);
                 startActivity(intent);
                 finish();

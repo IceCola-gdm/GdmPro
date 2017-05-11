@@ -4,15 +4,24 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
+import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.view.ChildViewPager;
+import com.lzy.okhttputils.OkHttpUtils;
+import com.lzy.okhttputils.callback.StringCallback;
 
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/4/11 0011.
@@ -23,9 +32,15 @@ public class FragmentYinYueGuan extends Fragment {
     private String[] titles={"个性推荐","歌单","排行榜"};
     private MyPagerAdapter adapter;
     private ArrayList<Fragment> fgs=new ArrayList<>();
+    private ArrayList<Music> musics=new ArrayList<>();
+    private Music music=null;
+    private MyApplication app;
+    private User user;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        app= (MyApplication) getActivity().getApplication();
+        user=app.getUser();
         initData();
     }
 

@@ -1,5 +1,6 @@
 package com.gdm.musicplayer.fragments;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,15 +11,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.service.MyService;
+import com.gdm.musicplayer.utils.ToastUtil;
 import com.gdm.musicplayer.view.RoundImageView;
+import com.lzy.okhttputils.OkHttpUtils;
+import com.lzy.okhttputils.callback.StringCallback;
+
+import java.io.Serializable;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/4/19 0019.
@@ -35,14 +51,26 @@ public class FragmentPlay extends Fragment {
     private String state;
     private int pos;
     private MyBroadcastReceiver receiver;
+    private MyApplication app;
+    private User user;
+    private ImageView imgLike;
+    private ImageView imgDown;
+    private ImageView imgInfo;
+    private ImageView imgMes;
+    private ImageView imgZan;
+    private AlertDialog myDialog;
+    private Music lastMusic=new Music();
+    private String path="http://120.24.220.119:8080/music/comment/good";
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initData();
         receiver = new MyBroadcastReceiver();
-        IntentFilter filter = new IntentFilter("palyactivity");
+        IntentFilter filter = new IntentFilter(MyService.PLAY_ACTION);
         getActivity().registerReceiver(receiver,filter);
+        app= (MyApplication) getActivity().getApplication();
+        user=app.getUser();
     }
 
     private void initData() {
@@ -81,12 +109,26 @@ public class FragmentPlay extends Fragment {
         imgCD= (RoundImageView) view.findViewById(R.id.rl_play);
         imgPortrait= (ImageView) view.findViewById(R.id.img_play_portrait);
         imgBar= (ImageView) view.findViewById(R.id.img_bar);
+        imgLike= (ImageView) view.findViewById(R.id.img_play_like);
+        imgDown= (ImageView) view.findViewById(R.id.img_play_down);
+        imgInfo= (ImageView) view.findViewById(R.id.img_play_info);
+        imgMes= (ImageView) view.findViewById(R.id.img_play_mes);
+        imgZan= (ImageView) view.findViewById(R.id.img_play_zan);
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setListener();
+    }
+
+    private void setListener() {
+        imgLike.setOnClickListener(new MyListener());
+        imgDown.setOnClickListener(new MyListener());
+        imgInfo.setOnClickListener(new MyListener());
+        imgZan.setOnClickListener(new MyListener());
+        imgMes.setOnClickListener(new MyListener());
     }
 
     @Override
@@ -96,22 +138,111 @@ public class FragmentPlay extends Fragment {
     }
 
     private class MyBroadcastReceiver extends BroadcastReceiver {
+        private boolean animstart=false;
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals("palyactivity")){
+            if(intent.getAction().equals(MyService.PLAY_ACTION)){
                 state=intent.getStringExtra("state");
+                Music music = (Music) intent.getSerializableExtra("music");
+                if(music!=null){
+                    if(!music.getName().equals(lastMusic.getName())){
+                        lastMusic=music;
+                    }
+                }
                 if(state!=null){
                     if (state.equals("play")) {
+                        if (animstart) {
+                          return;
+                        }
                         imgBar.startAnimation(rotate3);
                         imgCD.startAnimation(rotate);
                         imgPortrait.startAnimation(rotate2);
+                        animstart=true;
                     }else if(state.equals("stop")){
+                        if (!animstart) {
+                            return;
+                        }
                         imgCD.clearAnimation();
                         imgPortrait.clearAnimation();
                         imgBar.setAnimation(rotate4);
+                        animstart=false;
                     }
                 }
             }
         }
+    }
+
+    private class MyListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if(app.isLogin()){
+                switch (v.getId()){
+                    case R.id.img_play_like:
+                        like();
+                        break;
+                    case R.id.img_play_down:
+                        download();
+                        break;
+                    case R.id.img_play_info:
+                        musicoperate();
+                        break;
+                    case R.id.img_play_mes:
+                        mess();
+                        break;
+                    case R.id.img_play_zan:
+                        zan();
+                        break;
+                }
+            }else{
+                ToastUtil.toast(getContext(),"还没有登录哟");
+            }
+
+        }
+    }
+
+    private void mess() {
+
+    }
+
+    private void zan() {
+        OkHttpUtils.post(path)
+                .params("id",user.getId())
+                .params("type",1)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Log.e("------",s);
+                    }
+                });
+    }
+
+    private void musicoperate() {
+        myDialog = new AlertDialog.Builder(getContext()).create();
+        myDialog.show();
+        WindowManager.LayoutParams params = myDialog.getWindow().getAttributes();
+        params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        myDialog.getWindow().setAttributes(params);
+        myDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        myDialog.getWindow().setContentView(R.layout.play_item_operation);
+        RelativeLayout rlAdd= (RelativeLayout) myDialog.getWindow().findViewById(R.id.rl_add);
+        RelativeLayout rlMv= (RelativeLayout) myDialog.getWindow().findViewById(R.id.rl_mv);
+        TextView tvSinger= (TextView) myDialog.getWindow().findViewById(R.id.t_singer);
+        TextView tvAlbum= (TextView) myDialog.getWindow().findViewById(R.id.t_album);
+
+    }
+
+    /**
+     * 添加下载
+     */
+    private void download() {
+
+    }
+
+    /**
+     * 添加喜欢
+     */
+    private void like() {
+
     }
 }

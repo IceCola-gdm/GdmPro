@@ -20,9 +20,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.activities.ManageGedanActivity;
 import com.gdm.musicplayer.bean.MusicList;
+import com.gdm.musicplayer.utils.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -43,12 +45,14 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private Button btn_cancel;
     private String gedan;
     private AlertDialog dialog;
+    private MyApplication app;
 
-    public MyRecyclerViewAdapter(Context context, ArrayList<MusicList> beens,ArrayList<MusicList> content) {
+    public MyRecyclerViewAdapter(Context context, ArrayList<MusicList> beens,ArrayList<MusicList> content,MyApplication app) {
         this.context = context;
         this.beens = beens;
         inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.content=content;
+        this.app=app;
     }
 
     @Override
@@ -109,11 +113,14 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 @Override
                 public void onClick(View v) {
                     //创建歌单
-                    show();
+                    if(!app.isLogin()){
+                        ToastUtil.toast(context,"还没有登录哟");
+                    }else{
+                        show();
+                    }
                 }
             });
         }
-
     }
 
     private void show() {

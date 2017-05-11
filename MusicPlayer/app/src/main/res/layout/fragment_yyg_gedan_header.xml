@@ -42,7 +42,7 @@
             android:id="@+id/title1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:layout_below="@id/tv_1"
             android:text="给你一剂抵挡四季抑郁的上好良药"
             android:layout_toRightOf="@+id/img_gedan"
@@ -61,7 +61,8 @@
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="60dp"
+        android:clickable="false">
         <RelativeLayout
             android:layout_width="70dp"
             android:layout_height="25dp"
@@ -103,7 +104,7 @@
                 android:id="@+id/tv_yaogun"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="  摇滚  |"
+                android:text="  英语  |"
                 android:textColor="#3D3D3D"
                 android:textSize="12sp"
                 android:clickable="true"/>
@@ -111,7 +112,7 @@
                 android:id="@+id/tv_minyao"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="  民谣  |"
+                android:text="  韩语  "
                 android:textColor="#3D3D3D"
                 android:textSize="12sp"
                 android:clickable="true"/>

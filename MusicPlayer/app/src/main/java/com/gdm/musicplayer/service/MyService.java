@@ -13,15 +13,18 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.MusicBean;
 import com.gdm.musicplayer.bean.MusicList;
+import com.gdm.musicplayer.utils.ToastUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -31,10 +34,9 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     public static ArrayList<Music> getMusicList() {
         return musicList;
     }
-
     public MediaPlayer player;
     //数据源
-    private  static ArrayList<Music> musicList;
+    private  static ArrayList<Music> musicList=new ArrayList<>();
     //当前播放位置
     private int pos=0;
     //播放类型
@@ -47,7 +49,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     public static final int RANDOM_PLAY=3;
     //顺序播放
     public static final int LIST_PLAY=0;
-    private boolean isPlay;
+    public static boolean isPlay=false;
 
     public static void setType(int type) {
         MyService.type = type;
@@ -85,6 +87,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                     if (player.isPlaying()) {
                         Music bean = musicList.get(pos);
                         Intent intent = new Intent(PLAY_ACTION);
+                        intent.putExtra("music",bean);
                         intent.putExtra("state", "play");
                         intent.putExtra("pos", pos);
                         intent.putExtra("total", player.getDuration());
@@ -166,36 +169,45 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(mAction)) {
                 String cmd = intent.getStringExtra("cmd");
-                if (cmd.equals("next")) {//下一首命令
-                    nextMusic();
-                }else if(cmd.equals("play")){//播放命令
-                    if (player.isPlaying()) {
+                if(cmd!=null&&cmd!=""){
+                    if (cmd.equals("next")) {//下一首命令
+                        nextMusic();
+                    }else if(cmd.equals("play")){//播放命令
+                        if (player.isPlaying()) {
+                            pause();
+                        }else {
+                            play();
+                        }
+                    }else if(cmd.equals("pause")){//暂停命令
+//                    ToastUtil.toast(MyService.this,"pause");
                         pause();
-                    }else {
+                    }else if(cmd.equals("stop")){//停止命令
+                        stop();
+                    }else if(cmd.equals("last")){//上一首命令
+                        last();
+                    }else if(cmd.equals("type")){//设置播放类型
+                        type = intent.getIntExtra("type", 0);
+                    }else if(cmd.equals("seek_stop")){//拖动时要先暂停播放
+                        player.pause();
+                    }else if(cmd.equals("seek_pos")){//拖动完成之后
+                        int pos = intent.getIntExtra("pos", 0);
+                        player.seekTo(pos);
+                        if (!player.isPlaying()) {
+                            player.start();
+                        }
+                    }else if(cmd.equals("chose_pos")){//从列表位置开始播放
+                        stop();
+                        int pos = intent.getIntExtra("pos", 0);
+                        ArrayList musics = (ArrayList) intent.getSerializableExtra("data");
+                        if(musicList!=null){
+                            musicList.clear();
+                        }
+                        musicList.addAll(musics);
+                        MyService.this.pos=pos;
                         play();
                     }
-                }else if(cmd.equals("pause")){//暂停命令
-                    pause();
-                }else if(cmd.equals("stop")){//停止命令
-                    stop();
-                }else if(cmd.equals("last")){//上一首命令
-                    last();
-                }else if(cmd.equals("type")){//设置播放类型
-                    type = intent.getIntExtra("type", 0);
-                }else if(cmd.equals("seek_stop")){//拖动时要先暂停播放
-                    player.pause();
-                }else if(cmd.equals("seek_pos")){//拖动完成之后
-                    int pos = intent.getIntExtra("pos", 0);
-                    player.seekTo(pos);
-                    if (!player.isPlaying()) {
-                        player.start();
-                    }
-                }else if(cmd.equals("chose_pos")){//从列表位置开始播放
-                    int pos = intent.getIntExtra("pos", 0);
-                    stop();
-                    MyService.this.pos=pos;
-                    play();
                 }
+
             }else if(intent.getAction().equals(MyApplication.CHANGELIST)){
                 MyApplication ap= (MyApplication) getApplication();
                 musicList=ap.getMusics();
@@ -220,7 +232,6 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
             player.stop();
             isPlay=false;
         }
-
         player.reset();
     }
     private int nowPos=-1;
@@ -229,6 +240,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
             player.pause();
             nowPos=player.getCurrentPosition();
         }
+        isPlay=false;
     }
 
     private void play() {

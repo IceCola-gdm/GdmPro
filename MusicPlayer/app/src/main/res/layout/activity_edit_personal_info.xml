@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -40,37 +39,37 @@
             android:onClick="MyEditClick"
             />
     </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/rl_portrait"
-        android:clickable="true"
-        android:onClick="MyEditClick"
-        android:layout_width="match_parent"
-        android:layout_height="60dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="头像"
-            android:textColor="#3D3D3D"
-            android:textSize="16sp"
-            android:layout_centerVertical="true"
-            android:layout_margin="10dp"/>
-        <ImageView
-            android:id="@+id/img_edit_personalinfo_touxiang"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/me"
-            android:layout_alignParentRight="true"
-            android:layout_margin="10dp"
-            android:layout_centerVertical="true"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0.1dp"
-            android:layout_alignParentBottom="true"
-            android:background="#F0F5F4"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            />
-    </RelativeLayout>
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_portrait"-->
+        <!--android:clickable="true"-->
+        <!--android:onClick="MyEditClick"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="60dp">-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="头像"-->
+            <!--android:textColor="#3D3D3D"-->
+            <!--android:textSize="16sp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_margin="10dp"/>-->
+        <!--<ImageView-->
+            <!--android:id="@+id/img_edit_personalinfo_touxiang"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:src="@drawable/me"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:layout_centerVertical="true"/>-->
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0.1dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:background="#F0F5F4"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--/>-->
+    <!--</RelativeLayout>-->
     <RelativeLayout
         android:id="@+id/rl_background"
         android:clickable="true"
@@ -102,38 +101,38 @@
             android:layout_marginRight="10dp"
             />
     </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/rl_nickname"
-        android:clickable="true"
-        android:onClick="MyEditClick"
-        android:layout_width="match_parent"
-        android:layout_height="60dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="昵称"
-            android:textColor="#3D3D3D"
-            android:textSize="16sp"
-            android:layout_centerVertical="true"
-            android:layout_margin="10dp"/>
-        <TextView
-            android:id="@+id/tv_edit_personalinfo_nickname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_margin="10dp"
-            android:layout_centerVertical="true"
-            android:text="哈根小嘎嘎好"
-            android:textColor="#D4D4D4"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0.1dp"
-            android:layout_alignParentBottom="true"
-            android:background="#F0F5F4"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            />
-    </RelativeLayout>
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_nickname"-->
+        <!--android:clickable="true"-->
+        <!--android:onClick="MyEditClick"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="60dp">-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="昵称"-->
+            <!--android:textColor="#3D3D3D"-->
+            <!--android:textSize="16sp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_margin="10dp"/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/tv_edit_personalinfo_nickname"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:text="哈根小嘎嘎好"-->
+            <!--android:textColor="#D4D4D4"/>-->
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0.1dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:background="#F0F5F4"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--/>-->
+    <!--</RelativeLayout>-->
     <RelativeLayout
         android:id="@+id/rl_sex"
         android:clickable="true"
@@ -266,4 +265,18 @@
             android:layout_marginRight="10dp"
             />
     </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="点击下面空白处，编辑心情"
+        android:textColor="#939393"
+        android:textSize="16sp"
+        android:layout_marginLeft="5dp"
+        />
+    <EditText
+        android:id="@+id/ed_heart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@null"/>
 </LinearLayout>

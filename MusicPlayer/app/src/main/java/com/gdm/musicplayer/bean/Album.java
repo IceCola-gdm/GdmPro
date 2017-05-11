@@ -1,11 +1,12 @@
 package com.gdm.musicplayer.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2017/4/27 0027.
  */
-public class Album {
+public class Album implements Serializable{
     private String imgpath;
     private String name;
     private ArrayList<Music> musics;

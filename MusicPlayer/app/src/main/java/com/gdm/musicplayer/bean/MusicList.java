@@ -1,7 +1,5 @@
 package com.gdm.musicplayer.bean;
 
-import android.content.Context;
-import android.content.Intent;
 
 import java.util.ArrayList;
 

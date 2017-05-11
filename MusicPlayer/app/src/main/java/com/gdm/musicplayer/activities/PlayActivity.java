@@ -73,8 +73,7 @@ public class PlayActivity extends AppCompatActivity  {
     private ImageView imgType2;
     private TextView tvType;
     private TextView tvCount;
-
-
+    private String anim="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,9 +137,13 @@ public class PlayActivity extends AppCompatActivity  {
         Intent intent = getIntent();
         currentIndex=intent.getIntExtra("position",-1);
         ArrayList<Music> m = (ArrayList<Music>) intent.getSerializableExtra("data");
+        anim = intent.getStringExtra("anim");
         String state1 = intent.getStringExtra("state");
         if(state1!=null){
             state=state1;
+        }
+        if(musics!=null){
+            musics.clear();
         }
         musics.addAll(m);
     }
@@ -171,14 +174,32 @@ public class PlayActivity extends AppCompatActivity  {
         tvSongName= (TextView) findViewById(R.id.tv_play_song_name);
         tvSongSinger= (TextView) findViewById(R.id.tv_play_song_info);
         seekBar= (SeekBar) findViewById(R.id.seekbar);
-        seekBar.setMax(musics.get(pos).getDuration());
+        if(musics.size()!=0){
+            seekBar.setMax(musics.get(pos).getDuration());
+        }
         imgPlay= (ImageView) findViewById(R.id.img_play_play);
         imgPlayType= (ImageView) findViewById(R.id.img_play_type);
-        if(state.equals("stop")){
-            imgPlay.setImageResource(R.drawable.a_5);
-        }else if(state.equals("play")){
-            imgPlay.setImageResource(R.drawable.a_3);
+        if(anim!=null&&anim!=""){
+            if(anim.equals("start")){
+                imgPlay.setImageResource(R.drawable.a_3);
+                state="play";
+            }else{
+                imgPlay.setImageResource(R.drawable.a_5);
+                state="stop";
+            }
+        }else{
+            if(state.equals("stop")){
+                state="stop";
+                imgPlay.setImageResource(R.drawable.a_5);
+            }else if(state.equals("play")){
+                imgPlay.setImageResource(R.drawable.a_3);
+                state="play";
+            }
         }
+        Intent intent = new Intent("palyactivity");
+        intent.putExtra("state",state);
+        sendBroadcast(intent);
+
     }
     public void playClick(View view){
         Intent intent = new Intent(MyService.mAction);
@@ -203,6 +224,9 @@ public class PlayActivity extends AppCompatActivity  {
             case R.id.img_play_last:
                 seekBar.setProgress(0);
                 pos--;
+                if(pos==0){
+                    return;
+                }
                 intent.putExtra("cmd","last");
                 state="play";
                 imgPlay.setImageResource(R.drawable.a_3);
@@ -212,23 +236,21 @@ public class PlayActivity extends AppCompatActivity  {
                 seekBar.setMax(musics.get(pos).getDuration());
                 break;
             case R.id.img_play_play:
-                Intent intent1 = new Intent("palyactivity");
                 if(MainActivity.state.equals("stop")){
                     imgPlay.setImageResource(R.drawable.a_3);
-                    intent.putExtra("cmd","play");
-                    intent1.putExtra("state","play");
                     state="play";
                 }else if(MainActivity.state.equals("play")){
                     imgPlay.setImageResource(R.drawable.a_5);
-                    intent.putExtra("cmd","play");
-                    intent1.putExtra("state","stop");
                     state="stop";
                 }
-                sendBroadcast(intent1);
+                intent.putExtra("cmd","play");
                 break;
             case R.id.img_play_next:
                 seekBar.setProgress(0);
                 pos++;
+                if(pos==musics.size()){
+                    return;
+                }
                 intent.putExtra("cmd","next");
                 state="play";
                 imgPlay.setImageResource(R.drawable.a_3);
@@ -306,7 +328,8 @@ public class PlayActivity extends AppCompatActivity  {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-
+            imgPlay.setImageResource(R.drawable.a_3);
+            state="play";
         }
     }
 
@@ -330,7 +353,6 @@ public class PlayActivity extends AppCompatActivity  {
             seekBar.setMax(music.getDuration());
             imgPlay.setImageResource(R.drawable.a_3);
             state="play";
-
         }
     }
 

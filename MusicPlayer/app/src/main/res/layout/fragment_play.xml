@@ -12,12 +12,12 @@
             android:layout_height="300dp"
             android:background="@drawable/a9o"
             android:layout_gravity="center"/>
-        <com.gdm.musicplayer.view.CircleImageView
+        <ImageView
             android:id="@+id/img_play_portrait"
             android:layout_width="220dp"
             android:layout_height="220dp"
             android:layout_gravity="center"
-            android:src="@drawable/timg_10"/>
+            android:src="@drawable/a90"/>
 
         <ImageView
             android:id="@+id/img_bar"
@@ -38,7 +38,7 @@
         android:layout_alignParentBottom="true"
         android:gravity="center_horizontal">
         <LinearLayout
-            android:layout_width="200dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
@@ -47,6 +47,16 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:src="@drawable/a_jj"
+                android:clickable="true"
+                />
+            <ImageView
+                android:id="@+id/img_play_mes"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                android:src="@drawable/mess"
+                android:clickable="true"
+                android:layout_marginTop="16dp"
                 />
             <ImageView
                 android:id="@+id/img_play_down"
@@ -54,6 +64,16 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:src="@drawable/a_aa"
+                android:clickable="true"
+                />
+            <ImageView
+                android:id="@+id/img_play_zan"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                android:src="@drawable/zan"
+                android:clickable="true"
+                android:layout_marginTop="15dp"
                 />
             <ImageView
                 android:id="@+id/img_play_info"
@@ -61,6 +81,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:src="@drawable/a_mm"
+                android:clickable="true"
                 />
         </LinearLayout>
     </RelativeLayout>

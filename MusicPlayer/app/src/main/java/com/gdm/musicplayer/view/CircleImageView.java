@@ -3,15 +3,19 @@ package com.gdm.musicplayer.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.gdm.musicplayer.R;
 
 /**
@@ -117,9 +121,9 @@ public class CircleImageView extends ImageView {
      * 加载图片
      */
     private void loadImg() {
-        BitmapDrawable drawable= (BitmapDrawable) this.getDrawable();
+        Drawable drawable = this.getDrawable();
         if(drawable!=null){
-            bitmap=drawable.getBitmap();
+//            bitmap=((GlideBitmapDrawable)drawable).getBitmap();
         }
     }
     public void setCircleWidth(int width){

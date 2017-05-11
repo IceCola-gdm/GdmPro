@@ -11,11 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.bean.UserInfro;
 import com.gdm.musicplayer.utils.ToastUtil;
+import com.gdm.musicplayer.view.CircleImageView;
+import com.gdm.musicplayer.view.RoundImageView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
 
@@ -30,19 +33,23 @@ import okhttp3.Response;
 public class PhoneLoginActivity extends AppCompatActivity {
     private static final String TAG="PhoneLoginActivity";
     private ImageView imgBack;
+    private ImageView portrait;
     private Button btnLogin;
     private EditText edAccount;
     private EditText edPwd;
     private String account="";
     private String pwd="";
     private SharedPreferences sp=null;
+    private MyApplication app;
+    private static final String BASEPORTRAIT="http://120.24.220.119:8080/music/image/port/";
     private String url="http://120.24.220.119:8080/music/user/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_login);
-        sp=getSharedPreferences("myaccount",MODE_PRIVATE);
+        app= (MyApplication) getApplication();
+        sp=app.getSp();
         initView();
         setListener();
     }
@@ -54,6 +61,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
             edAccount.setText(account);
             edPwd.setText(pwd);
         }
+        Glide.with(PhoneLoginActivity.this).load(BASEPORTRAIT+sp.getString("portrait","")).error(R.drawable.pp).into(portrait);
     }
 
     private void setListener() {
@@ -66,6 +74,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
         btnLogin= (Button) findViewById(R.id.btn_phone_login);
         edAccount= (EditText) findViewById(R.id.ed_phone_login_number);
         edPwd= (EditText) findViewById(R.id.ed_phone_login_pwd);
+        portrait= (ImageView) findViewById(R.id.portrait);
         getInitData();
     }
 
@@ -121,21 +130,23 @@ public class PhoneLoginActivity extends AppCompatActivity {
             if(message.equals("登录成功")){
                 User user = new User();
                 JSONObject data = job.getJSONObject("data");
-                user.setId(data.getInt("id"));
-                user.setNickname(data.getString("nickname"));
-                user.setPassword(data.getString("password"));
-                user.setAddress(data.getString("address"));
-                user.setBirthday(data.getString("birthday"));
-                user.setDaxue(data.getString("daxue"));
-                user.setHeart(data.getString("heart"));
-                user.setSex(data.getString("sex"));
-                user.setUsername(data.getString("username"));
-                UserInfro.setUser(user);
-                SharedPreferences sp = getSharedPreferences("myaccount", MODE_PRIVATE);
+                user.setId(data.optInt("id"));
+                user.setNickname(data.optString("nickname"));
+                user.setPassword(data.optString("password"));
+                user.setAddress(data.optString("address"));
+                user.setBirthday(data.optString("birthday"));
+                user.setDaxue(data.optString("daxue"));
+                user.setHeart(data.optString("heart"));
+                user.setSex(data.optString("sex"));
+                user.setUsername(data.optString("username"));
+                user.setBackground(data.optString("background"));
+                user.setImgpath(data.optString("imgpath"));
+                app.setUser(user);
+                app.setLogin(true);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putString("account",account).commit();
                 editor.putString("pwd",pwd).commit();
-                MyApplication.isLogin=true;
+                editor.putString("portrait",user.getImgpath()).commit();
                 Intent intent = new Intent(PhoneLoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -143,7 +154,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
                 ToastUtil.toast(PhoneLoginActivity.this,message);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("PhoneLoginActivity","数据解析出错");
         }
     }
 }

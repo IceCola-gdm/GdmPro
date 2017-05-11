@@ -23,10 +23,12 @@ public class ChooseToLoginOrRegister extends AppCompatActivity {
             case R.id.btn_phone_login:
                 Intent intent = new Intent(ChooseToLoginOrRegister.this, PhoneLoginActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.btn_register:
                 Intent intent2 = new Intent(ChooseToLoginOrRegister.this, RegisterActivity.class);
                 startActivity(intent2);
+                finish();
                 break;
             case R.id.rl_try:
                 finish();

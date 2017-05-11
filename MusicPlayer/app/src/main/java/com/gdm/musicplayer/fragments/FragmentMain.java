@@ -1,5 +1,6 @@
 package com.gdm.musicplayer.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -10,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.activities.SearchOnlineActivity;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.gdm.musicplayer.view.MyTitleView;
@@ -113,7 +115,8 @@ public class FragmentMain extends Fragment {
     private class MyRightImgClickListener implements MyTitleView.OnRightImgClick {
         @Override
         public void onClick(View v) {
-            onImgListener.rightImgCallback();
+            Intent intent = new Intent(getContext(), SearchOnlineActivity.class);
+            startActivity(intent);
         }
     }
 

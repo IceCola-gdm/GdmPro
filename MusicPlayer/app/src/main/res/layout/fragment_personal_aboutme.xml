@@ -2,12 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
     <TextView
         android:id="@+id/fragment_personal_aboutme_tv"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#EFF3F2"/>
+        android:layout_height="match_parent"
+        android:background="#EFF3F2"
+        android:textSize="18dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:textColor="#000"/>
 
 </LinearLayout>

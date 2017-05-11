@@ -24,6 +24,7 @@ import com.gdm.musicplayer.activities.PlayListActivity;
 import com.gdm.musicplayer.adapter.YYGPagerAdapter;
 import com.gdm.musicplayer.bean.MList;
 import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.view.MyViewPager;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;

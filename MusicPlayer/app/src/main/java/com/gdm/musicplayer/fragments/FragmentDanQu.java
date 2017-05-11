@@ -64,7 +64,9 @@ public class FragmentDanQu extends Fragment {
             Intent intent1 = new Intent(MyService.mAction);
             intent1.putExtra("cmd","chose_pos");
             intent1.putExtra("pos",position);
-            getActivity().sendBroadcast(intent1);
+            intent1.putExtra("data",musics);
+            getContext().sendBroadcast(intent1);
+
             Intent intent = new Intent(getContext(), PlayActivity.class);
             intent.putExtra("data",musics);
             intent.putExtra("position",position);

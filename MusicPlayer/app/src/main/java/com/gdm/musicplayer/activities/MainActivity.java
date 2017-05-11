@@ -2,10 +2,12 @@ package com.gdm.musicplayer.activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -19,10 +21,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
+import com.bumptech.glide.Glide;
 import com.gdm.musicplayer.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MenuAdapter;
@@ -34,9 +39,13 @@ import com.gdm.musicplayer.fragments.FragmentPersonalInfo;
 import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.utils.MusicUtil;
 import com.gdm.musicplayer.utils.ToastUtil;
+import com.gdm.musicplayer.view.CircleImageView;
 import com.gdm.musicplayer.view.MySlidingPanelLayout;
+import com.gdm.musicplayer.view.RoundImageView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * 主界面
@@ -50,8 +59,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvPiFu;    //当前皮肤
     private TextView tvLogin;    //登录注册
     private RelativeLayout rl_info;
-
+    private User user=null;
     private FragmentMain fragmentMain;
+    private Fragment lastFragment=null;
     private ArrayList<Fragment> menus;
     private ArrayList<Music> musics=new ArrayList<>();
     private ImageView imgPlay;
@@ -59,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgPor;
     private TextView tvSong;
     private TextView tvSinger;
-
     public static String state="stop";  //播放状态
     private String title;
     private int pos=0;
@@ -68,6 +77,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvType;
     private TextView tvCount;
     private int type=0;
+    private MyApplication ap;
+    private SharedPreferences sp;
+    private int selectH=0;
+    private int selectM=0;
+    private int ms;   //定时时间
+    private static final String BASEPORTRAIT="http://120.24.220.119:8080/music/image/port/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +92,13 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(MyService.PLAY_ACTION);
         filter.addAction(MyApplication.CHANGELIST);
         registerReceiver(receiver,filter);
+        ap= (MyApplication) getApplication();
+        sp=ap.getSp();
+        user=ap.getUser();
+        ap.setMusics(musics);
         initView();
         initData();
         Intent intent = new Intent(this, MyService.class);
-        MyApplication ap= (MyApplication) getApplication();
-        ap.setMusics(musics);
         startService(intent);
     }
 
@@ -93,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
         menus.add(new FragmentPersonalInfo());
         musics.addAll(((MyApplication)getApplication()).getMusics());
         adapter=new MenuAdapter(musics,MainActivity.this);
-
     }
 
     @Override
@@ -113,9 +129,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(ap.isLogin()) {
+            if (user != null) {
+                tvLogin.setVisibility(View.INVISIBLE);
+                rl_info.setVisibility(View.VISIBLE);
+                if (user.getNickname() != null && user.getNickname() != "") {
+                    tvNickname.setText(user.getNickname());
+                }
+                if (user.getHeart() != null && user.getHeart() != "") {
+                    tvHeart.setText(user.getHeart());
+                }
+                Glide.with(MainActivity.this).load(BASEPORTRAIT+user.getImgpath()).error(R.drawable.me).into(imgPortrait);
+            }
+        }
 
     }
-    private Fragment lastFragment=null;
     private void showFragment1(FragmentMain mainFragment) {
         if (mainFragment.isVisible()) {
             return;
@@ -171,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
         imgSex= (ImageView) findViewById(R.id.img_sex);
         tvNickname= (TextView) findViewById(R.id.tv_nickname);
         tvHeart= (TextView) findViewById(R.id.tv_heart);
-
         tvLogin= (TextView) findViewById(R.id.tv_main_login);
         tvPiFu= (TextView) findViewById(R.id.tv_pifu);
         imgPlay= (ImageView) findViewById(R.id.rb_song_playicon);
@@ -179,20 +206,6 @@ public class MainActivity extends AppCompatActivity {
         tvSong= (TextView) findViewById(R.id.tv_songname);
         tvSinger= (TextView) findViewById(R.id.tv_singer);
         rl_info= (RelativeLayout) findViewById(R.id.rl_info);
-
-        User user = UserInfro.getUser();
-        if(MyApplication.isLogin) {
-            if (user != null) {
-                tvLogin.setVisibility(View.INVISIBLE);
-                rl_info.setVisibility(View.VISIBLE);
-                if (user.getNickname() != null && user.getNickname() != "") {
-                    tvNickname.setText(user.getNickname());
-                }
-                if (user.getHeart() != null && user.getHeart() != "") {
-                    tvHeart.setText(user.getHeart());
-                }
-            }
-        }
     }
 
     private class MyListener implements FragmentMain.OnImgListener {
@@ -222,7 +235,9 @@ public class MainActivity extends AppCompatActivity {
         }
         switch (view.getId()){
             case R.id.img_main_portrait:  //头像
-                showFragment(menus.get(0));
+                if(ap.isLogin()){
+                    showFragment(menus.get(0));
+                }
                 break;
             case R.id.tv_main_login:  //登录、注册
                 Intent intent = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
@@ -233,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent1);
                 break;
             case R.id.main_rl_timer:  //定时停止
-                ToastUtil.toast(MainActivity.this,"还没写");
+                timer();
                 break;
             case R.id.main_rl_naozhong:  //音乐闹钟
                 ToastUtil.toast(MainActivity.this,"还没写");
@@ -246,11 +261,46 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.main_rl_pwd:
-                Intent intent3 = new Intent(MainActivity.this, ResetPwdActivity.class);
-                startActivity(intent3);
+                if(ap.isLogin()){
+                    Intent intent3 = new Intent(MainActivity.this, ResetPwdActivity.class);
+                    startActivity(intent3);
+                }else{
+                    mSlidingPaneLayout.closePane();
+                    ToastUtil.toast(MainActivity.this,"您还没有登录哟，请先登录");
+                }
+
                 break;
         }
         mSlidingPaneLayout.closePane();
+    }
+
+    private void timer() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        TimePickerDialog pickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                setTitle("设置时间 " + hourOfDay + ":" + minute);
+                selectH=hourOfDay;
+                selectM=minute;
+            }
+        }, hour, minute, true);
+        pickerDialog.show();
+        ms = (selectH * 3600 + selectM * 60) * 1000;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(ms);
+                    Intent intent = new Intent(MyService.mAction);
+                    intent.putExtra("cmd","pause");
+                    sendBroadcast(intent);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -330,18 +380,18 @@ public class MainActivity extends AppCompatActivity {
                     title = intent.getStringExtra("title");
                     tvSinger.setText(intent.getStringExtra("author"));
                     tvSong.setText(title);
-                    if(state.equals("play")){
-                        imgPlay.setImageResource(R.drawable.stop);
-                    }else if(state.equals("stop")){
-                        imgPlay.setImageResource(R.drawable.play);
-                    }
+//                    if(state!=null){
+//                        if(state.equals("play")){
+//                            imgPlay.setImageResource(R.drawable.stop);
+//                        }else if(state.equals("stop")){
+//                            imgPlay.setImageResource(R.drawable.play);
+//                        }
+//                    }
                     break;
                 case MyApplication.CHANGELIST:
                     MyApplication ap= (MyApplication) getApplication();
-
                     musics=ap.getMusics();
                     adapter.notifyDataSetChanged();
-                    Log.e("MainActivity","列表已经改变"+musics.size());
                     break;
             }
         }
@@ -361,7 +411,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
-        MyApplication.isLogin=false;
+        ap.setLogin(false);
+
     }
 
     private class MyClickListener implements View.OnClickListener {
