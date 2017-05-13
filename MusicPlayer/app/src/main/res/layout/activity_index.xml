@@ -7,7 +7,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/timg"/>
+        android:src="@drawable/timg"
+        android:visibility="invisible"/>
+    <RelativeLayout
+        android:id="@+id/rlIndex"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/imgyy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/index"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="音悦，听见最美的声音"
+            android:layout_below="@+id/imgyy"
+            android:layout_marginTop="30dp"
+            android:layout_centerHorizontal="true"
+            android:textSize="20sp"/>
+    </RelativeLayout>
     <ImageView
         android:id="@+id/img_jump"
         android:layout_width="80dp"

@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
     compile 'com.lzy.net:okhttpserver:1.0.3'
     compile 'jp.wasabeef:glide-transformations:2.0.0'
+    compile project(':InitActivity')
 }

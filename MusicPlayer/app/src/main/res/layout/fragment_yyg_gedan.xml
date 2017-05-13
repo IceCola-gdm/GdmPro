@@ -3,9 +3,75 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#E4E8E7">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:clickable="false">
+            <RelativeLayout
+                android:layout_width="70dp"
+                android:layout_height="25dp"
+                android:background="@drawable/a1n"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp">
+                <TextView
+                    android:id="@+id/tv_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="类型"
+                    android:textColor="#3D3D3D"
+                    android:textSize="12sp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"/>
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_toRightOf="@+id/tv_type"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/right"/>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true">
+                <TextView
+                    android:id="@+id/tv_huayu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="华语  |"
+                    android:textColor="#3D3D3D"
+                    android:textSize="12sp"
+                    android:clickable="true"/>
+                <TextView
+                    android:id="@+id/tv_yaogun"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  英语  |"
+                    android:textColor="#3D3D3D"
+                    android:textSize="12sp"
+                    android:clickable="true"/>
+                <TextView
+                    android:id="@+id/tv_minyao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  韩语  "
+                    android:textColor="#3D3D3D"
+                    android:textSize="12sp"
+                    android:clickable="true"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
     <ListView
         android:id="@+id/yyg_gedan_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 </LinearLayout>

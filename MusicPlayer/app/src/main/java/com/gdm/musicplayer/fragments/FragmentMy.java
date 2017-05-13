@@ -1,16 +1,14 @@
 package com.gdm.musicplayer.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gdm.musicplayer.MyApplication;
+import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.activities.DownLoadManageActivity;
 import com.gdm.musicplayer.activities.LocalMusicListActivity;
@@ -19,7 +17,6 @@ import com.gdm.musicplayer.activities.RecentlyPlayActivity;
 import com.gdm.musicplayer.adapter.MyRecyclerViewAdapter;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.MusicList;
-import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.utils.MusicUtil;
 
 import java.util.ArrayList;

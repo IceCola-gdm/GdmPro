@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.gdm.musicplayer.R;
 
@@ -14,13 +15,15 @@ public class IndexActivity extends AppCompatActivity {
     private ImageView imgAds;
     private ImageView imgJump;
     private int[] imgs={R.drawable.timg,R.drawable.timg1,R.drawable.timg2,R.drawable.timg3};
-    private int index=0;
+    private int index=-1;
+    private RelativeLayout rl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
         imgAds= (ImageView) findViewById(R.id.imgAds);
         imgJump= (ImageView) findViewById(R.id.img_jump);
+        rl= (RelativeLayout) findViewById(R.id.rlIndex);
         imgJump.setOnClickListener(new MyListener());
         imgAds.setOnClickListener(new MyListener());
         new Thread(new Runnable() {
@@ -41,8 +44,15 @@ public class IndexActivity extends AppCompatActivity {
 //            super.handleMessage(msg);
             switch (msg.what){
                 case 100:
-                    if(index!=imgs.length){
-                        imgAds.setImageResource(imgs[index++]);
+                    rl.setVisibility(View.INVISIBLE);
+                    imgAds.setVisibility(View.VISIBLE);
+                    index++;
+                    if(index!=imgs.length-1){
+                        imgAds.setImageResource(imgs[index]);
+                    }else{
+//                        Intent intent = new Intent(IndexActivity.this, MainActivity.class);
+//                        startActivity(intent);
+//                        finish();
                     }
                     break;
             }

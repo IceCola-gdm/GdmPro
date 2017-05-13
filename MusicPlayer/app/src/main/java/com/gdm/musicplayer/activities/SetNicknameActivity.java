@@ -7,9 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 
-import com.gdm.musicplayer.MyApplication;
+import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.bean.UserInfro;

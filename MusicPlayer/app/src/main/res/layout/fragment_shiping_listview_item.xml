@@ -32,7 +32,8 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/a2k"/>
+            android:src="@drawable/a2k"
+            android:clickable="true"/>
         <TextView
             android:id="@+id/tv_shiping_time"
             android:layout_width="wrap_content"
@@ -59,7 +60,8 @@
                 android:layout_height="20dp"
                 android:layout_margin="10dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/zan1"/>
+                android:src="@drawable/zan1"
+                android:clickable="true"/>
             <TextView
                 android:id="@+id/tv_shipping_zan_count"
                 android:layout_width="wrap_content"
@@ -78,7 +80,8 @@
                 android:layout_height="20dp"
                 android:layout_margin="10dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/collect1"/>
+                android:src="@drawable/collect1"
+                android:clickable="true"/>
             <TextView
                 android:id="@+id/tv_shipping_collect_count"
                 android:layout_width="wrap_content"

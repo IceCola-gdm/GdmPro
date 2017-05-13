@@ -2,42 +2,25 @@ package com.gdm.musicplayer.activities;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.graphics.Color;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.Parcelable;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.gdm.musicplayer.MyApplication;
+import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MenuAdapter;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
-import com.gdm.musicplayer.bean.MList;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.fragments.FragmentLyric;
 import com.gdm.musicplayer.fragments.FragmentPlay;
@@ -156,13 +139,15 @@ public class PlayActivity extends AppCompatActivity  {
     private void initData() {
         fgs.add(new FragmentPlay());
         fgs.add(new FragmentLyric());
-        music = musics.get(currentIndex);
-        pos=currentIndex;
-        tvSongSinger.setText(music.getSinger());
-        tvSongName.setText(music.getName());
-        tvTotalTime.setText(TimeUtil.parse(music.getDuration()));
-        seekBar.setMax(music.getDuration());
-        adapter2=new MenuAdapter(musics,PlayActivity.this);
+        if(musics.size()!=0){
+            music = musics.get(currentIndex);
+            pos=currentIndex;
+            tvSongSinger.setText(music.getSinger());
+            tvSongName.setText(music.getName());
+            tvTotalTime.setText(TimeUtil.parse(music.getDuration()));
+            seekBar.setMax(music.getDuration());
+            adapter2=new MenuAdapter(musics,PlayActivity.this);
+        }
     }
 
     private void initView() {

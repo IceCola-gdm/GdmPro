@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -21,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.gdm.musicplayer.MyApplication;
+import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.User;
@@ -30,8 +29,6 @@ import com.gdm.musicplayer.utils.ToastUtil;
 import com.gdm.musicplayer.view.RoundImageView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
-
-import java.io.Serializable;
 
 import okhttp3.Call;
 import okhttp3.Response;

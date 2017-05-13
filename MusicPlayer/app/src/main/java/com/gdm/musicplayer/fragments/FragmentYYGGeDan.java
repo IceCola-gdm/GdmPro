@@ -66,6 +66,13 @@ public class FragmentYYGGeDan extends Fragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_yyg_gedan, container, false);
         listView= (ListView) view.findViewById(R.id.yyg_gedan_listview);
+        textViewType = (TextView) view.findViewById(R.id.tv_type);
+        TextView tvHuaYu= (TextView) view.findViewById(R.id.tv_huayu);
+        TextView tvYaoGun= (TextView) view.findViewById(R.id.tv_yaogun);
+        TextView tvMinYao= (TextView) view.findViewById(R.id.tv_minyao);
+        tvHuaYu.setOnClickListener(new MyListener());
+        tvYaoGun.setOnClickListener(new MyListener());
+        tvMinYao.setOnClickListener(new MyListener());
         getData();
         return view;
     }
@@ -119,7 +126,6 @@ public class FragmentYYGGeDan extends Fragment {
     @Override
     public void onActivityCreated( Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        addHeader();
         setAdapter();
         setListener();
     }
@@ -130,13 +136,13 @@ public class FragmentYYGGeDan extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent1 = new Intent(MyService.mAction);
                 intent1.putExtra("cmd","chose_pos");
-                intent1.putExtra("pos",position-1);
+                intent1.putExtra("pos",position);
                 intent1.putExtra("data",musics);
                 getActivity().sendBroadcast(intent1);
 
                 Intent intent = new Intent(getContext(), PlayActivity.class);
                 intent.putExtra("data",musics);
-                intent.putExtra("position",position-1);
+                intent.putExtra("position",position);
                 intent.putExtra("state","play");
                 startActivity(intent);
             }
@@ -147,19 +153,6 @@ public class FragmentYYGGeDan extends Fragment {
         adapter=new YYGGeDanListViewAdapter(getContext(),musics);
         listView.setAdapter(adapter);
     }
-
-    private void addHeader() {
-        View view = inflater.inflate(R.layout.fragment_yyg_gedan_header,null);
-        textViewType = (TextView) view.findViewById(R.id.tv_type);
-        TextView tvHuaYu= (TextView) view.findViewById(R.id.tv_huayu);
-        TextView tvYaoGun= (TextView) view.findViewById(R.id.tv_yaogun);
-        TextView tvMinYao= (TextView) view.findViewById(R.id.tv_minyao);
-        tvHuaYu.setOnClickListener(new MyListener());
-        tvYaoGun.setOnClickListener(new MyListener());
-        tvMinYao.setOnClickListener(new MyListener());
-        listView.addHeaderView(view);
-    }
-
     private class MyListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {

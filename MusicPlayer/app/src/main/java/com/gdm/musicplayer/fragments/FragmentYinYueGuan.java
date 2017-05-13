@@ -3,25 +3,18 @@ package com.gdm.musicplayer.fragments;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gdm.musicplayer.MyApplication;
+import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.view.ChildViewPager;
-import com.lzy.okhttputils.OkHttpUtils;
-import com.lzy.okhttputils.callback.StringCallback;
 
 import java.util.ArrayList;
-
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/4/11 0011.

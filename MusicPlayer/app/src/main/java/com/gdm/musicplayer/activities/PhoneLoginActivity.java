@@ -2,7 +2,6 @@ package com.gdm.musicplayer.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,13 +11,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.gdm.musicplayer.MyApplication;
+import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.bean.User;
-import com.gdm.musicplayer.bean.UserInfro;
 import com.gdm.musicplayer.utils.ToastUtil;
-import com.gdm.musicplayer.view.CircleImageView;
-import com.gdm.musicplayer.view.RoundImageView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
 
@@ -27,7 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import okhttp3.Call;
-import okhttp3.Request;
 import okhttp3.Response;
 
 public class PhoneLoginActivity extends AppCompatActivity {

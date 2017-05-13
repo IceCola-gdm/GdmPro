@@ -1,6 +1,5 @@
 package com.gdm.musicplayer.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -18,14 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.gdm.musicplayer.MyApplication;
+import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.activities.EditPersonalInfoActivity;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
 import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.utils.ToastUtil;
-import com.gdm.musicplayer.view.CircleImageView;
-import com.gdm.musicplayer.view.RoundImageView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
 

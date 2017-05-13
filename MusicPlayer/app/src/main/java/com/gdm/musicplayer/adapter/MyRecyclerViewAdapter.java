@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +21,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.gdm.musicplayer.MyApplication;
+import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.activities.ManageGedanActivity;
 import com.gdm.musicplayer.bean.MusicList;
+import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.utils.ToastUtil;
+import com.lzy.okhttputils.OkHttpUtils;
+import com.lzy.okhttputils.callback.StringCallback;
 
+import java.io.File;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/4/11 0011.
@@ -46,6 +54,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private String gedan;
     private AlertDialog dialog;
     private MyApplication app;
+    private User user=null;
+    private ArrayList<File> files=new ArrayList<>();
 
     public MyRecyclerViewAdapter(Context context, ArrayList<MusicList> beens,ArrayList<MusicList> content,MyApplication app) {
         this.context = context;
@@ -53,6 +63,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.content=content;
         this.app=app;
+        user=app.getUser();
     }
 
     @Override
@@ -209,6 +220,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     break;
                 case R.id.btn_submit:
                     gedan=ed.getText().toString();
+                    createNewGeDan();
                     myDialog.dismiss();
                     break;
                 case R.id.btn_cancel:
@@ -217,6 +229,22 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         }
     }
+
+    private void createNewGeDan() {
+        OkHttpUtils.post(MyApplication.BASEPATH+"/music/addmusiclist")
+                .params("id",user.getId())
+                .params("name",gedan)
+                .params("discription","")
+                .params("type",3)
+                .addFileParams("imgfile",files)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        Log.e("-----",s);
+                    }
+                });
+    }
+
     private void showDialog() {
         myDialog = new AlertDialog.Builder(context).create();
         myDialog.show();

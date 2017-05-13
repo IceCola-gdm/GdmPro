@@ -1,51 +1,47 @@
 package com.gdm.musicplayer.activities;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.bumptech.glide.Glide;
-import com.gdm.musicplayer.MyApplication;
+import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MenuAdapter;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.User;
-import com.gdm.musicplayer.bean.UserInfro;
 import com.gdm.musicplayer.fragments.FragmentMain;
 import com.gdm.musicplayer.fragments.FragmentPersonalInfo;
 import com.gdm.musicplayer.service.MyService;
-import com.gdm.musicplayer.utils.MusicUtil;
 import com.gdm.musicplayer.utils.ToastUtil;
-import com.gdm.musicplayer.view.CircleImageView;
 import com.gdm.musicplayer.view.MySlidingPanelLayout;
-import com.gdm.musicplayer.view.RoundImageView;
+import com.lzy.okhttputils.OkHttpUtils;
+import com.lzy.okhttputils.callback.StringCallback;
 
-import java.io.Serializable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * 主界面
@@ -83,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
     private int selectM=0;
     private int ms;   //定时时间
     private static final String BASEPORTRAIT="http://120.24.220.119:8080/music/image/port/";
+    private static final String PATH="http://120.24.220.119:8080/music/music/getAllMusic";
+    private Music music=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +98,53 @@ public class MainActivity extends AppCompatActivity {
         initData();
         Intent intent = new Intent(this, MyService.class);
         startService(intent);
+        getData();
+    }
+
+    private void getData() {
+        OkHttpUtils.get(PATH)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        parse(s);
+                    }
+                });
+    }
+
+    private void parse(String s) {
+        try {
+            JSONObject job = new JSONObject(s.trim());
+            if(job.optString("message").equals("查询成功")){
+                JSONArray data = job.optJSONArray("data");
+                for(int i=0;i<data.length();i++){
+                    JSONObject obj = data.optJSONObject(i);
+                    music=new Music();
+                    music.setId(obj.optInt("musicid"));
+                    music.setName(obj.optString("name"));
+                    if(obj.optString("path")!=null&&obj.optString("path")!=""){
+                        music.setFileUrl(MyApplication.BASEMUSICPATH+obj.optString("path"));
+                    }
+                    music.setSinger(obj.optString("author"));
+                    music.setAlbum(obj.optString("album"));
+                    music.setSize(obj.optString("size"));
+                    if(obj.optString("imgpath")!=null&&obj.optString("imgpath")!=""){
+                        music.setImgPath(MyApplication.BASEMUSICIIMGPATH+obj.optString("imgpath"));
+                    }
+                    if(obj.optString("mvpath")!=null&&obj.optString("mvpath")!=""){
+                        music.setMvPath(MyApplication.BASEMVPATH+obj.optString("mvpath"));
+                    }
+                    if(obj.optString("lrcfile")!=null&&obj.optString("lrcfile")!=""){
+                        music.setLrc(MyApplication.BASELRCPATH+obj.optString("lrcfile"));
+                    }
+                    musics.add(music);
+                }
+
+            }else{
+                ToastUtil.toast(MainActivity.this,job.optString("message"));
+            }
+        } catch (JSONException e) {
+            Log.e("FragmnetYYGGeDan","数据解析出错");
+        }
     }
 
     private void initData() {
@@ -108,8 +153,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentMain.setOnImgListener(new MyListener());
         menus=new ArrayList<>();
         menus.add(new FragmentPersonalInfo());
-        musics.addAll(((MyApplication)getApplication()).getMusics());
-        adapter=new MenuAdapter(musics,MainActivity.this);
     }
 
     @Override
@@ -268,7 +311,6 @@ public class MainActivity extends AppCompatActivity {
                     mSlidingPaneLayout.closePane();
                     ToastUtil.toast(MainActivity.this,"您还没有登录哟，请先登录");
                 }
-
                 break;
         }
         mSlidingPaneLayout.closePane();
@@ -380,18 +422,11 @@ public class MainActivity extends AppCompatActivity {
                     title = intent.getStringExtra("title");
                     tvSinger.setText(intent.getStringExtra("author"));
                     tvSong.setText(title);
-//                    if(state!=null){
-//                        if(state.equals("play")){
-//                            imgPlay.setImageResource(R.drawable.stop);
-//                        }else if(state.equals("stop")){
-//                            imgPlay.setImageResource(R.drawable.play);
-//                        }
-//                    }
                     break;
                 case MyApplication.CHANGELIST:
-                    MyApplication ap= (MyApplication) getApplication();
-                    musics=ap.getMusics();
-                    adapter.notifyDataSetChanged();
+//                    MyApplication ap= (MyApplication) getApplication();
+//                    musics=ap.getMusics();
+//                    adapter.notifyDataSetChanged();
                     break;
             }
         }

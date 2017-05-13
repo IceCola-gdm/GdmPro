@@ -9,26 +9,15 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Binder;
 import android.os.IBinder;
-import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.gdm.musicplayer.MyApplication;
+import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.bean.Music;
-import com.gdm.musicplayer.bean.MusicBean;
-import com.gdm.musicplayer.bean.MusicList;
-import com.gdm.musicplayer.utils.ToastUtil;
-import com.lzy.okhttputils.OkHttpUtils;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
-
-import okhttp3.internal.framed.Ping;
 
 public class MyService extends Service implements MediaPlayer.OnBufferingUpdateListener {
     public static ArrayList<Music> getMusicList() {
