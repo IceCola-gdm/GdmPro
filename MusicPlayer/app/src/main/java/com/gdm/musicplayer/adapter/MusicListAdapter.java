@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.bean.MList;
 import com.gdm.musicplayer.bean.MusicList;
 
 import java.util.ArrayList;
@@ -19,10 +20,10 @@ import java.util.ArrayList;
  * Created by Administrator on 2017/4/13 0013.
  */
 public class MusicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<MusicList> datas;
+    private ArrayList<MList> datas;
     private Context context;
     private LayoutInflater inflater;
-    public MusicListAdapter(ArrayList<MusicList> datas, Context context) {
+    public MusicListAdapter(ArrayList<MList> datas, Context context) {
         this.datas = datas;
         this.context = context;
         this.inflater=LayoutInflater.from(context);
@@ -38,14 +39,14 @@ public class MusicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         MusicListHolder h= (MusicListHolder) holder;
-        final MusicList list = datas.get(position);
-        h.title.setText(list.getTitle());
-        h.num.setText(list.getNum());
-        Glide.with(context).load(list.getImgPath()).into(h.img);
+        final MList list = datas.get(position);
+        h.title.setText(list.getName());
+        Glide.with(context).load(list.getImgpath()).into(h.img);
         h.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context,list.getmClass()));
+                //TODO
+//                context.startActivity(new Intent(context,List));
             }
         });
     }
