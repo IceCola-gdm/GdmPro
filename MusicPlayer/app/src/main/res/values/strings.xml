@@ -2,5 +2,9 @@
     <string name="app_name">MusicPlayer</string>
     <string name="title_activity_choose_to_login_or_register">ChooseToLoginOrRegister</string>
     <string name="title_activity_register">RegisterActivity</string>
-    <string name="creat_table"></string>
+    <string name="creat_table">CREATE TABLE down(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+name TEXT not NULL,
+        type INTEGER,
+        state INTEGER)</string>
 </resources>

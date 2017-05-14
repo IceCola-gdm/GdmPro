@@ -49,13 +49,20 @@
         <activity android:name=".activities.AlbumListActivity" />
         <activity android:name=".activities.SearchOnlineActivity" />
         <activity android:name=".activities.PaihangbangListActivity" />
-        <activity android:name=".activities.MVPlayActivity"
+        <activity
+            android:name=".activities.MVPlayActivity"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+
         <service
             android:name=".service.MyService"
             android:enabled="true"
             android:exported="true" />
+
+        <activity android:name=".activities.TestActivity">
+
+        </activity>
+        <service android:name=".download.DownLoadService"></service>
     </application>
 
 </manifest>

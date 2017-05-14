@@ -60,10 +60,14 @@ public class MyLocalDanquAdapter extends BaseAdapter {
         }
         Music music= (Music) getItem(position);
         holder.tvTitle.setText(music.getName());
-        holder.tvMusicInfo.setText(music.getSinger()+"-"+music.getAlbum());
+        if (music.getSinger()!=null&&music.getAlbum()!=null) {
+            holder.tvMusicInfo.setText(music.getSinger()+"-"+music.getAlbum());
+        }
+
         holder.imgSetting.setOnClickListener(new MyListener());
         return convertView;
     }
+
     class ViewHolder{
         public TextView tvTitle;
         public TextView tvMusicInfo;

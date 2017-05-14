@@ -41,7 +41,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         MusicListHolder h= (MusicListHolder) holder;
         final MList list = datas.get(position);
         h.title.setText(list.getName());
-        Glide.with(context).load(list.getImgpath()).into(h.img);
+
         h.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

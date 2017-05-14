@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
@@ -203,39 +204,42 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void selectGedan() {
-        OkHttpUtils.post("http://120.24.220.119:8080/music/music/getTypeList")
-                .params("userid",user.getId())
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        try {
-                            JSONObject js = new JSONObject(s);
-                            String message = js.getString("message");
-                            lists.clear();
-                            if (message.equals("查询成功")) {
-                                JSONArray data = js.getJSONArray("data");
-                                for (int i = 0; i < data.length(); i++) {
-                                    JSONObject obj = data.getJSONObject(i);
-                                    int id = obj.getInt("id");
-                                    int userid = obj.getInt("userid");
-                                    String name = obj.getString("name");
-                                    String discription = obj.getString("discription");
-                                    String imgpath = obj.getString("imgpath");
-                                    MList list = new MList();
-                                    list.setImgpath(imgpath);
-                                    list.setName(name);
-                                    list.setDiscription(discription);
-                                    list.setUserid(userid);
-                                    list.setId(id);
-                                    lists.add(list);
+        if (user!=null) {
+            OkHttpUtils.post("http://120.24.220.119:8080/music/music/getTypeList")
+                    .params("userid",user.getId())
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            try {
+                                JSONObject js = new JSONObject(s);
+                                String message = js.getString("message");
+                                lists.clear();
+                                if (message.equals("查询成功")) {
+                                    JSONArray data = js.getJSONArray("data");
+                                    for (int i = 0; i < data.length(); i++) {
+                                        JSONObject obj = data.getJSONObject(i);
+                                        int id = obj.getInt("id");
+                                        int userid = obj.getInt("userid");
+                                        String name = obj.getString("name");
+                                        String discription = obj.getString("discription");
+                                        String imgpath = obj.getString("imgpath");
+                                        MList list = new MList();
+                                        list.setImgpath(imgpath);
+                                        list.setName(name);
+                                        list.setDiscription(discription);
+                                        list.setUserid(userid);
+                                        list.setId(id);
+                                        lists.add(list);
+                                    }
+                                    adt.notifyDataSetChanged();
                                 }
-                                adt.notifyDataSetChanged();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-                    }
-                });
+                    });
+        }
+
     }
 
     private class HolderThree extends RecyclerView.ViewHolder {
@@ -279,25 +283,33 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void createNewGeDan() {
+
         OkHttpUtils.post(MyApplication.BASEPATH+"/music/addmusiclist")
-                .params("id",user.getId())
+                .params("userid",user.getId())
                 .params("name",gedan)
-                .params("discription","")
+                .params("discription","暂无")
                 .params("type",3)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
+
                         try {
+                            int i=1;
                             JSONObject js = new JSONObject(s);
                             String message = js.getString("message");
                             if (message.equals("新增成功")) {
-
                                 selectGedan();
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        int i=555;
+                        Log.e("MyRecyclerViewAdapter",e.getMessage());
                     }
                 });
     }
