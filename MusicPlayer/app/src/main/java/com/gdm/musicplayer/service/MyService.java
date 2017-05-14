@@ -252,12 +252,9 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                     }
                     player.setDataSource(bean.getFileUrl());
                     player.prepare();
-
                 } catch (Exception e) {
-
                 }
             }
-
         }
         isPlay=true;
     }
