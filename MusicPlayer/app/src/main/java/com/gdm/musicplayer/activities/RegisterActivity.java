@@ -29,6 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String pwd="";
     private String pwdAgain="";
     private MyApplication app;
+    private User u=null;
     private static final String PATH="http://120.24.220.119:8080/music/user/register";
 
     @Override
@@ -36,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         app= (MyApplication) getApplication();
+        u=app.getUser();
         initView();
     }
 
@@ -99,7 +101,6 @@ public class RegisterActivity extends AppCompatActivity {
                 String username = data.getString("username");
                 String password = data.getString("password");
                 int id = data.getInt("id");
-                User u = new User();
                 u.setUsername(username);
                 u.setPassword(password);
                 u.setId(id);
@@ -107,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
                 app.setUser(u);
                 Intent intent = new Intent(RegisterActivity.this,SetNicknameActivity.class);
                 startActivity(intent);
-                finish();
+
             }else{
                 ToastUtil.toast(RegisterActivity.this,message);
             }

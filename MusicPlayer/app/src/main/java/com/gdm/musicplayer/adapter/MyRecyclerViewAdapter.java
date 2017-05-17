@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
@@ -56,6 +57,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private MyApplication app;
     private User user=null;
     private ArrayList<File> files=new ArrayList<>();
+    private static final String PATH= Environment.getExternalStorageDirectory()+File.separator+"a.jpg";
 
     public MyRecyclerViewAdapter(Context context, ArrayList<MusicList> beens,ArrayList<MusicList> content,MyApplication app) {
         this.context = context;
@@ -221,7 +223,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 case R.id.btn_submit:
                     gedan=ed.getText().toString();
                     createNewGeDan();
-                    myDialog.dismiss();
                     break;
                 case R.id.btn_cancel:
                     myDialog.dismiss();
@@ -231,16 +232,18 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void createNewGeDan() {
+        files.add(new File(PATH));
         OkHttpUtils.post(MyApplication.BASEPATH+"/music/addmusiclist")
                 .params("id",user.getId())
                 .params("name",gedan)
-                .params("discription","")
+                .params("discription","dhbdoqhaiwdhxhiwq")
                 .params("type",3)
                 .addFileParams("imgfile",files)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        Log.e("-----",s);
+                        Log.e("--dWDWQDQW---",s);
+                        myDialog.dismiss();
                     }
                 });
     }

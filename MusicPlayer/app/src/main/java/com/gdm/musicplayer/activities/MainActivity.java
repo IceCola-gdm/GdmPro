@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e("---",ap.isLogin()+"");
         if(ap.isLogin()) {
             if (user != null) {
                 tvLogin.setVisibility(View.INVISIBLE);
@@ -286,15 +287,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
                 startActivity(intent);
                 break;
-            case R.id.main_rl_huanfu:  //个性换肤
-                Intent intent1 = new Intent(MainActivity.this, HuanfuActivity.class);
-                startActivity(intent1);
-                break;
             case R.id.main_rl_timer:  //定时停止
                 timer();
-                break;
-            case R.id.main_rl_naozhong:  //音乐闹钟
-                ToastUtil.toast(MainActivity.this,"还没写");
                 break;
             case R.id.rl_change:  //切换账号
                 Intent intent2 = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
@@ -419,6 +413,11 @@ public class MainActivity extends AppCompatActivity {
                 case MyService.PLAY_ACTION:
                     state=intent.getStringExtra("state");
                     pos = intent.getIntExtra("pos", 0);
+                    if (state.equals("play")) {
+                        imgPlay.setImageResource(R.drawable.stop);
+                    }else {
+                        imgPlay.setImageResource(R.drawable.play);
+                    }
                     title = intent.getStringExtra("title");
                     tvSinger.setText(intent.getStringExtra("author"));
                     tvSong.setText(title);
@@ -427,6 +426,21 @@ public class MainActivity extends AppCompatActivity {
 //                    MyApplication ap= (MyApplication) getApplication();
 //                    musics=ap.getMusics();
 //                    adapter.notifyDataSetChanged();
+                    break;
+                case "userinfochange":
+                    if(ap.isLogin()) {
+                        if (user != null) {
+                            tvLogin.setVisibility(View.INVISIBLE);
+                            rl_info.setVisibility(View.VISIBLE);
+                            if (user.getNickname() != null && user.getNickname() != "") {
+                                tvNickname.setText(user.getNickname());
+                            }
+                            if (user.getHeart() != null && user.getHeart() != "") {
+                                tvHeart.setText(user.getHeart());
+                            }
+                            Glide.with(MainActivity.this).load(BASEPORTRAIT+user.getImgpath()).error(R.drawable.me).into(imgPortrait);
+                        }
+                    }
                     break;
             }
         }
@@ -438,6 +452,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MyService.mAction);
             intent.putExtra("cmd","chose_pos");
             intent.putExtra("pos",pos);
+            intent.putExtra("data",musics);
             sendBroadcast(intent);
         }
     }

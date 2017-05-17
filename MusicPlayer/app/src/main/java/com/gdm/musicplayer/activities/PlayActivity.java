@@ -228,6 +228,7 @@ public class PlayActivity extends AppCompatActivity  {
                     imgPlay.setImageResource(R.drawable.a_5);
                     state="stop";
                 }
+                MyService.setMusicList(musics);
                 intent.putExtra("cmd","play");
                 break;
             case R.id.img_play_next:
@@ -330,7 +331,9 @@ public class PlayActivity extends AppCompatActivity  {
             Intent intent = new Intent(MyService.mAction);
             intent.putExtra("cmd","chose_pos");
             intent.putExtra("pos",pos);
+            intent.putExtra("data",musics);
             sendBroadcast(intent);
+
             Music music=musics.get(pos);
             tvSongName.setText(music.getName());
             tvSongSinger.setText(music.getSinger());

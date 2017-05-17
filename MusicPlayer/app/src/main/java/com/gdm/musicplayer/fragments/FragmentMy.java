@@ -69,7 +69,6 @@ public class FragmentMy extends Fragment {
             musicLists.add(musicList);
         }
         content=new ArrayList<>();
-        //TODO 从服务器上获取数据
         adapter=new MyRecyclerViewAdapter(getContext(),musicLists,content,application);
     }
 

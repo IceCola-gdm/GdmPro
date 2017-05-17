@@ -67,15 +67,6 @@
                 android:clickable="true"
                 />
             <ImageView
-                android:id="@+id/img_play_zan"
-                android:layout_width="0dp"
-                android:layout_height="20dp"
-                android:layout_weight="1"
-                android:src="@drawable/zan"
-                android:clickable="true"
-                android:layout_marginTop="15dp"
-                />
-            <ImageView
                 android:id="@+id/img_play_info"
                 android:layout_width="0dp"
                 android:layout_height="50dp"

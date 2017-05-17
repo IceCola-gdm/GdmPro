@@ -43,14 +43,12 @@ public class SetNicknameActivity extends AppCompatActivity {
         app= (MyApplication) getApplication();
         user=app.getUser();
         edNickname= (EditText) findViewById(R.id.et_set_nickname_name);
-
     }
     public void setNicknameClick(View view){
         switch (view.getId()){
             case R.id.img_setnickname_back:
-                Intent intent = new Intent(SetNicknameActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+//                Intent intent = new Intent(SetNicknameActivity.this, MainActivity.class);
+//                startActivity(intent);
                 finish();
                 break;
             case R.id.btn_start:
@@ -58,8 +56,8 @@ public class SetNicknameActivity extends AppCompatActivity {
                 if(s!=null&&s!=""){
                     nickname=s;
                     postNickName(nickname);
-                    Intent intent1 = new Intent(SetNicknameActivity.this, MainActivity.class);
-                    startActivity(intent1);
+//                    Intent intent1 = new Intent(SetNicknameActivity.this, MainActivity.class);
+//                    startActivity(intent1);
                     finish();
                 }else{
                     ToastUtil.toast(SetNicknameActivity.this,"输入信息不能为空");
@@ -72,7 +70,7 @@ public class SetNicknameActivity extends AppCompatActivity {
     private void postNickName(String nickname) {
         files.add(new File(img));
         OkHttpUtils.post(PATH)
-                .params("id", UserInfro.getUser().getId())
+                .params("id", ((MyApplication)getApplication()).getUser().getId())
                 .params("nickname",nickname)
                 .addFileParams("background",files)
                 .execute(new StringCallback() {
@@ -83,12 +81,13 @@ public class SetNicknameActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        Log.e(TAG,e.getMessage());
+                        ToastUtil.toast(SetNicknameActivity.this,"设置昵称出错");
                     }
                 });
     }
 
     private void parse(String s) {
+        Log.e("SetNickName",s);
         try {
             JSONObject job = new JSONObject(s.trim());
             String message = job.getString("message");
@@ -96,6 +95,9 @@ public class SetNicknameActivity extends AppCompatActivity {
                 JSONObject data = job.getJSONObject("data");
                 String name = data.getString("nickname");
                 user.setNickname(name);
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }else{
                 ToastUtil.toast(SetNicknameActivity.this,message);
             }

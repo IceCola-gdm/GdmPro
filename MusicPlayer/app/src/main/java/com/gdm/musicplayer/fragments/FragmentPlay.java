@@ -54,7 +54,6 @@ public class FragmentPlay extends Fragment {
     private ImageView imgDown;
     private ImageView imgInfo;
     private ImageView imgMes;
-    private ImageView imgZan;
     private AlertDialog myDialog;
     private Music lastMusic=new Music();
     private String path="http://120.24.220.119:8080/music/comment/good";
@@ -110,7 +109,6 @@ public class FragmentPlay extends Fragment {
         imgDown= (ImageView) view.findViewById(R.id.img_play_down);
         imgInfo= (ImageView) view.findViewById(R.id.img_play_info);
         imgMes= (ImageView) view.findViewById(R.id.img_play_mes);
-        imgZan= (ImageView) view.findViewById(R.id.img_play_zan);
         return view;
     }
 
@@ -124,7 +122,6 @@ public class FragmentPlay extends Fragment {
         imgLike.setOnClickListener(new MyListener());
         imgDown.setOnClickListener(new MyListener());
         imgInfo.setOnClickListener(new MyListener());
-        imgZan.setOnClickListener(new MyListener());
         imgMes.setOnClickListener(new MyListener());
     }
 
@@ -186,9 +183,6 @@ public class FragmentPlay extends Fragment {
                     case R.id.img_play_mes:
                         mess();
                         break;
-                    case R.id.img_play_zan:
-                        zan();
-                        break;
                 }
             }else{
                 ToastUtil.toast(getContext(),"还没有登录哟");
@@ -199,18 +193,6 @@ public class FragmentPlay extends Fragment {
 
     private void mess() {
 
-    }
-
-    private void zan() {
-        OkHttpUtils.post(path)
-                .params("id",user.getId())
-                .params("type",1)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        Log.e("------",s);
-                    }
-                });
     }
 
     private void musicoperate() {
@@ -226,6 +208,10 @@ public class FragmentPlay extends Fragment {
         RelativeLayout rlMv= (RelativeLayout) myDialog.getWindow().findViewById(R.id.rl_mv);
         TextView tvSinger= (TextView) myDialog.getWindow().findViewById(R.id.t_singer);
         TextView tvAlbum= (TextView) myDialog.getWindow().findViewById(R.id.t_album);
+        TextView tvName= (TextView) myDialog.getWindow().findViewById(R.id.tv_sn);
+        tvAlbum.setText(lastMusic.getAlbum());
+        tvSinger.setText(lastMusic.getSinger());
+        tvName.setText(lastMusic.getName());
 
     }
 

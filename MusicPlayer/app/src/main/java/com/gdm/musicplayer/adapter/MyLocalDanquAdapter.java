@@ -1,5 +1,6 @@
 package com.gdm.musicplayer.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gdm.musicplayer.R;
@@ -55,6 +57,7 @@ public class MyLocalDanquAdapter extends BaseAdapter {
             holder.tvMusicInfo= (TextView) convertView.findViewById(R.id.tv_song_singer);
             holder.imgSetting= (ImageView) convertView.findViewById(R.id.img_song_setting);
             convertView.setTag(holder);
+            holder.imgSetting.setTag(position);
         }else{
             holder= (ViewHolder) convertView.getTag();
         }
@@ -73,7 +76,39 @@ public class MyLocalDanquAdapter extends BaseAdapter {
     private class MyListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            ToastUtil.toast(context,"还没写");
+            int pos= (int) v.getTag();
+            AlertDialog dialog = new AlertDialog.Builder(context).create();
+            dialog.show();
+            dialog.getWindow().setContentView(R.layout.play_item_operation);
+            TextView tvName = (TextView) dialog.getWindow().findViewById(R.id.tv_sn);
+            TextView tvSingerName = (TextView) dialog.getWindow().findViewById(R.id.t_singer);
+            TextView tvAlbumName = (TextView) dialog.getWindow().findViewById(R.id.t_album);
+            RelativeLayout rlAdd= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_add);
+            RelativeLayout rlMV= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_mv);
+            RelativeLayout rlDown= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_down);
+            tvName.setText(musics.get(pos).getName());
+            tvAlbumName.setText(musics.get(pos).getAlbum());
+            tvSingerName.setText(musics.get(pos).getSinger());
+            rlAdd.setOnClickListener(new MyItemListener());
+            rlDown.setOnClickListener(new MyItemListener());
+            rlMV.setOnClickListener(new MyItemListener());
+        }
+    }
+
+    private class MyItemListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.rl_add:
+
+                    break;
+                case R.id.rl_mv:
+
+                    break;
+                case R.id.rl_down:
+
+                    break;
+            }
         }
     }
 }
