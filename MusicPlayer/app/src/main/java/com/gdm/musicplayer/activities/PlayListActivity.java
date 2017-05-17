@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -15,6 +16,7 @@ import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.bean.MList;
 import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.download.DownLoadService;
 import com.gdm.musicplayer.service.MyService;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
@@ -112,8 +114,8 @@ public class PlayListActivity extends AppCompatActivity {
                 });
             }else if(holder instanceof ContentHolder){
                 ContentHolder h= (ContentHolder) holder;
-                Music music = list.get(position-1);
-                h.itemView.setOnClickListener(new View.OnClickListener() {
+                final Music music = list.get(position-1);
+                h.contentview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent1 = new Intent(PlayListActivity.this, PlayActivity.class);
@@ -134,6 +136,16 @@ public class PlayListActivity extends AppCompatActivity {
                 });
                 h.name.setText(music.getName());
                 h.singer.setText(music.getSinger());
+                h.setting.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(PlayListActivity.this, DownLoadService.class);
+                        intent.putExtra("name",music.getName());
+                        intent.putExtra("path",music.getFileUrl());
+                        intent.putExtra("type",1);
+                        startService(intent);
+                    }
+                });
             }
         }
 
@@ -165,10 +177,14 @@ public class PlayListActivity extends AppCompatActivity {
         }
         class ContentHolder extends RecyclerView.ViewHolder{
             private TextView name,singer;
+            private ImageView setting;
+            private RelativeLayout contentview;
             public ContentHolder(View itemView) {
                 super(itemView);
+                contentview= (RelativeLayout) itemView.findViewById(R.id.contentview);
                 name= (TextView) itemView.findViewById(R.id.tv_song_name);
                 singer= (TextView) itemView.findViewById(R.id.tv_song_singer);
+                setting= (ImageView) itemView.findViewById(R.id.img_song_setting);
             }
         }
     }
