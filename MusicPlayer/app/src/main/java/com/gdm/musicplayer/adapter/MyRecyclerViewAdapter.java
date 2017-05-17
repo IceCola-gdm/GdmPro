@@ -25,16 +25,11 @@ import com.bumptech.glide.Glide;
 import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.activities.ManageGedanActivity;
-import com.gdm.musicplayer.bean.MList;
 import com.gdm.musicplayer.bean.MusicList;
 import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,7 +44,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static int HEAD=0;
     private static int CONTENT=1;
     private static int BOTTOM=2;
-    private MusicListAdapter adt;
     private Context context;
     private LayoutInflater inflater;
     private ArrayList<MusicList> beens;
@@ -62,8 +56,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private AlertDialog dialog;
     private MyApplication app;
     private User user=null;
-    private ArrayList<MList> lists;
     private ArrayList<File> files=new ArrayList<>();
+    private static final String PATH= Environment.getExternalStorageDirectory()+File.separator+"a.jpg";
 
     public MyRecyclerViewAdapter(Context context, ArrayList<MusicList> beens,ArrayList<MusicList> content,MyApplication app) {
         this.context = context;
@@ -72,8 +66,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.content=content;
         this.app=app;
         user=app.getUser();
-        lists=new ArrayList<>();
-        adt=new MusicListAdapter(lists,context);
     }
 
     @Override
@@ -88,7 +80,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             case 1:
                 view=inflater.inflate(R.layout.fragment_my_recycler_content,parent,false);
                 holder=new HolderTwo(view);
-
                 break;
             case 2:
                 view=inflater.inflate(R.layout.fragment_my_recycler_bottom,parent,false);
@@ -118,6 +109,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             });
         }else if (holder instanceof HolderTwo){
             final HolderTwo h= (HolderTwo) holder;
+            h.content.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
             h.title.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -196,50 +188,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             textViewCount= (TextView) view.findViewById(R.id.tv_content_count);
             imageViewEdit= (ImageView) view.findViewById(R.id.img_content_setting);
             content= (RecyclerView) view.findViewById(R.id.fragment_my_recycler_content);
-            content.setAdapter(adt);
-            content.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
             contentparent= (RelativeLayout) view.findViewById(R.id.contentparent);
-            selectGedan();
         }
-    }
-
-    private void selectGedan() {
-        if (user!=null) {
-            OkHttpUtils.post("http://120.24.220.119:8080/music/music/getTypeList")
-                    .params("userid",user.getId())
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onSuccess(String s, Call call, Response response) {
-                            try {
-                                JSONObject js = new JSONObject(s);
-                                String message = js.getString("message");
-                                lists.clear();
-                                if (message.equals("查询成功")) {
-                                    JSONArray data = js.getJSONArray("data");
-                                    for (int i = 0; i < data.length(); i++) {
-                                        JSONObject obj = data.getJSONObject(i);
-                                        int id = obj.getInt("id");
-                                        int userid = obj.getInt("userid");
-                                        String name = obj.getString("name");
-                                        String discription = obj.getString("discription");
-                                        String imgpath = obj.getString("imgpath");
-                                        MList list = new MList();
-                                        list.setImgpath(imgpath);
-                                        list.setName(name);
-                                        list.setDiscription(discription);
-                                        list.setUserid(userid);
-                                        list.setId(id);
-                                        lists.add(list);
-                                    }
-                                    adt.notifyDataSetChanged();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-        }
-
     }
 
     private class HolderThree extends RecyclerView.ViewHolder {
@@ -284,32 +234,31 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private void createNewGeDan() {
 
+        files.add(new File(PATH));
         OkHttpUtils.post(MyApplication.BASEPATH+"/music/addmusiclist")
-                .params("userid",user.getId())
+                .params("id",user.getId())
                 .params("name",gedan)
-                .params("discription","暂无")
+                .params("discription","")
+                .params("discription","dhbdoqhaiwdhxhiwq")
                 .params("type",3)
+                .addFileParams("imgfile",files)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
+                        Log.e("-----",s);
 
-                        try {
-                            int i=1;
-                            JSONObject js = new JSONObject(s);
-                            String message = js.getString("message");
-                            if (message.equals("新增成功")) {
-                                selectGedan();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        Log.e("--dWDWQDQW---",s);
+                        myDialog.dismiss();
 
-                    }
 
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        int i=555;
-                        Log.e("MyRecyclerViewAdapter",e.getMessage());
+
+
+
+
+
+
+
+
                     }
                 });
     }

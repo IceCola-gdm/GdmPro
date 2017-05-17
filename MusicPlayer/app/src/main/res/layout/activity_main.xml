@@ -106,58 +106,6 @@
             android:layout_height="50dp"
             android:clickable="true"
             android:onClick="clickInMain"
-            android:id="@+id/main_rl_naozhong">
-            <ImageView
-                android:id="@+id/img_alarm"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/nz"
-                android:layout_margin="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="音乐闹钟"
-                android:textSize="14sp"
-                android:textColor="#3D3D3D"
-                android:layout_toRightOf="@+id/img_alarm"
-                android:layout_centerVertical="true"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:clickable="true"
-            android:onClick="clickInMain"
-            android:id="@+id/main_rl_huanfu">
-            <ImageView
-                android:id="@+id/img_huanfu"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/hf"
-                android:layout_margin="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="个性换肤"
-                android:textSize="14sp"
-                android:textColor="#3D3D3D"
-                android:layout_toRightOf="@+id/img_huanfu"
-                android:layout_centerVertical="true"/>
-            <TextView
-                android:id="@+id/tv_pifu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="经典红"
-                android:textSize="12sp"
-                android:textColor="#939393"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:layout_centerVertical="true"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:clickable="true"
-            android:onClick="clickInMain"
             android:id="@+id/main_rl_pwd">
             <ImageView
                 android:id="@+id/img_pwd"

@@ -23,6 +23,9 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     public static ArrayList<Music> getMusicList() {
         return musicList;
     }
+    public static void setMusicList(ArrayList<Music> musicList) {
+        MyService.musicList = musicList;
+    }
     public MediaPlayer player;
     //数据源
     private  static ArrayList<Music> musicList=new ArrayList<>();
@@ -46,10 +49,6 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
 
     public static int getType() {
         return type;
-    }
-
-    public static void setMusicList(ArrayList<Music> musicList) {
-        MyService.musicList = musicList;
     }
 
     @Override
@@ -79,6 +78,12 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                         intent.putExtra("music",bean);
                         intent.putExtra("state", "play");
                         intent.putExtra("pos", pos);
+                        if (bean.getSinger()!=null) {
+                            intent.putExtra("author",bean.getSinger());
+                        }else {
+                            intent.putExtra("author","");
+                        }
+
                         intent.putExtra("total", player.getDuration());
                         intent.putExtra("now", player.getCurrentPosition());
                         intent.putExtra("title", bean.getName());
@@ -191,7 +196,9 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                         if(musicList!=null){
                             musicList.clear();
                         }
-                        musicList.addAll(musics);
+                        if(musics!=null){
+                            musicList.addAll(musics);
+                        }
                         MyService.this.pos=pos;
                         play();
                     }

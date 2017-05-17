@@ -29,6 +29,7 @@ public class MyApplication extends Application {
         musics=new ArrayList<>();
         musics.addAll((ArrayList<Music>) MusicUtil.getAllSongs(this,"song"));
         sp=getSharedPreferences("myaccount",MODE_PRIVATE);
+        user=new User();
     }
 
     public boolean isLogin() {
@@ -53,6 +54,7 @@ public class MyApplication extends Application {
 
     public void setUser(User user) {
         this.user = user;
+        sendBroadcast(new Intent("userinfochange"));
     }
 
     public void setMusics(ArrayList<Music> musics) {
