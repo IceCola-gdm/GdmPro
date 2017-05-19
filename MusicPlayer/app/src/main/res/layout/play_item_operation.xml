@@ -127,7 +127,8 @@
             android:layout_height="15dp"
             android:scaleType="fitXY"
             android:src="@drawable/dow"
-            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"/>
         <TextView
             android:id="@+id/tv_down"
@@ -135,6 +136,7 @@
             android:layout_height="wrap_content"
             android:text="下载到本地"
             android:layout_toRightOf="@+id/down"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"/>
     </RelativeLayout>
 </LinearLayout>

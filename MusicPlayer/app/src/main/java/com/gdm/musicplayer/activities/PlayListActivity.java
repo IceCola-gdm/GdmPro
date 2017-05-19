@@ -1,5 +1,6 @@
 package com.gdm.musicplayer.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -113,6 +115,14 @@ public class PlayListActivity extends AppCompatActivity {
             }else if(holder instanceof ContentHolder){
                 ContentHolder h= (ContentHolder) holder;
                 Music music = list.get(position-1);
+                h.imgSetting.setTag(position-1);
+                h.imgSetting.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos= (int) v.getTag();
+                        show(pos);
+                    }
+                });
                 h.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -133,7 +143,7 @@ public class PlayListActivity extends AppCompatActivity {
                     }
                 });
                 h.name.setText(music.getName());
-                h.singer.setText(music.getSinger());
+                h.singer.setText(music.getSinger()+"-"+music.getAlbum());
             }
         }
 
@@ -165,10 +175,47 @@ public class PlayListActivity extends AppCompatActivity {
         }
         class ContentHolder extends RecyclerView.ViewHolder{
             private TextView name,singer;
+            private ImageView imgSetting;
             public ContentHolder(View itemView) {
                 super(itemView);
                 name= (TextView) itemView.findViewById(R.id.tv_song_name);
                 singer= (TextView) itemView.findViewById(R.id.tv_song_singer);
+                imgSetting= (ImageView) itemView.findViewById(R.id.img_song_setting);
+            }
+        }
+    }
+
+    private void show(int pos) {
+        AlertDialog dialog = new AlertDialog.Builder(PlayListActivity.this).create();
+        dialog.show();
+        dialog.getWindow().setContentView(R.layout.play_item_operation);
+        TextView tvName = (TextView) dialog.getWindow().findViewById(R.id.tv_sn);
+        TextView tvSingerName = (TextView) dialog.getWindow().findViewById(R.id.t_singer);
+        TextView tvAlbumName = (TextView) dialog.getWindow().findViewById(R.id.t_album);
+        RelativeLayout rlAdd= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_add);
+        RelativeLayout rlMV= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_mv);
+        RelativeLayout rlDown= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_down);
+        tvName.setText(list.get(pos).getName());
+        tvAlbumName.setText(list.get(pos).getAlbum());
+        tvSingerName.setText(list.get(pos).getSinger());
+        rlAdd.setOnClickListener(new MyItemListener());
+        rlDown.setOnClickListener(new MyItemListener());
+        rlMV.setOnClickListener(new MyItemListener());
+    }
+
+    private class MyItemListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.rl_add:
+
+                    break;
+                case R.id.rl_mv:
+
+                    break;
+                case R.id.rl_down:
+
+                    break;
             }
         }
     }

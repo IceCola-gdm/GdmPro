@@ -44,15 +44,6 @@
             android:src="@drawable/a36"
             android:layout_marginLeft="20dp"
             android:layout_centerVertical="true"/>
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="+86"-->
-            <!--android:textSize="18sp"-->
-            <!--android:layout_toRightOf="@+id/img_phone_icon"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:textColor="#C0C4C3"/>-->
         <EditText
             android:id="@+id/ed_phone_login_number"
             android:layout_width="250dp"

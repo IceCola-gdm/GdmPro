@@ -27,23 +27,6 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/img_mycollection_back"
             />
-            <ImageView
-                android:id="@+id/img_mycollection_search"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/search"
-                android:layout_margin="10dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"/>
-        <EditText
-            android:id="@+id/ed_mycollection_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/img_mycollection_back"
-            android:layout_centerVertical="true"
-            android:textColorHint="#C0C4C3"
-            android:hint="搜索收藏歌曲"
-            android:visibility="invisible"/>
     </RelativeLayout>
     <android.support.design.widget.TabLayout
         android:id="@+id/mycollection_tablelayout"

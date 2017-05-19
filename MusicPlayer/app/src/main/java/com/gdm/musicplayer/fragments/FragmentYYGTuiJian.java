@@ -49,7 +49,8 @@ public class FragmentYYGTuiJian extends Fragment {
     private ArrayList<MList> data;
     private RecyclerView listview;
     private ListAdapter listAdapter;
-
+    private String listimgpath="http://120.24.220.119:8080/music/image/";
+    private String path="http://120.24.220.119:8080/music/music/getTypeList";
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tuijian_fragment, container, false);
@@ -60,7 +61,7 @@ public class FragmentYYGTuiJian extends Fragment {
 
     private void initMusicData() {
         data=new ArrayList<>();
-        OkHttpUtils.post("http://120.24.220.119:8080/music/music/getTypeList")
+        OkHttpUtils.post(path)
                 .params("type",2)
                 .execute(new StringCallback() {
                     @Override
@@ -69,7 +70,6 @@ public class FragmentYYGTuiJian extends Fragment {
                     }
                 });
     }
-    private String listimgpath="http://120.24.220.119:8080/music/image/";
     private void parse(String s) {
         try {
             JSONObject js = new JSONObject(s);
