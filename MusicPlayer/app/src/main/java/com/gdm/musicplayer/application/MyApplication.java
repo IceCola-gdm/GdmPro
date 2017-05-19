@@ -18,6 +18,7 @@ public class MyApplication extends Application {
     public static final String CHANGELIST="com.gdm.listchange";
     private  User user=null;
     private SharedPreferences sp;
+    private static MyApplication instance;
     public static final String BASEPATH="http://120.24.220.119:8080/music/";
     public static final String BASEMUSICPATH="http://120.24.220.119:8080/music/data/music/";  //音乐文件
     public static final String BASEMUSICIIMGPATH="http://120.24.220.119:8080/music/data/music/img/"; //音乐图片
@@ -30,6 +31,11 @@ public class MyApplication extends Application {
         musics.addAll((ArrayList<Music>) MusicUtil.getAllSongs(this,"song"));
         sp=getSharedPreferences("myaccount",MODE_PRIVATE);
         user=new User();
+        instance=this;
+    }
+
+    public static MyApplication getInstance() {
+        return instance;
     }
 
     public boolean isLogin() {

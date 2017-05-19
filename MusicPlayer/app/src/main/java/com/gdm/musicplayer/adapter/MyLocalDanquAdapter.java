@@ -2,6 +2,7 @@ package com.gdm.musicplayer.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.utils.ToastUtil;
 
 import java.util.ArrayList;
+
+import io.vov.vitamio.utils.Log;
 
 /**
  * Created by Administrator on 2017/4/24 0024.
@@ -47,7 +52,7 @@ public class MyLocalDanquAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder=null;
         if(convertView==null){
             convertView=inflater.inflate(R.layout.localmusiclist_listview_item,parent,false);
@@ -62,6 +67,18 @@ public class MyLocalDanquAdapter extends BaseAdapter {
             holder= (ViewHolder) convertView.getTag();
         }
         Music music= (Music) getItem(position);
+        final RelativeLayout content= (RelativeLayout) convertView.findViewById(R.id.contentview);
+        content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyApplication ap= MyApplication.getInstance();
+                ap.setMusics(musics);
+                Intent intent = new Intent(MyService.mAction);
+                intent.putExtra("cmd","chose_pos");
+                intent.putExtra("pos",position);
+                context.sendBroadcast(intent);
+            }
+        });
         holder.tvTitle.setText(music.getName());
         if (music.getSinger()!=null&&music.getAlbum()!=null) {
             holder.tvMusicInfo.setText(music.getSinger()+"-"+music.getAlbum());

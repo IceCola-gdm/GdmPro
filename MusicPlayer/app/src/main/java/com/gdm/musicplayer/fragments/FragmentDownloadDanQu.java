@@ -1,17 +1,21 @@
 package com.gdm.musicplayer.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MyLocalDanquAdapter;
+import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.download.DataBase;
+import com.gdm.musicplayer.service.MyService;
 
 import java.io.File;
 import java.util.AbstractSequentialList;
@@ -38,12 +42,7 @@ public class FragmentDownloadDanQu extends Fragment {
         initDownMusic();
         adt=new MyLocalDanquAdapter(musicsDown,getActivity());
         list.setAdapter(adt);
-        list.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
         return view;
     }
     private void initDownMusic() {

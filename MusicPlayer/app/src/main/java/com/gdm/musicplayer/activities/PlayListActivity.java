@@ -1,6 +1,7 @@
 package com.gdm.musicplayer.activities;
 
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,6 +25,7 @@ import com.lzy.okhttputils.callback.StringCallback;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -139,6 +141,7 @@ public class PlayListActivity extends AppCompatActivity {
                 h.setting.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        showMyDiaLog(music);
                         Intent intent = new Intent(PlayListActivity.this, DownLoadService.class);
                         intent.putExtra("name",music.getName());
                         intent.putExtra("path",music.getFileUrl());
@@ -186,6 +189,36 @@ public class PlayListActivity extends AppCompatActivity {
                 singer= (TextView) itemView.findViewById(R.id.tv_song_singer);
                 setting= (ImageView) itemView.findViewById(R.id.img_song_setting);
             }
+        }
+    }
+    AlertDialog dialog=null;
+    private void showMyDiaLog(final Music m) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View v = getLayoutInflater().inflate(R.layout.play_item_operation, null, false);
+        builder.setView(v);
+        dialog=builder.create();
+        TextView songname= (TextView) v.findViewById(R.id.tv_sn);
+        RelativeLayout down= (RelativeLayout) v.findViewById(R.id.rl_down);
+        down.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PlayListActivity.this, DownLoadService.class);
+                intent.putExtra("type",0);
+                intent.putExtra("name",m.getName());
+                intent.putExtra("path",m.getFileUrl());
+                startService(intent);
+                dialog.hide();
+            }
+        });
+        dialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (dialog!=null) {
+            dialog.cancel();
         }
     }
 }
