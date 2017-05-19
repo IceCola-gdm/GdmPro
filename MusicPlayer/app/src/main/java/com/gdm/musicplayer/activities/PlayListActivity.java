@@ -1,7 +1,7 @@
 package com.gdm.musicplayer.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,7 +17,6 @@ import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.bean.MList;
 import com.gdm.musicplayer.bean.Music;
-import com.gdm.musicplayer.download.DownLoadService;
 import com.gdm.musicplayer.service.MyService;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
@@ -25,7 +24,6 @@ import com.lzy.okhttputils.callback.StringCallback;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -116,8 +114,16 @@ public class PlayListActivity extends AppCompatActivity {
                 });
             }else if(holder instanceof ContentHolder){
                 ContentHolder h= (ContentHolder) holder;
-                final Music music = list.get(position-1);
-                h.contentview.setOnClickListener(new View.OnClickListener() {
+                Music music = list.get(position-1);
+                h.imgSetting.setTag(position-1);
+                h.imgSetting.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos= (int) v.getTag();
+                        show(pos);
+                    }
+                });
+                h.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent1 = new Intent(PlayListActivity.this, PlayActivity.class);
@@ -137,18 +143,7 @@ public class PlayListActivity extends AppCompatActivity {
                     }
                 });
                 h.name.setText(music.getName());
-                h.singer.setText(music.getSinger());
-                h.setting.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showMyDiaLog(music);
-                        Intent intent = new Intent(PlayListActivity.this, DownLoadService.class);
-                        intent.putExtra("name",music.getName());
-                        intent.putExtra("path",music.getFileUrl());
-                        intent.putExtra("type",1);
-                        startService(intent);
-                    }
-                });
+                h.singer.setText(music.getSinger()+"-"+music.getAlbum());
             }
         }
 
@@ -180,45 +175,48 @@ public class PlayListActivity extends AppCompatActivity {
         }
         class ContentHolder extends RecyclerView.ViewHolder{
             private TextView name,singer;
-            private ImageView setting;
-            private RelativeLayout contentview;
+            private ImageView imgSetting;
             public ContentHolder(View itemView) {
                 super(itemView);
-                contentview= (RelativeLayout) itemView.findViewById(R.id.contentview);
                 name= (TextView) itemView.findViewById(R.id.tv_song_name);
                 singer= (TextView) itemView.findViewById(R.id.tv_song_singer);
-                setting= (ImageView) itemView.findViewById(R.id.img_song_setting);
+                imgSetting= (ImageView) itemView.findViewById(R.id.img_song_setting);
             }
         }
     }
-    AlertDialog dialog=null;
-    private void showMyDiaLog(final Music m) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View v = getLayoutInflater().inflate(R.layout.play_item_operation, null, false);
-        builder.setView(v);
-        dialog=builder.create();
-        TextView songname= (TextView) v.findViewById(R.id.tv_sn);
-        RelativeLayout down= (RelativeLayout) v.findViewById(R.id.rl_down);
-        down.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PlayListActivity.this, DownLoadService.class);
-                intent.putExtra("type",0);
-                intent.putExtra("name",m.getName());
-                intent.putExtra("path",m.getFileUrl());
-                startService(intent);
-                dialog.hide();
-            }
-        });
+    private void show(int pos) {
+        AlertDialog dialog = new AlertDialog.Builder(PlayListActivity.this).create();
         dialog.show();
+        dialog.getWindow().setContentView(R.layout.play_item_operation);
+        TextView tvName = (TextView) dialog.getWindow().findViewById(R.id.tv_sn);
+        TextView tvSingerName = (TextView) dialog.getWindow().findViewById(R.id.t_singer);
+        TextView tvAlbumName = (TextView) dialog.getWindow().findViewById(R.id.t_album);
+        RelativeLayout rlAdd= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_add);
+        RelativeLayout rlMV= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_mv);
+        RelativeLayout rlDown= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_down);
+        tvName.setText(list.get(pos).getName());
+        tvAlbumName.setText(list.get(pos).getAlbum());
+        tvSingerName.setText(list.get(pos).getSinger());
+        rlAdd.setOnClickListener(new MyItemListener());
+        rlDown.setOnClickListener(new MyItemListener());
+        rlMV.setOnClickListener(new MyItemListener());
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (dialog!=null) {
-            dialog.cancel();
+    private class MyItemListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.rl_add:
+
+                    break;
+                case R.id.rl_mv:
+
+                    break;
+                case R.id.rl_down:
+
+                    break;
+            }
         }
     }
 }

@@ -287,9 +287,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
                 startActivity(intent);
                 break;
-            case R.id.main_rl_timer:  //定时停止
-                timer();
-                break;
             case R.id.rl_change:  //切换账号
                 Intent intent2 = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
                 startActivity(intent2);
@@ -308,35 +305,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         mSlidingPaneLayout.closePane();
-    }
-
-    private void timer() {
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-        TimePickerDialog pickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                setTitle("设置时间 " + hourOfDay + ":" + minute);
-                selectH=hourOfDay;
-                selectM=minute;
-            }
-        }, hour, minute, true);
-        pickerDialog.show();
-        ms = (selectH * 3600 + selectM * 60) * 1000;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(ms);
-                    Intent intent = new Intent(MyService.mAction);
-                    intent.putExtra("cmd","pause");
-                    sendBroadcast(intent);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
     @Override

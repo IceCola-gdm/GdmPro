@@ -5,16 +5,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.bean.Music;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -42,7 +45,8 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     //顺序播放
     public static final int LIST_PLAY=0;
     public static boolean isPlay=false;
-
+    private SharedPreferences sp;
+    private ArrayList<Music> temp=new ArrayList<>();
     public static void setType(int type) {
         MyService.type = type;
     }
@@ -57,7 +61,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
         intPlayer();
         initBord();
         initTheard();
-
+        sp=getSharedPreferences("recently",MODE_PRIVATE);
     }
 
     private void initTheard() {
@@ -115,6 +119,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(commend);
+
     }
 
     @Nullable
@@ -253,6 +258,14 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                     }
                     player.setDataSource(bean.getFileUrl());
                     player.prepare();
+                    temp.add(bean);
+
+                    SharedPreferences.Editor editor = sp.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(temp);
+                    editor.putString("musics","");
+                    editor.putString("musics",json);
+                    editor.commit();
                 } catch (Exception e) {
                 }
             }

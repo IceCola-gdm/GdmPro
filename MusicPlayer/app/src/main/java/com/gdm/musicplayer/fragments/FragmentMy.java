@@ -1,10 +1,13 @@
 package com.gdm.musicplayer.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,9 @@ import com.gdm.musicplayer.bean.MusicList;
 import com.gdm.musicplayer.download.DataBase;
 import com.gdm.musicplayer.utils.MusicUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -36,17 +42,42 @@ public class FragmentMy extends Fragment {
     private ArrayList<MusicList> content;
     private Class[] classes={LocalMusicListActivity.class, RecentlyPlayActivity.class, DownLoadManageActivity.class, MyCollectionActivity.class};
     private int[] icons={R.drawable.local,R.drawable.w1,R.drawable.downmanage,R.drawable.collectmanage};
-    private ArrayList<Music> musicsLocal=new ArrayList<>();  //数据源1
-    private ArrayList<Music> musicsRently=new ArrayList<>();  //数据源2
-    private ArrayList<Music> musicsDown=new ArrayList<>();  //数据源3
-    private ArrayList<Music> musicsCollect=new ArrayList<>();  //数据源4
+    private ArrayList<Music> musicsLocal=new ArrayList<>();  //数据源1 本地音乐
+    private ArrayList<Music> musicsRently=new ArrayList<>();  //数据源2 最近播放
+    private ArrayList<Music> musicsDown=new ArrayList<>();  //数据源3  下载管理
+    private ArrayList<Music> musicsCollect=new ArrayList<>();  //数据源4 收藏
     private ArrayList<ArrayList<Music>> data=new ArrayList<>();
     private MyApplication application;
+    private SharedPreferences sp;
+    private String musicsJson;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         application= (MyApplication) getActivity().getApplication();
+        sp=getActivity().getSharedPreferences("recently", Context.MODE_PRIVATE);
+        musicsJson = sp.getString("musics", "");
         initData();
+    }
+
+    private void getRecentlyData(String musicsJson) {
+        try {
+            JSONArray array = new JSONArray(musicsJson.trim());
+            for(int i=0;i<array.length();i++){
+                JSONObject job = array.getJSONObject(i);
+                Music music=new Music();
+                music.setAlbum(job.optString("album"));
+                music.setDuration(job.optInt("duration"));
+                music.setFileUrl(job.optString("fileUrl"));
+                music.setId(job.optInt("id"));
+                music.setIsnet(job.optBoolean("isnet"));
+                music.setName(job.optString("name"));
+                music.setSinger(job.optString("singer"));
+                musicsRently.add(music);
+            }
+        } catch (JSONException e) {
+            Log.e("FragmentMy","数据解析出错");
+        }
     }
 
     @Override
@@ -56,7 +87,9 @@ public class FragmentMy extends Fragment {
 
     private void initData() {
         musicsLocal.addAll((ArrayList<Music>)MusicUtil.getAllSongs(getContext(),"song"));
-        initDownMusic();
+        if(!musicsJson.equals("")){
+            getRecentlyData(musicsJson);
+        }
         data.add(musicsLocal);
         data.add(musicsRently);
         data.add(musicsDown);

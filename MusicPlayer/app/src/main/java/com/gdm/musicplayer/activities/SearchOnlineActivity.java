@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,6 +36,7 @@ import okhttp3.Response;
 public class SearchOnlineActivity extends AppCompatActivity {
     private LinearLayout ll_in;
     private LinearLayout ll_out;
+    private RelativeLayout rl_fail;
     private RelativeLayout rl;
     private EditText editText;
     private TextView tv_count;
@@ -72,6 +74,7 @@ public class SearchOnlineActivity extends AppCompatActivity {
         search= (ImageView) findViewById(R.id.search);
         editText= (EditText) findViewById(R.id.ed_search);
         ll_in= (LinearLayout) findViewById(R.id.ll_in);
+        rl_fail= (RelativeLayout) findViewById(R.id.rl_fail);
         rl= (RelativeLayout) findViewById(R.id.rl_all3);
         tv_count= (TextView) findViewById(R.id.tv_count);
         listView= (ListView) findViewById(R.id.search_listview);
@@ -121,32 +124,38 @@ public class SearchOnlineActivity extends AppCompatActivity {
             JSONObject job = new JSONObject(s.trim());
             if(job.optString("message").equals("搜索成功")){
                 JSONArray data = job.optJSONArray("data");
-                for(int i=0;i<data.length();i++){
-                    JSONObject obj = data.optJSONObject(i);
-                    music=new Music();
-                    music.setName(obj.optString("name"));
-                    music.setId(obj.optInt("musicid"));
-                    if(obj.optString("path")!=null&&obj.optString("path")!=""){
-                        music.setFileUrl(baseMusicPath+obj.optString("path"));
+                if(data.length()==0){
+                    ll_out.setVisibility(View.INVISIBLE);
+                    rl_fail.setVisibility(View.VISIBLE);
+                    rl.setVisibility(View.INVISIBLE);
+                }else {
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject obj = data.optJSONObject(i);
+                        music = new Music();
+                        music.setName(obj.optString("name"));
+                        music.setId(obj.optInt("musicid"));
+                        if (obj.optString("path") != null && obj.optString("path") != "") {
+                            music.setFileUrl(baseMusicPath + obj.optString("path"));
+                        }
+                        music.setSinger(obj.optString("author"));
+                        music.setAlbum(obj.optString("album"));
+                        music.setSize(obj.optString("size"));
+                        if (obj.optString("imgpath") != null && obj.optString("imgpath") != "") {
+                            music.setImgPath(baseMusicImgPath + obj.optString("imgpath"));
+                        }
+                        if (obj.optString("mvpath") != null && obj.optString("mvpath") != "") {
+                            music.setMvPath(baseMvPath + obj.optString("mvpath"));
+                        }
+                        if (obj.optString("lrcfile") != null && obj.optString("lrcfile") != "") {
+                            music.setLrc(baseLrcPath + obj.optString("lrcfile"));
+                        }
+                        musics.add(music);
                     }
-                    music.setSinger(obj.optString("author"));
-                    music.setAlbum(obj.optString("album"));
-                    music.setSize(obj.optString("size"));
-                    if(obj.optString("imgpath")!=null&&obj.optString("imgpath")!=""){
-                        music.setImgPath(baseMusicImgPath+obj.optString("imgpath"));
-                    }
-                    if(obj.optString("mvpath")!=null&&obj.optString("mvpath")!=""){
-                        music.setMvPath(baseMvPath+obj.optString("mvpath"));
-                    }
-                    if(obj.optString("lrcfile")!=null&&obj.optString("lrcfile")!=""){
-                        music.setLrc(baseLrcPath+obj.optString("lrcfile"));
-                    }
-                    musics.add(music);
+                    adapter = new YYGGeDanListViewAdapter(SearchOnlineActivity.this, musics);
+                    listView.setAdapter(adapter);
+                    tv_count.setText("共(" + musics.size() + ")首");
+                    listView.setOnItemClickListener(new MyItemListener());
                 }
-                adapter=new YYGGeDanListViewAdapter(SearchOnlineActivity.this,musics);
-                listView.setAdapter(adapter);
-                tv_count.setText("共("+musics.size()+")首");
-                listView.setOnItemClickListener(new MyItemListener());
             }else{
                 ToastUtil.toast(SearchOnlineActivity.this,"搜索失败");
             }
@@ -171,6 +180,8 @@ public class SearchOnlineActivity extends AppCompatActivity {
             if(s.toString().equals("")){
                 ll_out.setVisibility(View.VISIBLE);
                 ll_in.setVisibility(View.INVISIBLE);
+                rl_fail.setVisibility(View.INVISIBLE);
+                rl.setVisibility(View.VISIBLE);
                 name="";
             }else{
                 name=s.toString();

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ProviderInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,39 +41,24 @@ public class FragmentYYGGeDan extends Fragment {
     private ArrayList<Music> musics=new ArrayList<>();
     private YYGGeDanListViewAdapter adapter;
     private Music music=null;
-    private LayoutInflater inflater;
-    private TextView textViewType;
     private String baseMusicPath="http://120.24.220.119:8080/music/data/music/";
     private String baseMusicImgPath="http://120.24.220.119:8080/music/data/music/img/";
     private String baseLrcPath="http://120.24.220.119:8080/music/data/music/lrc/";
     private String baseMvPath="http://120.24.220.119:8080/music/data/mv/";
     private static final String PATH="http://120.24.220.119:8080/music/music/getAllMusic";
-    private Thread thread;
-    private int[] imgs={R.drawable.abk,R.drawable.abl,R.drawable.abm,R.drawable.abn};
-    private Thread thread1;
-    private ImageView imageView;
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initData();
-    }
-
-    private void initData() {
-        inflater= (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_yyg_gedan, container, false);
         listView= (ListView) view.findViewById(R.id.yyg_gedan_listview);
-        textViewType = (TextView) view.findViewById(R.id.tv_type);
-        TextView tvHuaYu= (TextView) view.findViewById(R.id.tv_huayu);
-        TextView tvYaoGun= (TextView) view.findViewById(R.id.tv_yaogun);
-        TextView tvMinYao= (TextView) view.findViewById(R.id.tv_minyao);
-        tvHuaYu.setOnClickListener(new MyListener());
-        tvYaoGun.setOnClickListener(new MyListener());
-        tvMinYao.setOnClickListener(new MyListener());
+        refreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.yyg_gedan_fresh);
+        refreshLayout.setOnRefreshListener(new MyRefreshListener());
         getData();
         return view;
     }
@@ -83,6 +69,7 @@ public class FragmentYYGGeDan extends Fragment {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         parse(s);
+                        adapter.notifyDataSetChanged();
                     }
                 });
     }
@@ -91,7 +78,9 @@ public class FragmentYYGGeDan extends Fragment {
         try {
             JSONObject job = new JSONObject(s.trim());
             if(job.optString("message").equals("查询成功")){
+                ToastUtil.toast(getContext(),job.optString("message"));
                 JSONArray data = job.optJSONArray("data");
+                musics=new ArrayList<>();
                 for(int i=0;i<data.length();i++){
                     JSONObject obj = data.optJSONObject(i);
                     music=new Music();
@@ -114,6 +103,7 @@ public class FragmentYYGGeDan extends Fragment {
                     }
                     musics.add(music);
                 }
+                ToastUtil.toast(getContext(),musics.size()+"");
 
             }else{
                 ToastUtil.toast(getContext(),job.optString("message"));
@@ -153,22 +143,13 @@ public class FragmentYYGGeDan extends Fragment {
         adapter=new YYGGeDanListViewAdapter(getContext(),musics);
         listView.setAdapter(adapter);
     }
-    private class MyListener implements View.OnClickListener {
+
+    private class MyRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
-        public void onClick(View v) {
-            String res="";
-            switch (v.getId()){
-                case R.id.tv_huayu:
-                    res="华语";
-                    break;
-                case R.id.tv_yaogun:
-                    res="英语";
-                    break;
-                case R.id.tv_minyao:
-                    res="韩语";
-                    break;
-            }
-            textViewType.setText(res);
+        public void onRefresh() {
+            getData();
+            adapter.notifyDataSetChanged();
+            refreshLayout.setRefreshing(false);
         }
     }
 }

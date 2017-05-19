@@ -3,6 +3,7 @@ package com.gdm.musicplayer.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class FragmentYYGPaiHang extends Fragment {
     private ListView listView;
     private ArrayList<PaiHangBang> paiHangBangs=new ArrayList<>();
     private YYGPaiHangBangAdapter adapter;
+    private SwipeRefreshLayout refreshLayout;
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,9 @@ public class FragmentYYGPaiHang extends Fragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_yyg_paihang, container, false);
         listView= (ListView) view.findViewById(R.id.listview);
+        refreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.yyg_paihang_refresh);
+        listView.setOnItemClickListener(new MyItemListener());
+        refreshLayout.setOnRefreshListener(new MyRefreshListener());
         getData();
         listView.setOnItemClickListener(new MyItemListener());
         return view;
@@ -105,6 +110,11 @@ public class FragmentYYGPaiHang extends Fragment {
     }
 
 
+    private void setAdapter() {
+        adapter=new YYGPaiHangBangAdapter(paiHangBangs,getContext());
+        listView.setAdapter(adapter);
+    }
+
     private class MyItemListener implements android.widget.AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -112,6 +122,15 @@ public class FragmentYYGPaiHang extends Fragment {
             PaiHangBang paiHangBang = paiHangBangs.get(position);
             intent.putExtra("data",paiHangBang);
             startActivity(intent);
+        }
+    }
+
+    private class MyRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
+        @Override
+        public void onRefresh() {
+            getData();
+            adapter.notifyDataSetChanged();
+            refreshLayout.setRefreshing(false);
         }
     }
 }
