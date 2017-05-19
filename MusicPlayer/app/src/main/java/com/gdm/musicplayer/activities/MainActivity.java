@@ -244,7 +244,6 @@ public class MainActivity extends AppCompatActivity {
         tvNickname= (TextView) findViewById(R.id.tv_nickname);
         tvHeart= (TextView) findViewById(R.id.tv_heart);
         tvLogin= (TextView) findViewById(R.id.tv_main_login);
-        tvPiFu= (TextView) findViewById(R.id.tv_pifu);
         imgPlay= (ImageView) findViewById(R.id.rb_song_playicon);
         imgPor= (ImageView) findViewById(R.id.img_song_cover);
         tvSong= (TextView) findViewById(R.id.tv_songname);

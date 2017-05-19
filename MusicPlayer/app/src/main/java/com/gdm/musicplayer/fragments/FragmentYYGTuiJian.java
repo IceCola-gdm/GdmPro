@@ -47,9 +47,8 @@ import okhttp3.Response;
 public class FragmentYYGTuiJian extends Fragment {
 
     private ArrayList<MList> data;
-    private ArrayList<MList> title;
     private RecyclerView listview;
-    private ListAdt listAdt;
+    private ListAdapter listAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
@@ -91,15 +90,15 @@ public class FragmentYYGTuiJian extends Fragment {
                     this.data.add(mList);
                 }
                 //TODO
-                listAdt = new ListAdt();
-                listview.setAdapter(listAdt);
+                listAdapter = new ListAdapter();
+                listview.setAdapter(listAdapter);
                 listview.setLayoutManager(new LinearLayoutManager(getActivity()));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-    class ListAdt extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater=LayoutInflater.from(getActivity());
