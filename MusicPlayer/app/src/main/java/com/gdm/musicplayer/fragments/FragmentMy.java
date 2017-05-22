@@ -3,6 +3,7 @@ package com.gdm.musicplayer.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,12 +21,13 @@ import com.gdm.musicplayer.activities.RecentlyPlayActivity;
 import com.gdm.musicplayer.adapter.MyRecyclerViewAdapter;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.MusicList;
+import com.gdm.musicplayer.download.DataBase;
 import com.gdm.musicplayer.utils.MusicUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -105,6 +107,20 @@ public class FragmentMy extends Fragment {
         }
         content=new ArrayList<>();
         adapter=new MyRecyclerViewAdapter(getContext(),musicLists,content,application);
+    }
+    private File root=new File(Environment.getExternalStorageDirectory(),"gdm");
+    private DataBase db;
+    private void initDownMusic() {
+        db=DataBase.getDb(getActivity());
+        ArrayList<DataBase.Down> downs = db.getAllByType(1);
+        for (int i = 0; i < downs.size(); i++) {
+            Music music = new Music();
+            DataBase.Down down = downs.get(i);
+            music.setName(down.getName());
+            File f = new File(root, down.getName() + ".mp3");
+            music.setFileUrl(f.getAbsolutePath());
+            musicsDown.add(music);
+        }
     }
 
     @Override

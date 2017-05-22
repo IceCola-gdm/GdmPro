@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgSex;
     private TextView tvHeart;
     private TextView tvNickname;
-    private TextView tvPiFu;    //当前皮肤
+//    private TextView tvPiFu;    //当前皮肤
     private TextView tvLogin;    //登录注册
     private RelativeLayout rl_info;
     private User user=null;
@@ -244,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
         tvNickname= (TextView) findViewById(R.id.tv_nickname);
         tvHeart= (TextView) findViewById(R.id.tv_heart);
         tvLogin= (TextView) findViewById(R.id.tv_main_login);
+//        tvPiFu= (TextView) findViewById(R.id.tv_pifu);
         imgPlay= (ImageView) findViewById(R.id.rb_song_playicon);
         imgPor= (ImageView) findViewById(R.id.img_song_cover);
         tvSong= (TextView) findViewById(R.id.tv_songname);

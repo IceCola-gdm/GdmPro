@@ -60,9 +60,11 @@ public class YYGPaiHangBangAdapter extends BaseAdapter {
         }
         PaiHangBang paiHangBang= (PaiHangBang) getItem(position);
         ArrayList<Music> musics = paiHangBang.getMusics();
-        holder.tv1.setText(musics.get(0).getName());
-        holder.tv2.setText(musics.get(1).getName());
-        holder.tv3.setText(musics.get(2).getName());
+        if (musics.size()>3) {
+            holder.tv1.setText(musics.get(0).getName());
+            holder.tv2.setText(musics.get(1).getName());
+            holder.tv3.setText(musics.get(2).getName());
+        }
         Glide.with(context).load(paiHangBang.getImg()).error(R.drawable.phb).into(holder.imageView);
         return convertView;
     }

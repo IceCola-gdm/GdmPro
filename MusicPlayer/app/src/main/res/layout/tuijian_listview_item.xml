@@ -2,26 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/tv_song_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="gagahhahha"
-        android:textColor="#757978"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:textSize="16sp"/>
-    <TextView
-        android:id="@+id/tv_song_singer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_song_name"
-        android:text="gaga"
-        android:textColor="#A5A9A8"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/img_l"
-        android:layout_marginTop="5dp"
-        android:textSize="14sp"/>
+    <RelativeLayout
+        android:clickable="true"
+        android:id="@+id/contentview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_song_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="gagahhahha"
+            android:textColor="#757978"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/tv_song_singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_song_name"
+            android:text="gaga"
+            android:textColor="#A5A9A8"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/img_l"
+            android:layout_marginTop="5dp"
+            android:textSize="14sp"/>
+    </RelativeLayout>
     <ImageView
         android:id="@+id/img_song_setting"
         android:layout_width="16dp"

@@ -223,6 +223,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 case R.id.btn_submit:
                     gedan=ed.getText().toString();
                     createNewGeDan();
+                    myDialog.dismiss();
                     break;
                 case R.id.btn_cancel:
                     myDialog.dismiss();
@@ -232,18 +233,32 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void createNewGeDan() {
+
         files.add(new File(PATH));
         OkHttpUtils.post(MyApplication.BASEPATH+"/music/addmusiclist")
                 .params("id",user.getId())
                 .params("name",gedan)
+                .params("discription","")
                 .params("discription","dhbdoqhaiwdhxhiwq")
                 .params("type",3)
                 .addFileParams("imgfile",files)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
+                        Log.e("-----",s);
+
                         Log.e("--dWDWQDQW---",s);
                         myDialog.dismiss();
+
+
+
+
+
+
+
+
+
+
                     }
                 });
     }

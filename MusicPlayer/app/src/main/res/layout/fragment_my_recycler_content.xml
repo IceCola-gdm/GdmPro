@@ -12,6 +12,28 @@
             android:id="@+id/img_content_arrow"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:src="@drawable/right"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:id="@+id/tv_content_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/img_content_arrow"
+            android:text="创建的歌单"
+            android:layout_centerVertical="true"
+            android:textColor="#3D3D3D"/>
+        <TextView
+            android:id="@+id/tv_content_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_content_title"
+            android:layout_centerVertical="true"
+            android:text="(0)"/>
+        <ImageView
+            android:id="@+id/img_content_arrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/down"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>

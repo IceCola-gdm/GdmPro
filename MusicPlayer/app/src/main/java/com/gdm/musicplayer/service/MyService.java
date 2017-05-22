@@ -197,13 +197,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                     }else if(cmd.equals("chose_pos")){//从列表位置开始播放
                         stop();
                         int pos = intent.getIntExtra("pos", 0);
-                        ArrayList musics = (ArrayList) intent.getSerializableExtra("data");
-                        if(musicList!=null){
-                            musicList.clear();
-                        }
-                        if(musics!=null){
-                            musicList.addAll(musics);
-                        }
+                        musicList=((MyApplication)getApplication()).getMusics();
                         MyService.this.pos=pos;
                         play();
                     }
