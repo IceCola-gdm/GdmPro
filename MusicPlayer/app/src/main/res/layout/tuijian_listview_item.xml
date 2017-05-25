@@ -26,23 +26,23 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/img_l"
             android:layout_marginTop="5dp"
-            android:textSize="14sp"/>
+            android:textSize="12sp"/>
+        <ImageView
+            android:id="@+id/img_song_set"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/edit"
+            android:clickable="true"
+            />
     </RelativeLayout>
-    <ImageView
-        android:id="@+id/img_song_setting"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_alignParentRight="true"
-        android:layout_margin="10dp"
-        android:layout_centerVertical="true"
-        android:src="@drawable/edit"
-        android:clickable="true"
-        />
     <RelativeLayout
         android:id="@+id/rl"
         android:layout_width="match_parent"
         android:layout_height="0.1dp"
         android:background="#939393"
-        android:layout_below="@+id/tv_song_singer"
+        android:layout_below="@+id/contentview"
         android:layout_margin="5dp"/>
 </RelativeLayout>

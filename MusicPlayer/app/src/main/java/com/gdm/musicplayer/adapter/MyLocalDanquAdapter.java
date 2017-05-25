@@ -3,7 +3,6 @@ package com.gdm.musicplayer.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +10,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.activities.MVPlayActivity;
 import com.gdm.musicplayer.application.MyApplication;
+import com.gdm.musicplayer.bean.MV;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.service.MyService;
-import com.gdm.musicplayer.utils.ToastUtil;
-
 import java.util.ArrayList;
 
-import io.vov.vitamio.utils.Log;
 
 /**
  * Created by Administrator on 2017/4/24 0024.
@@ -29,6 +26,8 @@ public class MyLocalDanquAdapter extends BaseAdapter {
     private ArrayList<Music> musics;
     private Context context;
     private LayoutInflater inflater;
+    private RelativeLayout rlMV;
+    private RelativeLayout rlAdd;
 
     public MyLocalDanquAdapter(ArrayList<Music> musics, Context context) {
         this.musics = musics;
@@ -38,7 +37,7 @@ public class MyLocalDanquAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return musics.size();
+        return musics.size()==0?0:musics.size();
     }
 
     @Override
@@ -83,7 +82,6 @@ public class MyLocalDanquAdapter extends BaseAdapter {
         if (music.getSinger()!=null&&music.getAlbum()!=null) {
             holder.tvMusicInfo.setText(music.getSinger()+"-"+music.getAlbum());
         }
-
         holder.imgSetting.setOnClickListener(new MyListener());
         return convertView;
     }
@@ -98,20 +96,29 @@ public class MyLocalDanquAdapter extends BaseAdapter {
         @Override
         public void onClick(View v) {
             int pos= (int) v.getTag();
+            Music m = musics.get(pos);
             AlertDialog dialog = new AlertDialog.Builder(context).create();
             dialog.show();
             dialog.getWindow().setContentView(R.layout.play_item_operation);
             TextView tvName = (TextView) dialog.getWindow().findViewById(R.id.tv_sn);
             TextView tvSingerName = (TextView) dialog.getWindow().findViewById(R.id.t_singer);
             TextView tvAlbumName = (TextView) dialog.getWindow().findViewById(R.id.t_album);
-            RelativeLayout rlAdd= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_add);
-            RelativeLayout rlMV= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_mv);
+            rlAdd= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_add);
+            rlMV= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_mv);
+            if(m.getMvPath()==null||m.getMvPath().equals("暂无")) {
+                rlMV.setClickable(false);
+            }else{
+                rlMV.setClickable(true);
+            }
             RelativeLayout rlDown= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_down);
+            rlDown.setClickable(false);
+            rlAdd.setTag(pos);
+            rlMV.setTag(pos);
             tvName.setText(musics.get(pos).getName());
             tvAlbumName.setText(musics.get(pos).getAlbum());
             tvSingerName.setText(musics.get(pos).getSinger());
             rlAdd.setOnClickListener(new MyItemListener());
-            rlDown.setOnClickListener(new MyItemListener());
+//            rlDown.setOnClickListener(new MyItemListener());
             rlMV.setOnClickListener(new MyItemListener());
         }
     }
@@ -121,12 +128,28 @@ public class MyLocalDanquAdapter extends BaseAdapter {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.rl_add:
-
+                    int tag = (int) rlAdd.getTag();
                     break;
                 case R.id.rl_mv:
-
-                    break;
-                case R.id.rl_down:
+                    ArrayList<MV> mvs = new ArrayList<>();
+                    int tag2 = (int) rlMV.getTag();
+                    Music music = musics.get(tag2);
+                    if(music.getMvPath()!=null){
+                        if(!music.getMvPath().equals("暂无")){
+                            MV mv = new MV();
+                            mv.setSinger(music.getSinger());
+                            mv.setUrl(music.getMvPath());
+                            mv.setImg(music.getImgPath());
+                            mv.setName(music.getName());
+                            mv.setDuration(music.getDuration()+"");
+                            mv.setAlbum(music.getAlbum());
+                            mvs.add(mv);
+                            Intent intent = new Intent(context, MVPlayActivity.class);
+                            intent.putExtra("pos",tag2);
+                            intent.putExtra("data",mvs);
+                            context.startActivity(intent);
+                        }
+                    }
 
                     break;
             }

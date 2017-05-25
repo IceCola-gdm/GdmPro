@@ -14,6 +14,7 @@ import com.gdm.musicplayer.utils.ToastUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +32,8 @@ public class RegisterActivity extends AppCompatActivity {
     private MyApplication app;
     private User u=null;
     private static final String PATH="http://120.24.220.119:8080/music/user/register";
+    private static final String PATH2="http://120.24.220.119:8080/music/music/addmusiclist";
+    private static final String PATH3="http://120.24.220.119:8080/music/music/getTypeList";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,17 @@ public class RegisterActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(String s, Call call, Response response) {
                                         parse(s);
+                                        createGeDan();
+                                        ToastUtil.toast(RegisterActivity.this,"创建歌单成功");
+                                        OkHttpUtils.post(PATH3)
+                                                .params("userid",u.getId())
+                                                .execute(new StringCallback() {
+                                                    @Override
+                                                    public void onSuccess(String s, Call call, Response response) {
+                                                        Log.e("---",s);
+                                                        parse2(s);
+                                                    }
+                                                });
                                     }
 
                                     @Override
@@ -92,6 +106,34 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    private void parse2(String s) {
+        try {
+            JSONObject job = new JSONObject(s.trim());
+            JSONArray array = job.optJSONArray("data");
+            for(int i=0;i<array.length();i++){
+                JSONObject obj = array.getJSONObject(i);
+                if(obj.optString("name").equals("我喜欢的")){
+                    MyApplication.lid=obj.optInt("id");
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createGeDan() {
+        OkHttpUtils.post(PATH2)
+                .params("name","我喜欢的")
+                .params("userid",u.getId())
+                .params("discription","")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+
+                    }
+                });
+    }
+
     private void parse(String s) {
         try {
             JSONObject job = new JSONObject(s.trim());
@@ -108,7 +150,6 @@ public class RegisterActivity extends AppCompatActivity {
                 app.setUser(u);
                 Intent intent = new Intent(RegisterActivity.this,SetNicknameActivity.class);
                 startActivity(intent);
-
             }else{
                 ToastUtil.toast(RegisterActivity.this,message);
             }

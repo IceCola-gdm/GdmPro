@@ -1,6 +1,9 @@
 package com.gdm.musicplayer.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gdm.musicplayer.activities.PlayListActivity;
 import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.activities.DownLoadManageActivity;
@@ -21,6 +25,7 @@ import com.gdm.musicplayer.activities.RecentlyPlayActivity;
 import com.gdm.musicplayer.adapter.MyRecyclerViewAdapter;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.MusicList;
+import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.download.DataBase;
 import com.gdm.musicplayer.utils.MusicUtil;
 
@@ -28,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -48,8 +54,10 @@ public class FragmentMy extends Fragment {
     private ArrayList<Music> musicsCollect=new ArrayList<>();  //数据源4 收藏
     private ArrayList<ArrayList<Music>> data=new ArrayList<>();
     private MyApplication application;
+    private User user=null;
     private SharedPreferences sp;
     private String musicsJson;
+    private MyAddMusicReceiver receiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,10 @@ public class FragmentMy extends Fragment {
         application= (MyApplication) getActivity().getApplication();
         sp=getActivity().getSharedPreferences("recently", Context.MODE_PRIVATE);
         musicsJson = sp.getString("musics", "");
+        user=application.getUser();
+        receiver=new MyAddMusicReceiver();
+        IntentFilter filter=new IntentFilter(PlayListActivity.FLAG);
+        getActivity().registerReceiver(receiver,filter);
         initData();
     }
 
@@ -136,5 +148,23 @@ public class FragmentMy extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(receiver);
+    }
+
+    private class MyAddMusicReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(PlayListActivity.FLAG)){
+                Music music = (Music) intent.getSerializableExtra("add");
+                musicsCollect.add(music);
+                adapter.notifyDataSetChanged();
+                Log.e("---","收到广播--"+musicsCollect.size());
+            }
+        }
     }
 }

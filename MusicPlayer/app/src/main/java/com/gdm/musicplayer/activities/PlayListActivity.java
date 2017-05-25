@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,8 +17,11 @@ import com.bumptech.glide.Glide;
 import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.bean.MList;
+import com.gdm.musicplayer.bean.MV;
 import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.service.MyService;
+import com.gdm.musicplayer.utils.ToastUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
 
@@ -32,16 +36,24 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 public class PlayListActivity extends AppCompatActivity {
+    public static final String FLAG="add";
     private MList data;
     private ArrayList<Music> list;
     private RecyclerView show;
     private String musicpath="http://120.24.220.119:8080/music/data/music/";
     private String musicpath2="http://120.24.220.119:8080/music/music/selectListContent";
+    private String addMusicPath=MyApplication.BASEPATH+"/music/addMusic2list";
+    private MyApplication app;
+    private User user=null;
+    private AlertDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tuijian);
         data= (MList) getIntent().getSerializableExtra("data");
+        app=MyApplication.getInstance();
+        user=app.getUser();
         initView();
         initData();
     }
@@ -180,13 +192,13 @@ public class PlayListActivity extends AppCompatActivity {
                 super(itemView);
                 name= (TextView) itemView.findViewById(R.id.tv_song_name);
                 singer= (TextView) itemView.findViewById(R.id.tv_song_singer);
-                imgSetting= (ImageView) itemView.findViewById(R.id.img_song_setting);
+                imgSetting= (ImageView) itemView.findViewById(R.id.img_song_set);
             }
         }
     }
 
     private void show(int pos) {
-        AlertDialog dialog = new AlertDialog.Builder(PlayListActivity.this).create();
+        dialog = new AlertDialog.Builder(PlayListActivity.this).create();
         dialog.show();
         dialog.getWindow().setContentView(R.layout.play_item_operation);
         TextView tvName = (TextView) dialog.getWindow().findViewById(R.id.tv_sn);
@@ -195,6 +207,9 @@ public class PlayListActivity extends AppCompatActivity {
         RelativeLayout rlAdd= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_add);
         RelativeLayout rlMV= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_mv);
         RelativeLayout rlDown= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_down);
+        rlAdd.setTag(pos);
+        rlDown.setTag(pos);
+        rlMV.setTag(pos);
         tvName.setText(list.get(pos).getName());
         tvAlbumName.setText(list.get(pos).getAlbum());
         tvSingerName.setText(list.get(pos).getSinger());
@@ -206,17 +221,60 @@ public class PlayListActivity extends AppCompatActivity {
     private class MyItemListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
-                case R.id.rl_add:
-
-                    break;
-                case R.id.rl_mv:
-
-                    break;
-                case R.id.rl_down:
-
-                    break;
+            if(app.isLogin()){
+                int posit= (int) v.getTag();
+                switch (v.getId()){
+                    case R.id.rl_add:
+                        add(posit);
+                        break;
+                    case R.id.rl_mv:
+                        mv(posit);
+                        break;
+                    case R.id.rl_down:
+                        down(posit);
+                        break;
+                }
+                dialog.dismiss();
+            }else{
+                ToastUtil.toast(PlayListActivity.this,"亲，还没有登录哟");
             }
+
+        }
+    }
+
+    private void down(int pos) {
+
+    }
+
+    private void mv(int pos) {
+        ArrayList<MV> mvs = new ArrayList<>();
+        Music music = list.get(pos);
+        if(music.getMvPath()!=null&&!music.getMvPath().equals("暂无")){
+            MV mv = new MV();
+            mv.setUrl(music.getMvPath());
+            mv.setSinger(music.getSinger());
+            mv.setImg(music.getImgPath());
+            mv.setName(music.getName());
+            mv.setAlbum(music.getAlbum());
+            mv.setDuration(music.getDuration()+"");
+            mvs.add(mv);
+            Intent intent = new Intent(PlayListActivity.this, MVPlayActivity.class);
+            intent.putExtra("pos",pos);
+            intent.putExtra("data",mvs);
+            startActivity(intent);
+
+        }else{
+            ToastUtil.toast(PlayListActivity.this,"没有MV文件");
+        }
+    }
+
+    private void add(int pos) {
+        Music music = list.get(pos);
+        if(music!=null){
+            Intent intent = new Intent(PlayListActivity.FLAG);
+            intent.putExtra("add",music);
+            sendBroadcast(intent);
+            Log.e("---","添加完成");
         }
     }
 }

@@ -24,11 +24,14 @@ import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.User;
+import com.gdm.musicplayer.download.DownLoadService;
 import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.gdm.musicplayer.view.RoundImageView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
+
+import java.io.Serializable;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -57,6 +60,8 @@ public class FragmentPlay extends Fragment {
     private AlertDialog myDialog;
     private Music lastMusic=new Music();
     private String path="http://120.24.220.119:8080/music/comment/good";
+    private String comPath="http://120.24.220.119:8080/music/comment/commit";
+    private Music music=null;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
@@ -137,7 +142,7 @@ public class FragmentPlay extends Fragment {
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(MyService.PLAY_ACTION)){
                 state=intent.getStringExtra("state");
-                Music music = (Music) intent.getSerializableExtra("music");
+                music = (Music) intent.getSerializableExtra("music");
                 if(music!=null){
                     if(!music.getName().equals(lastMusic.getName())){
                         lastMusic=music;
@@ -192,7 +197,13 @@ public class FragmentPlay extends Fragment {
     }
 
     private void mess() {
-
+//        OkHttpUtils.get(comPath)
+//                .execute(new StringCallback() {
+//                    @Override
+//                    public void onSuccess(String s, Call call, Response response) {
+//                        Log.e("----",s);
+//                    }
+//                });
     }
 
     private void musicoperate() {
@@ -219,7 +230,11 @@ public class FragmentPlay extends Fragment {
      * 添加下载
      */
     private void download() {
-
+        Intent intent = new Intent(getContext(), DownLoadService.class);
+        intent.putExtra("path",music.getFileUrl());
+        intent.putExtra("name",music.getName());
+        intent.putExtra("type",0);
+        getActivity().startService(intent);
     }
 
     /**

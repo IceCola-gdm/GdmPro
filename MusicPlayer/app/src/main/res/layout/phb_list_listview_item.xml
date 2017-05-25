@@ -11,8 +11,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:textSize="20sp"
-            android:visibility="invisible"/>
+            android:textSize="18sp"
+            android:visibility="invisible"
+            android:gravity="center"/>
         <ImageView
             android:id="@+id/img_number"
             android:layout_width="30dp"
@@ -26,9 +27,9 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/fl_no"
         android:text="ajddjka"
-        android:textSize="18sp"
-        android:textColor="#757978"
+        android:textSize="16sp"
         android:layout_margin="10dp"/>
+        <!--android:textColor="#757978"/>-->
     <TextView
         android:id="@+id/info"
         android:layout_width="wrap_content"
@@ -36,7 +37,7 @@
         android:layout_toRightOf="@+id/fl_no"
         android:text="ajddjka"
         android:textColor="#A5A9A8"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:layout_below="@+id/name"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="-5dp"/>

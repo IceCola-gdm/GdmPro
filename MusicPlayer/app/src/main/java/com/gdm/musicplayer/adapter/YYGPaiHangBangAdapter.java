@@ -22,7 +22,8 @@ public class YYGPaiHangBangAdapter extends BaseAdapter {
     private ArrayList<PaiHangBang> paiHangBangs;
     private Context context;
     private LayoutInflater inflater;
-
+    private int[] imgs={R.drawable.ktv,R.drawable.hot,R.drawable.e,R.drawable.top,R.drawable.h,R.drawable.billboard,R.drawable.phb};
+    private String[] names={"KTV麦霸","热歌榜","Beatport","中国TOP排行榜","Melon周音源榜","Billboard"};
     public YYGPaiHangBangAdapter(ArrayList<PaiHangBang> paiHangBangs, Context context) {
         this.paiHangBangs = paiHangBangs;
         this.context = context;
@@ -65,7 +66,9 @@ public class YYGPaiHangBangAdapter extends BaseAdapter {
             holder.tv2.setText(musics.get(1).getName());
             holder.tv3.setText(musics.get(2).getName());
         }
-        Glide.with(context).load(paiHangBang.getImg()).error(R.drawable.phb).into(holder.imageView);
+        if(position<7){
+            Glide.with(context).load(paiHangBang.getImg()).error(imgs[position]).into(holder.imageView);
+        }
         return convertView;
     }
     class ViewHolder{

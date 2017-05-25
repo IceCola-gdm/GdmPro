@@ -1,9 +1,11 @@
 package com.gdm.musicplayer.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2017/5/12 0012.
  */
-public class MV{
+public class MV implements Serializable{
     private String name;
     private String img;
     private String url;

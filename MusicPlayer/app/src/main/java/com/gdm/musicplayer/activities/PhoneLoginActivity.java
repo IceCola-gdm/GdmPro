@@ -19,6 +19,7 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,6 +39,8 @@ public class PhoneLoginActivity extends AppCompatActivity {
     private MyApplication app;
     private static final String BASEPORTRAIT="http://120.24.220.119:8080/music/image/port/";
     private String url="http://120.24.220.119:8080/music/user/login";
+    private static final String PATH3="http://120.24.220.119:8080/music/music/getTypeList";
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +117,14 @@ public class PhoneLoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         parse(s);
+                        OkHttpUtils.post(PATH3)
+                                .params("userid",user.getId())
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onSuccess(String s, Call call, Response response) {
+                                        parse2(s);
+                                    }
+                                });
                     }
                 });
     }
@@ -123,7 +134,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
             JSONObject job = new JSONObject(s.trim());
             String message = job.getString("message");
             if(message.equals("登录成功")){
-                User user = new User();
+                user = new User();
                 JSONObject data = job.getJSONObject("data");
                 user.setId(data.optInt("id"));
                 user.setNickname(data.optString("nickname"));
@@ -152,4 +163,22 @@ public class PhoneLoginActivity extends AppCompatActivity {
             Log.e("PhoneLoginActivity","数据解析出错");
         }
     }
+    private void parse2(String s) {
+        try {
+            JSONObject job = new JSONObject(s.trim());
+            JSONArray array = job.optJSONArray("data");
+            for(int i=0;i<array.length();i++){
+                JSONObject obj = array.getJSONObject(i);
+                if(obj.optString("name").equals("我的收藏")){
+                    MyApplication.cid=obj.optInt("id");
+                }
+                if(obj.optString("name").equals("我喜欢的")){
+                    MyApplication.lid=obj.optInt("id");
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

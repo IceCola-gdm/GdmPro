@@ -57,6 +57,8 @@ public class PlayActivity extends AppCompatActivity  {
     private TextView tvType;
     private TextView tvCount;
     private String anim="";
+    private String singer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +88,8 @@ public class PlayActivity extends AppCompatActivity  {
                     pos = intent.getIntExtra("pos", 0);
                     title = intent.getStringExtra("title");
                     tvSongName.setText(title);
+                    singer=intent.getStringExtra("author");
+                    tvSongSinger.setText(singer);
                     musics=MyService.getMusicList();
                     if (adapter2!=null) {
                         adapter2.notifyDataSetChanged();

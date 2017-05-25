@@ -10,10 +10,10 @@ public class PaiHangBang implements Serializable{
     private int id;
     private String name;
     private String description;
-    private String img;
+    private int img;
     private ArrayList<Music> musics;
 
-    public PaiHangBang(int id, String name, String description, String img, ArrayList<Music> musics) {
+    public PaiHangBang(int id, String name, String description, int img, ArrayList<Music> musics) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -48,11 +48,11 @@ public class PaiHangBang implements Serializable{
         this.description = description;
     }
 
-    public String getImg() {
+    public int getImg() {
         return img;
     }
 
-    public void setImg(String img) {
+    public void setImg(int img) {
         this.img = img;
     }
 

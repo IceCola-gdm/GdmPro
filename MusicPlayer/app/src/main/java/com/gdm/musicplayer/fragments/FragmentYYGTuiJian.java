@@ -1,5 +1,6 @@
 package com.gdm.musicplayer.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,7 @@ import com.gdm.musicplayer.adapter.YYGPagerAdapter;
 import com.gdm.musicplayer.bean.MList;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.service.MyService;
+import com.gdm.musicplayer.utils.ToastUtil;
 import com.gdm.musicplayer.view.MyViewPager;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
@@ -51,6 +53,8 @@ public class FragmentYYGTuiJian extends Fragment {
     private ListAdapter listAdapter;
     private String listimgpath="http://120.24.220.119:8080/music/image/";
     private String path="http://120.24.220.119:8080/music/music/getTypeList";
+    private ProgressDialog dialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tuijian_fragment, container, false);
@@ -61,12 +65,23 @@ public class FragmentYYGTuiJian extends Fragment {
 
     private void initMusicData() {
         data=new ArrayList<>();
+        dialog=new ProgressDialog(getContext());
+        dialog.setMessage("玩命加载中，请稍后！");
+        dialog.show();
         OkHttpUtils.post(path)
                 .params("type",2)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
+                        dialog.dismiss();
                         parse(s);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dialog.dismiss();
+                        ToastUtil.toast(getContext(),e.getMessage());
                     }
                 });
     }
@@ -215,8 +230,6 @@ public class FragmentYYGTuiJian extends Fragment {
                     }
                 });
             }
-
-
             @Override
             public int getItemCount() {
                 return data.size();
@@ -232,5 +245,11 @@ public class FragmentYYGTuiJian extends Fragment {
                 }
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        dialog.cancel();
     }
 }

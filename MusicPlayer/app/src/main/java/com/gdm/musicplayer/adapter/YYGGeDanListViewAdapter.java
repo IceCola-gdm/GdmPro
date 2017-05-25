@@ -48,12 +48,13 @@ public class YYGGeDanListViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder=null;
         if(convertView==null){
-            convertView=inflater.inflate(R.layout.tuijian_listview_item,parent,false);
+            convertView=inflater.inflate(R.layout.tuijian_listview_item,null,true);
             holder=new ViewHolder();
             holder.tvName= (TextView) convertView.findViewById(R.id.tv_song_name);
             holder.tvInfo= (TextView) convertView.findViewById(R.id.tv_song_singer);
             holder.imgSetting= (ImageView) convertView.findViewById(R.id.img_song_setting);
             holder.rl= (RelativeLayout) convertView.findViewById(R.id.rl);
+            parent.addView(convertView);
             convertView.setTag(holder);
         }else{
             holder= (ViewHolder) convertView.getTag();

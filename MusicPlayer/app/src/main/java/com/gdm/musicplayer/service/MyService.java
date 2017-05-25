@@ -146,6 +146,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                 Intent intent = new Intent(PLAY_ACTION);
                 intent.putExtra("state", "next");
                 intent.putExtra("pos", pos);
+                intent.putExtra("music",musicList.get(pos));
                 intent.putExtra("total", player.getDuration());
                 intent.putExtra("now", 0);
                 intent.putExtra("title", bean.getName());

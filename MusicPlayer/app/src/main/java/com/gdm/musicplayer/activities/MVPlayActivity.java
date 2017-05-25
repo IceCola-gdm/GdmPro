@@ -1,5 +1,6 @@
 package com.gdm.musicplayer.activities;
 
+import android.app.Activity;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -16,18 +17,25 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.application.MyApplication;
+import com.gdm.musicplayer.bean.MV;
 import com.gdm.musicplayer.bean.ScreenBean;
 import com.gdm.musicplayer.utils.LocUtil;
+
+import java.util.ArrayList;
 
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.utils.Log;
 import io.vov.vitamio.widget.MediaController;
 import io.vov.vitamio.widget.VideoView;
 
-public class MVPlayActivity extends AppCompatActivity {
+public class MVPlayActivity extends Activity {
 
     /** 当前视频路径 */
-    private String path = Environment.getExternalStorageDirectory() + "/FXXK IT.mp4";
+//    private String path = Environment.getExternalStorageDirectory() + "/FXXK IT.mp4";
+    private String path;
+    private int current=-1;
+    private ArrayList<MV> mvs=new ArrayList<>();
     /** 当前声音 */
     private int mVolume = -1;
     /** 最大音量 */
@@ -52,22 +60,34 @@ public class MVPlayActivity extends AppCompatActivity {
         super.onCreate(icicle);
 //        if (!LibsChecker.checkVitamioLibs(this))
 //            return;
-
+        current=getIntent().getIntExtra("pos",-1);
+        ArrayList<MV> m= (ArrayList<MV>) getIntent().getSerializableExtra("data");
+        mvs.addAll(m);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.acy_play);
-        init();
-    }
-
-    private void init() {
         mVideoView = (VideoView) findViewById(R.id.surface_view);
         mVolumeBrightnessLayout = findViewById(R.id.operation_volume_brightness);
         mOperationBg = (ImageView) findViewById(R.id.operation_bg);
         mOperationPercent = (ImageView) findViewById(R.id.operation_percent);
-
         mMaxVolume = LocUtil.getMaxVolume(this);
         gestDetector = new GestureDetector(this, new SingleGestureListener());
         scaleDetector = new ScaleGestureDetector(this, new MultiGestureListener());
         screenBean = LocUtil.getScreenPix(this);
+        init();
+        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.stop();
+                current++;
+                if(current!=mvs.size()){
+                    init();
+                }
+            }
+        });
+    }
+
+    private void init() {
+        path=MyApplication.BASEMVPATH+mvs.get(current).getUrl();
         if (path.equals("")) {
             return;
         }else{
