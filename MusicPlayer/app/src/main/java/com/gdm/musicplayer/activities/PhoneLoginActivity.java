@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.sharesdk.framework.ShareSDK;
 import okhttp3.Call;
 import okhttp3.Response;
 

@@ -65,7 +65,7 @@
                 android:id="@+id/img_login_weixin_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/a3m"
+                android:src="@drawable/z"
                 android:layout_marginLeft="10dp"
                 android:clickable="true"
                 android:onClick="chooseClick"/>
@@ -73,7 +73,7 @@
                 android:id="@+id/img_login_qq_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/a3i"
+                android:src="@drawable/q"
                 android:layout_marginLeft="20dp"
                 android:clickable="true"
                 android:onClick="chooseClick"/>
@@ -81,7 +81,7 @@
                 android:id="@+id/img_login_weibo_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/a3k"
+                android:src="@drawable/t"
                 android:layout_marginLeft="20dp"
                 android:clickable="true"
                 android:onClick="chooseClick"/>
@@ -89,7 +89,7 @@
                 android:id="@+id/img_login_wangyi_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/a3f"
+                android:src="@drawable/s"
                 android:layout_marginLeft="20dp"
                 android:clickable="true"
                 android:onClick="chooseClick"/>

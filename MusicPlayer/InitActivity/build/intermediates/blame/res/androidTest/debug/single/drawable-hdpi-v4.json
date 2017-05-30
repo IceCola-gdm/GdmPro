@@ -1,5 +1,9 @@
 [
     {
+        "merged": "G:\\Workspaces\\studiospace\\music\\GdmPro\\MusicPlayer\\InitActivity\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\ic_launcher.png",
+        "source": "G:\\Workspaces\\studiospace\\music\\GdmPro\\MusicPlayer\\InitActivity\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\ic_launcher.png"
+    },
+    {
         "merged": "E:\\gdmpro\\GdmPro\\MusicPlayer\\InitActivity\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\ic_launcher.png",
         "source": "E:\\gdmpro\\GdmPro\\MusicPlayer\\InitActivity\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\ic_launcher.png"
     }

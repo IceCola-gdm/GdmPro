@@ -163,7 +163,7 @@ public class FragmentMy extends Fragment {
                 Music music = (Music) intent.getSerializableExtra("add");
                 musicsCollect.add(music);
                 adapter.notifyDataSetChanged();
-                Log.e("---","收到广播--"+musicsCollect.size());
+                Log.e("--FragmentMy-","收到广播--"+musicsCollect.size());
             }
         }
     }

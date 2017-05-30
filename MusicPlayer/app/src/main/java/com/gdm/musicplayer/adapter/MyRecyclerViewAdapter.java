@@ -113,12 +113,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             h.title.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (h.contentparent.getVisibility()==View.VISIBLE) {
-                        h.imageViewArrow.setImageResource(R.drawable.right);
-                        h.contentparent.setVisibility(View.GONE);
-                    }else{
+                    if (h.contentparent.getVisibility()==View.INVISIBLE) {
                         h.imageViewArrow.setImageResource(R.drawable.down);
                         h.contentparent.setVisibility(View.VISIBLE);
+                    }else{
+                        h.imageViewArrow.setImageResource(R.drawable.right);
+                        h.contentparent.setVisibility(View.INVISIBLE);
                     }
                 }
             });
@@ -183,9 +183,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public HolderTwo(View view) {
             super(view);
             title= (RelativeLayout) view.findViewById(R.id.title);
-            imageViewArrow= (ImageView) view.findViewById(R.id.img_content_arrow);
-            textViewTitle= (TextView) view.findViewById(R.id.tv_content_title);
-            textViewCount= (TextView) view.findViewById(R.id.tv_content_count);
+            imageViewArrow= (ImageView) view.findViewById(R.id.img_content_arrow2);
+            textViewTitle= (TextView) view.findViewById(R.id.tv_content_title2);
+            textViewCount= (TextView) view.findViewById(R.id.tv_content_count2);
             imageViewEdit= (ImageView) view.findViewById(R.id.img_content_setting);
             content= (RecyclerView) view.findViewById(R.id.fragment_my_recycler_content);
             contentparent= (RelativeLayout) view.findViewById(R.id.contentparent);
@@ -233,12 +233,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void createNewGeDan() {
-
         files.add(new File(PATH));
         OkHttpUtils.post(MyApplication.BASEPATH+"/music/addmusiclist")
                 .params("id",user.getId())
                 .params("name",gedan)
-                .params("discription","")
                 .params("discription","dhbdoqhaiwdhxhiwq")
                 .params("type",3)
                 .addFileParams("imgfile",files)
@@ -246,19 +244,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         Log.e("-----",s);
-
-                        Log.e("--dWDWQDQW---",s);
                         myDialog.dismiss();
-
-
-
-
-
-
-
-
-
-
                     }
                 });
     }

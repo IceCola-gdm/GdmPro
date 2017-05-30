@@ -31,4 +31,5 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.0'
     compile project(':InitActivity')
     compile 'com.google.code.gson:gson:2.2.4'
+    compile files('libs/MobCommons-2017.0412.1554.jar')
 }

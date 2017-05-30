@@ -9,6 +9,8 @@ import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.utils.MusicUtil;
 import java.util.ArrayList;
 
+import cn.sharesdk.framework.ShareSDK;
+
 /**
  * Created by Administrator on 2017/4/27 0027.
  */

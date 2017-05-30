@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,7 @@ public class FragmentMyCollectionDanQu extends Fragment {
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(PlayListActivity.FLAG)){
                 Music music = (Music) intent.getSerializableExtra("add");
+                Log.e("FragmentMyCol",music.getName());
                 musics.add(music);
                 adapter.notifyDataSetChanged();
             }
