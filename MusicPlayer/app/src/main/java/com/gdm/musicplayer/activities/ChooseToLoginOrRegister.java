@@ -1,5 +1,6 @@
 package com.gdm.musicplayer.activities;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,7 +11,12 @@ import android.util.Log;
 import android.view.View;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.application.MyApplication;
+import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.utils.ToastUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -102,7 +108,22 @@ public class ChooseToLoginOrRegister extends AppCompatActivity {
             public void onComplete(Platform arg0, int arg1, HashMap<String, Object> arg2) {
                 //输出所有授权信息
                 String s = arg0.getDb().exportData();
-                Log.e("---",s);
+                try {
+                    JSONObject js=new JSONObject(s);
+                    String nickname = js.getString("nickname");
+                    String icon = js.getString("icon");
+                    User u = new User();
+                    u.setUsername(nickname);
+                    u.setNickname(nickname);
+                    u.setId(-1);
+                    u.setImgpath(icon);
+                    MyApplication ap = (MyApplication) getApplication();
+                    ap.setUser(u);
+                    ap.setLogin(true);
+                    finish();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
             @Override
             public void onCancel(Platform arg0, int arg1) {

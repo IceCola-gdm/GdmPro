@@ -46,7 +46,7 @@ import okhttp3.Response;
 /**
  * 主界面
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentPersonalInfo.OnBackClick {
     private MySlidingPanelLayout mSlidingPaneLayout;
     private ImageView imgPortrait;   //头像
     private ImageView imgSex;
@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String BASEPORTRAIT="http://120.24.220.119:8080/music/image/port/";
     private static final String PATH="http://120.24.220.119:8080/music/music/getAllMusic";
     private Music music=null;
+    private FragmentPersonalInfo fg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +153,9 @@ public class MainActivity extends AppCompatActivity {
         showFragment1(fragmentMain);
         fragmentMain.setOnImgListener(new MyListener());
         menus=new ArrayList<>();
-        menus.add(new FragmentPersonalInfo());
+         fg = new FragmentPersonalInfo();
+        fg.setClick(this);
+        menus.add(fg);
     }
 
     @Override
@@ -174,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.e("---",ap.isLogin()+"");
         if(ap.isLogin()) {
+            user=ap.getUser();
             if (user != null) {
                 tvLogin.setVisibility(View.INVISIBLE);
                 rl_info.setVisibility(View.VISIBLE);
@@ -183,7 +187,12 @@ public class MainActivity extends AppCompatActivity {
                 if (user.getHeart() != null && user.getHeart() != "") {
                     tvHeart.setText(user.getHeart());
                 }
-                Glide.with(MainActivity.this).load(BASEPORTRAIT+user.getImgpath()).error(R.drawable.me).into(imgPortrait);
+                if (user.getId()==-1) {
+                    Glide.with(MainActivity.this).load(user.getImgpath()).error(R.drawable.me).into(imgPortrait);
+                }else{
+                    Glide.with(MainActivity.this).load(BASEPORTRAIT+user.getImgpath()).error(R.drawable.me).into(imgPortrait);
+                }
+
             }
         }
 
@@ -250,6 +259,11 @@ public class MainActivity extends AppCompatActivity {
         tvSong= (TextView) findViewById(R.id.tv_songname);
         tvSinger= (TextView) findViewById(R.id.tv_singer);
         rl_info= (RelativeLayout) findViewById(R.id.rl_info);
+    }
+
+    @Override
+    public void onBack() {
+        getSupportFragmentManager().beginTransaction().hide(fg).show(fragmentMain).commit();
     }
 
     private class MyListener implements FragmentMain.OnImgListener {

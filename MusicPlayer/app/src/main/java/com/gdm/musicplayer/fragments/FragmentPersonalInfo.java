@@ -100,7 +100,9 @@ public class FragmentPersonalInfo extends Fragment {
         super.onResume();
         user=app.getUser();
         tvNikName.setText(user.getNickname());
-        Glide.with(getContext()).load(BASEPORTRAIT+user.getImgpath()).error(R.drawable.pp).into(imgPortrait);
+        if (user.getId()==-1) {
+            Glide.with(getContext()).load(user.getImgpath()).error(R.drawable.pp).into(imgPortrait);
+        }
         Glide.with(getContext()).load(BASEBACKGROUND+user.getBackground()).error(R.drawable.afc).into(imgBackground);
         String sex = user.getSex();
         if(sex!=null&&sex!=""){
@@ -151,7 +153,9 @@ public class FragmentPersonalInfo extends Fragment {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.img_personalinfo_back:  //返回
-                    ToastUtil.toast(getContext(),"点击了");
+                    if (click!=null) {
+                        click.onBack();
+                    }
 //                    removeFragment();
                     break;
                 case R.id.tv_personalinfo_edit:  //修改个人信息
@@ -163,6 +167,15 @@ public class FragmentPersonalInfo extends Fragment {
                     break;
             }
         }
+    }
+    private OnBackClick click;
+
+    public void setClick(OnBackClick click) {
+        this.click = click;
+    }
+
+    public interface OnBackClick{
+        void onBack();
     }
     private void resetPortrait() {
         Intent intent= new Intent(Intent.ACTION_PICK,

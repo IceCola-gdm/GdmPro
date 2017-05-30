@@ -88,6 +88,7 @@
         android:id="@+id/personal_tablelayout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:background="#fff"
         app:tabIndicatorColor="@android:color/holo_red_dark"
         app:tabSelectedTextColor="@android:color/holo_red_dark"
         app:tabTextColor="@android:color/black"/>
