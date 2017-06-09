@@ -2,6 +2,7 @@ package com.gdm.musicplayer.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,8 @@ import com.lzy.okhttputils.callback.StringCallback;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 
 import cn.sharesdk.framework.ShareSDK;
 import okhttp3.Call;
@@ -60,7 +63,13 @@ public class PhoneLoginActivity extends AppCompatActivity {
             edAccount.setText(account);
             edPwd.setText(pwd);
         }
-        Glide.with(PhoneLoginActivity.this).load(BASEPORTRAIT+sp.getString("portrait","")).error(R.drawable.pp).into(portrait);
+        //Glide.with(PhoneLoginActivity.this).load(BASEPORTRAIT+sp.getString("portrait","")).error(R.drawable.pp).into(portrait);
+        File file = new File(BASEPORTRAIT + sp.getString("portrait", ""));
+        if(file.exists()&&file.isFile()){
+            this.portrait.setImageBitmap(BitmapFactory.decodeFile(BASEPORTRAIT+sp.getString("portrait","")));
+        }else{
+            portrait.setImageResource(R.drawable.pp);
+        }
     }
 
     private void setListener() {
@@ -118,14 +127,6 @@ public class PhoneLoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         parse(s);
-                        OkHttpUtils.post(PATH3)
-                                .params("userid",user.getId())
-                                .execute(new StringCallback() {
-                                    @Override
-                                    public void onSuccess(String s, Call call, Response response) {
-                                        parse2(s);
-                                    }
-                                });
                     }
                 });
     }
@@ -135,6 +136,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
             JSONObject job = new JSONObject(s.trim());
             String message = job.getString("message");
             if(message.equals("登录成功")){
+                ToastUtil.toast(PhoneLoginActivity.this,message);
                 user = new User();
                 JSONObject data = job.getJSONObject("data");
                 user.setId(data.optInt("id"));
@@ -164,22 +166,4 @@ public class PhoneLoginActivity extends AppCompatActivity {
             Log.e("PhoneLoginActivity","数据解析出错");
         }
     }
-    private void parse2(String s) {
-        try {
-            JSONObject job = new JSONObject(s.trim());
-            JSONArray array = job.optJSONArray("data");
-            for(int i=0;i<array.length();i++){
-                JSONObject obj = array.getJSONObject(i);
-                if(obj.optString("name").equals("我的收藏")){
-                    MyApplication.cid=obj.optInt("id");
-                }
-                if(obj.optString("name").equals("我喜欢的")){
-                    MyApplication.lid=obj.optInt("id");
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

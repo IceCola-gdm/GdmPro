@@ -1,12 +1,15 @@
 package com.gdm.musicplayer.activities;
 
 import android.app.AlertDialog;
-import android.app.TimePickerDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,10 +17,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.bumptech.glide.Glide;
 import com.gdm.musicplayer.application.MyApplication;
@@ -26,7 +29,6 @@ import com.gdm.musicplayer.adapter.MenuAdapter;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.fragments.FragmentMain;
-import com.gdm.musicplayer.fragments.FragmentPersonalInfo;
 import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.gdm.musicplayer.view.MySlidingPanelLayout;
@@ -37,8 +39,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -46,19 +48,22 @@ import okhttp3.Response;
 /**
  * 主界面
  */
-public class MainActivity extends AppCompatActivity implements FragmentPersonalInfo.OnBackClick {
+public class MainActivity extends AppCompatActivity{
     private MySlidingPanelLayout mSlidingPaneLayout;
     private ImageView imgPortrait;   //头像
     private ImageView imgSex;
+    private ImageView imgbackground;
     private TextView tvHeart;
     private TextView tvNickname;
-//    private TextView tvPiFu;    //当前皮肤
+    private TextView tvBirthday;
+    private TextView tvLocation;
+    private TextView tvUniversity;
     private TextView tvLogin;    //登录注册
     private RelativeLayout rl_info;
+    private FrameLayout rl_first;
     private User user=null;
     private FragmentMain fragmentMain;
     private Fragment lastFragment=null;
-    private ArrayList<Fragment> menus;
     private ArrayList<Music> musics=new ArrayList<>();
     private ImageView imgPlay;
     private MenuAdapter adapter=null;
@@ -80,8 +85,15 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
     private int ms;   //定时时间
     private static final String BASEPORTRAIT="http://120.24.220.119:8080/music/image/port/";
     private static final String PATH="http://120.24.220.119:8080/music/music/getAllMusic";
+    private static final String BASEBACKGROUND="http://120.24.220.119:8080/music/image/bg/";
+    private static final String PATH2="http://120.24.220.119:8080/music/user/uploadPort";
     private Music music=null;
-    private FragmentPersonalInfo fg;
+    private Cursor c;
+    private String imgPath;
+    private ArrayList<File> files=new ArrayList<>();
+    private AlertDialog dialog;
+    private RecyclerView recyclerView;
+    private ProgressDialog dialog2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,23 +103,36 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
         IntentFilter filter = new IntentFilter(MyService.PLAY_ACTION);
         filter.addAction(MyApplication.CHANGELIST);
         registerReceiver(receiver,filter);
+
+        Intent intent = new Intent(this, MyService.class);
+        startService(intent);
+        getData();
         ap= (MyApplication) getApplication();
         sp=ap.getSp();
         user=ap.getUser();
         ap.setMusics(musics);
         initView();
         initData();
-        Intent intent = new Intent(this, MyService.class);
-        startService(intent);
-        getData();
     }
 
     private void getData() {
+        dialog2=new ProgressDialog(MainActivity.this);
+        dialog2.setMessage("玩命儿加载中，请稍后...");
+        dialog2.show();
         OkHttpUtils.get(PATH)
+                .params("pageNum",1)
+                .params("pageSize",20)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         parse(s);
+                        dialog2.dismiss();
+                    }
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dialog.dismiss();
+                        ToastUtil.toast(MainActivity.this,e.getMessage());
                     }
                 });
     }
@@ -139,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
                     }
                     musics.add(music);
                 }
-
             }else{
                 ToastUtil.toast(MainActivity.this,job.optString("message"));
             }
@@ -152,10 +176,6 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
         fragmentMain = new FragmentMain();
         showFragment1(fragmentMain);
         fragmentMain.setOnImgListener(new MyListener());
-        menus=new ArrayList<>();
-         fg = new FragmentPersonalInfo();
-        fg.setClick(this);
-        menus.add(fg);
     }
 
     @Override
@@ -176,23 +196,47 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
     protected void onResume() {
         super.onResume();
         Log.e("---",ap.isLogin()+"");
+        getSupportFragmentManager().beginTransaction().show(fragmentMain).commit();
         if(ap.isLogin()) {
             user=ap.getUser();
             if (user != null) {
                 tvLogin.setVisibility(View.INVISIBLE);
                 rl_info.setVisibility(View.VISIBLE);
+                rl_info.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, EditPersonalInfoActivity.class);
+                        startActivityForResult(intent,101);
+                    }
+                });
                 if (user.getNickname() != null && user.getNickname() != "") {
                     tvNickname.setText(user.getNickname());
                 }
                 if (user.getHeart() != null && user.getHeart() != "") {
                     tvHeart.setText(user.getHeart());
                 }
+                if (user.getDaxue() != null && user.getDaxue()!= "") {
+                    tvUniversity.setText(user.getDaxue());
+                }
+                if (user.getBirthday()!= null && user.getBirthday()!= "") {
+                    tvBirthday.setText(user.getBirthday());
+                }
+                if (user.getAddress()!= null && user.getAddress()!= "") {
+                    tvLocation.setText(user.getAddress());
+                }
+                if (user.getSex()!= null && user.getSex()!= "") {
+                    if(user.getSex().equals("男")){
+                        imgSex.setImageResource(R.drawable.ab1);
+                    }else if(user.getSex().equals("女")){
+                        imgSex.setImageResource(R.drawable.ab2);
+                    }
+                }
                 if (user.getId()==-1) {
                     Glide.with(MainActivity.this).load(user.getImgpath()).error(R.drawable.me).into(imgPortrait);
                 }else{
                     Glide.with(MainActivity.this).load(BASEPORTRAIT+user.getImgpath()).error(R.drawable.me).into(imgPortrait);
                 }
-
+               // Glide.with(MainActivity.this).load(user.getBackground()).error(R.drawable.afc).into(imgbackground);
             }
         }
 
@@ -215,26 +259,6 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
         }
         t.commit();
     }
-    private void showFragment(Fragment mainFragment) {
-        if (mainFragment.isVisible()) {
-            return;
-        }
-        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if (lastFragment==null) {
-            
-        }else{
-            ft.hide(lastFragment).commit();
-        }
-        lastFragment=mainFragment;
-        if(mainFragment.isAdded()){
-            ft.show(mainFragment);
-        }else{
-            ft.add(R.id.main_container,mainFragment);
-        }
-        lastFragment=mainFragment;
-//        ft.commit();
-    }
-
     private void closeFragment(Fragment mainFragment) {
         android.support.v4.app.FragmentTransaction ft =getSupportFragmentManager().beginTransaction();
         if(mainFragment.isAdded()) {
@@ -252,18 +276,17 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
         imgSex= (ImageView) findViewById(R.id.img_sex);
         tvNickname= (TextView) findViewById(R.id.tv_nickname);
         tvHeart= (TextView) findViewById(R.id.tv_heart);
+        tvBirthday= (TextView) findViewById(R.id.tv_birthday);
+        tvLocation= (TextView) findViewById(R.id.tv_loc);
+        tvUniversity= (TextView) findViewById(R.id.tv_univer);
         tvLogin= (TextView) findViewById(R.id.tv_main_login);
-//        tvPiFu= (TextView) findViewById(R.id.tv_pifu);
         imgPlay= (ImageView) findViewById(R.id.rb_song_playicon);
         imgPor= (ImageView) findViewById(R.id.img_song_cover);
         tvSong= (TextView) findViewById(R.id.tv_songname);
         tvSinger= (TextView) findViewById(R.id.tv_singer);
         rl_info= (RelativeLayout) findViewById(R.id.rl_info);
-    }
-
-    @Override
-    public void onBack() {
-        getSupportFragmentManager().beginTransaction().hide(fg).show(fragmentMain).commit();
+        rl_first= (FrameLayout) findViewById(R.id.rl_first);
+        imgbackground= (ImageView) findViewById(R.id.img_b);
     }
 
     private class MyListener implements FragmentMain.OnImgListener {
@@ -294,12 +317,15 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
         switch (view.getId()){
             case R.id.img_main_portrait:  //头像
                 if(ap.isLogin()){
-                    showFragment(menus.get(0));
+//                    showFragment(menus.get(0));
+                    resetPortrait();
                 }
                 break;
             case R.id.tv_main_login:  //登录、注册
-                Intent intent = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
-                startActivity(intent);
+                if(!ap.isLogin()){
+                    Intent intent = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.rl_change:  //切换账号
                 Intent intent2 = new Intent(MainActivity.this, ChooseToLoginOrRegister.class);
@@ -317,8 +343,14 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
                     ToastUtil.toast(MainActivity.this,"您还没有登录哟，请先登录");
                 }
                 break;
+
         }
         mSlidingPaneLayout.closePane();
+    }
+    private void resetPortrait() {
+        Intent intent= new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent,10);
     }
 
     @Override
@@ -340,28 +372,36 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
                 break;
             case R.id.rb_song_playicon:
                 Intent intent1 = new Intent(MyService.mAction);
-                if(state.equals("play")){
-                    imgPlay.setImageResource(R.drawable.play);
-                    intent1.putExtra("cmd","play");
-                    state="stop";
+                if(!MyApplication.playFlag){
+                    intent1.putExtra("cmd","chose_pos");
+                    intent1.putExtra("data",musics);
+                    intent1.putExtra("pos",0);
+                    intent1.putExtra("flag",1);
+                    MyApplication.playFlag=true;
+                    sendBroadcast(intent1);
                 }else{
-                    imgPlay.setImageResource(R.drawable.stop);
+                    if(state.equals("play")){
+                        imgPlay.setImageResource(R.drawable.play);
+                        state="stop";
+                    }else{
+                        imgPlay.setImageResource(R.drawable.stop);
+                        state="play";
+                    }
                     intent1.putExtra("cmd","play");
-                    state="play";
+                    sendBroadcast(intent1);
                 }
-                sendBroadcast(intent1);
+
                 break;
             case R.id.img_song_list:
                 show();
                 break;
         }
     }
-
     private void show() {
-        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
+        dialog = new AlertDialog.Builder(MainActivity.this).create();
         dialog.show();
         dialog.getWindow().setContentView(R.layout.activity_menu);
-        RecyclerView recyclerView = (RecyclerView) dialog.getWindow().findViewById(R.id.mListView_menu);
+        recyclerView = (RecyclerView) dialog.getWindow().findViewById(R.id.mListView_menu);
         imgType = (ImageView) dialog.getWindow().findViewById(R.id.img_mode);
         tvType= (TextView) dialog.getWindow().findViewById(R.id.tv_mode);
         tvCount= (TextView) dialog.getWindow().findViewById(R.id.tv_account);
@@ -385,24 +425,33 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         adapter.setListener(new MyItemClickListener());
         imgType.setOnClickListener(new MyClickListener());
-        rlDelete.setOnClickListener(new MyClickListener());
+
     }
     private class MyPlayStateReceiver extends BroadcastReceiver{
-
         @Override
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()){
                 case MyService.PLAY_ACTION:
                     state=intent.getStringExtra("state");
                     pos = intent.getIntExtra("pos", 0);
-                    if (state.equals("play")) {
-                        imgPlay.setImageResource(R.drawable.stop);
-                    }else {
-                        imgPlay.setImageResource(R.drawable.play);
+                    if(state!=null){
+                        if (state.equals("play")) {
+                            imgPlay.setImageResource(R.drawable.stop);
+                        }else {
+                            imgPlay.setImageResource(R.drawable.play);
+                        }
                     }
                     title = intent.getStringExtra("title");
+                    ArrayList<Music> m= (ArrayList<Music>) intent.getSerializableExtra("data");
                     tvSinger.setText(intent.getStringExtra("author"));
                     tvSong.setText(title);
+                    if(m!=null){
+                        musics.clear();
+                        musics.addAll(m);
+                        if (adapter!=null) {
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
                     break;
                 case MyApplication.CHANGELIST:
 //                    MyApplication ap= (MyApplication) getApplication();
@@ -420,6 +469,22 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
                             if (user.getHeart() != null && user.getHeart() != "") {
                                 tvHeart.setText(user.getHeart());
                             }
+                            if (user.getBirthday()!= null && user.getBirthday() != "") {
+                                tvBirthday.setText(user.getBirthday());
+                            }
+                            if (user.getAddress()!= null && user.getAddress()!= "") {
+                                tvLocation.setText(user.getAddress());
+                            }
+                            if (user.getDaxue()!= null && user.getDaxue()!= "") {
+                                tvUniversity.setText(user.getDaxue());
+                            }
+                            if(user.getSex()!=null&&user.getSex()!=""){
+                                if(user.getSex().equals("男")){
+                                    imgSex.setImageResource(R.drawable.ab1);
+                                }else if(user.getSex().equals("女")){
+                                    imgSex.setImageResource(R.drawable.ab2);
+                                }
+                            }
                             Glide.with(MainActivity.this).load(BASEPORTRAIT+user.getImgpath()).error(R.drawable.me).into(imgPortrait);
                         }
                     }
@@ -436,6 +501,7 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
             intent.putExtra("pos",pos);
             intent.putExtra("data",musics);
             sendBroadcast(intent);
+            dialog.cancel();
         }
     }
 
@@ -444,9 +510,7 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
         super.onDestroy();
         unregisterReceiver(receiver);
         ap.setLogin(false);
-
     }
-
     private class MyClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -455,12 +519,13 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
                     sendBroadcastWithType();
                     break;
                 case R.id.rl_delete:
-
+                    recyclerView.removeAllViews();
+                    musics.clear();
+                    adapter.notifyDataSetChanged();
                     break;
             }
         }
     }
-
     private void sendBroadcastWithType() {
         Intent intent = new Intent(MyService.mAction);
         if(type==MyService.LIST_PLAY){  //顺序播放
@@ -483,5 +548,67 @@ public class MainActivity extends AppCompatActivity implements FragmentPersonalI
         intent.putExtra("cmd","type");
         intent.putExtra("type",type);
         sendBroadcast(intent);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==10&&resultCode==RESULT_OK&&data!=null){
+            Uri uri = data.getData();
+            String[] filePathColumns = {MediaStore.Images.Media.DATA};
+            c = getContentResolver().query(uri, filePathColumns, null, null, null);
+            c.moveToFirst();
+            int columnIndex = c.getColumnIndex(filePathColumns[0]);
+            imgPath = c.getString(columnIndex);
+            File file = new File(imgPath);
+            if(file.exists()){
+                files.add(file);
+            }
+            OkHttpUtils.post(PATH2)
+                    .params("userid",user.getId())
+                    .addFileParams("portimg",files)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            parse2(s);
+                        }
+                    });
+        }else if(requestCode == 101 && resultCode == RESULT_OK && data != null){
+            String newBackground = data.getStringExtra("newBackground");
+            User user = (User) data.getSerializableExtra("user");
+            Log.e("--user:",user.toString());
+            tvUniversity.setText(user.getDaxue());
+            tvLocation.setText(user.getAddress());
+            tvHeart.setText(user.getHeart());
+            tvBirthday.setText(user.getBirthday());
+            if(user.getSex().equals("男")){
+                imgSex.setImageResource(R.drawable.ab1);
+            }else if(user.getSex().equals("女")){
+                imgSex.setImageResource(R.drawable.ab2);
+            }
+            Glide.with(MainActivity.this).load(BASEBACKGROUND+newBackground).asBitmap().error(R.drawable.afc).into(imgbackground);
+        }
+    }
+
+    /**
+     * 修改头像
+     * @param s
+     */
+    private void parse2(String s) {
+        try {
+            JSONObject job = new JSONObject(s.trim());
+            if(job.optString("message").equals("文件上传成功")){
+                JSONObject data = job.optJSONObject("data");
+                String imgpath = data.optString("imgpath");
+                user.setImgpath(imgPath);
+                Glide.with(MainActivity.this).load(BASEPORTRAIT+imgPath).error(R.drawable.pp).into(imgPortrait);
+                SharedPreferences.Editor edit = sp.edit();
+                user.setImgpath(imgPath);
+                edit.putString("portrait",imgPath).commit();
+            }else{
+                ToastUtil.toast(MainActivity.this,job.optString("message"));
+            }
+        } catch (JSONException e) {
+            Log.e("FragmentPersonalInfo","数据解析出错");
+        }
     }
 }

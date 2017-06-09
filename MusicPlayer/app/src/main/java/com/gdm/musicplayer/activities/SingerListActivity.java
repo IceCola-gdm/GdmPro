@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gdm.musicplayer.R;
@@ -26,9 +27,9 @@ public class SingerListActivity extends AppCompatActivity {
     private MySingerListAdapter adapter=null;
     private ImageView imgBack;
     private TextView tvSingerName;
-    private ImageView imgAll;
     private TextView tvCount;
     private ListView listView;
+    private RelativeLayout rl_all2;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,13 +49,13 @@ public class SingerListActivity extends AppCompatActivity {
     private void setListener() {
         imgBack.setOnClickListener(new MyListener());
         listView.setOnItemClickListener(new MyItemListener());
-        imgAll.setOnClickListener(new MyListener());
+        rl_all2.setOnClickListener(new MyListener());
     }
 
     private void initView() {
         imgBack= (ImageView)findViewById(R.id.img_singername_back);
         tvSingerName= (TextView)findViewById(R.id.tv_singername);
-        imgAll= (ImageView)findViewById(R.id.img_singername_icon);
+        rl_all2= (RelativeLayout) findViewById(R.id.rl_all2);
         tvCount= (TextView)findViewById(R.id.tv_count);
         listView= (ListView)findViewById(R.id.fragment_singer_list_listview);
         tvSingerName.setText(singer.getName());
@@ -68,11 +69,26 @@ public class SingerListActivity extends AppCompatActivity {
                 case R.id.img_singername_back:
                     finish();
                     break;
-                case R.id.img_singername_icon:
-
+                case R.id.rl_all2:
+                    playAll();
                     break;
             }
         }
+    }
+
+    private void playAll() {
+        Intent intent1 = new Intent(MyService.mAction);
+        intent1.putExtra("cmd","chose_pos");
+        intent1.putExtra("pos",0);
+        intent1.putExtra("data",musics);
+        intent1.putExtra("flag",0);   //0为本地音乐
+        sendBroadcast(intent1);
+
+        Intent intent = new Intent(SingerListActivity.this, PlayActivity.class);
+        intent.putExtra("data",musics);
+        intent.putExtra("position",0);
+        intent.putExtra("state","play");
+        startActivity(intent);
     }
 
     private class MyItemListener implements android.widget.AdapterView.OnItemClickListener {
@@ -82,6 +98,7 @@ public class SingerListActivity extends AppCompatActivity {
             intent1.putExtra("cmd","chose_pos");
             intent1.putExtra("pos",position);
             intent1.putExtra("data",musics);
+            intent1.putExtra("flag",0);
             sendBroadcast(intent1);
 
             Intent intent = new Intent(SingerListActivity.this, PlayActivity.class);

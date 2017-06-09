@@ -1,10 +1,12 @@
 package com.gdm.musicplayer.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2017/4/29 0029.
  * 用户实体类
  */
-public class User {
+public class User implements Serializable{
     private int id;
     private String username;
     private String password;

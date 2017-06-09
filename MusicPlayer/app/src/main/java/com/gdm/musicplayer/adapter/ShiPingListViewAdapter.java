@@ -50,19 +50,6 @@ public class ShiPingListViewAdapter extends BaseAdapter {
         if(convertView==null){
             convertView=inflater.inflate(R.layout.fragment_shiping_listview_item,parent,false);
             holder=new ViewHolder();
-            holder.imgCollect= (ImageView) convertView.findViewById(R.id.img_shiping_collect);
-            holder.imgZan= (ImageView) convertView.findViewById(R.id.img_shiping_zan);
-            holder.imgLike= (ImageView) convertView.findViewById(R.id.img_shiping_like);
-            holder.imgShare= (ImageView) convertView.findViewById(R.id.img_shiping_share);
-            holder.imgDown= (ImageView) convertView.findViewById(R.id.img_shiping_download);
-
-            holder.tvZan= (TextView) convertView.findViewById(R.id.tv_shipping_zan_count);
-            holder.tvCollect= (TextView) convertView.findViewById(R.id.tv_shipping_collect_count);
-            holder.tvLike= (TextView) convertView.findViewById(R.id.tv_shipping_like_count);
-            holder.tvShare= (TextView) convertView.findViewById(R.id.tv_shipping_share_count);
-            holder.tvDown= (TextView) convertView.findViewById(R.id.tv_shipping_download_count);
-
-            holder.tvDuration= (TextView) convertView.findViewById(R.id.tv_shiping_time);
             holder.tvInfo= (TextView) convertView.findViewById(R.id.tv_shiping_songinfo);
             holder.imgCover= (ImageView) convertView.findViewById(R.id.img_shiping_cover);
             holder.imgPlay= (ImageView) convertView.findViewById(R.id.img_shiping_play);
@@ -89,19 +76,8 @@ public class ShiPingListViewAdapter extends BaseAdapter {
     }
     class ViewHolder{
         public TextView tvInfo;
-        public TextView tvDuration;
         public ImageView imgPlay;
         public ImageView imgCover;
-        public ImageView imgZan;
-        public ImageView imgLike;
-        public ImageView imgCollect;
-        public ImageView imgShare;
-        public ImageView imgDown;
-        public TextView tvZan;
-        public TextView tvLike;
-        public TextView tvCollect;
-        public TextView tvShare;
-        public TextView tvDown;
     }
     public interface OnClickListener{
         void click(int pos);

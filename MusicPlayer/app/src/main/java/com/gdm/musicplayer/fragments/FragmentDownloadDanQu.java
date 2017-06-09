@@ -51,15 +51,7 @@ public class FragmentDownloadDanQu extends Fragment {
     private void initDownMusic() {
         musicsDown=new ArrayList<>();
         db = DataBase.getDb(getActivity());
-        ArrayList<DataBase.Down> downs = db.getAllByType(1);
-        for (int i = 0; i < downs.size(); i++) {
-            Music music = new Music();
-            DataBase.Down down = downs.get(i);
-            music.setName(down.getName());
-            File f = new File(root, down.getName() + ".mp3");
-            music.setFileUrl(f.getAbsolutePath());
-            musicsDown.add(music);
-        }
+       musicsDown.addAll(db.selectMusic(2));
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

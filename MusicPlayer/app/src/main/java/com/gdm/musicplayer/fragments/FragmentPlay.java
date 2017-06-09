@@ -20,11 +20,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gdm.musicplayer.activities.MVPlayActivity;
+import com.gdm.musicplayer.activities.PlayListActivity;
 import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.User;
+import com.gdm.musicplayer.download.DataBase;
 import com.gdm.musicplayer.download.DownLoadService;
+import com.gdm.musicplayer.download.ShouCangDbhelper;
 import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.gdm.musicplayer.view.RoundImageView;
@@ -32,6 +36,7 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -49,18 +54,14 @@ public class FragmentPlay extends Fragment {
     RotateAnimation rotate4;
     LinearInterpolator lin;
     private String state;
-    private int pos;
     private MyBroadcastReceiver receiver;
     private MyApplication app;
     private User user;
     private ImageView imgLike;
     private ImageView imgDown;
     private ImageView imgInfo;
-    private ImageView imgMes;
     private AlertDialog myDialog;
     private Music lastMusic=new Music();
-    private String path="http://120.24.220.119:8080/music/comment/good";
-    private String comPath="http://120.24.220.119:8080/music/comment/commit";
     private Music music=null;
 
     @Override
@@ -113,7 +114,6 @@ public class FragmentPlay extends Fragment {
         imgLike= (ImageView) view.findViewById(R.id.img_play_like);
         imgDown= (ImageView) view.findViewById(R.id.img_play_down);
         imgInfo= (ImageView) view.findViewById(R.id.img_play_info);
-        imgMes= (ImageView) view.findViewById(R.id.img_play_mes);
         return view;
     }
 
@@ -127,7 +127,6 @@ public class FragmentPlay extends Fragment {
         imgLike.setOnClickListener(new MyListener());
         imgDown.setOnClickListener(new MyListener());
         imgInfo.setOnClickListener(new MyListener());
-        imgMes.setOnClickListener(new MyListener());
     }
 
     @Override
@@ -185,9 +184,6 @@ public class FragmentPlay extends Fragment {
                     case R.id.img_play_info:
                         musicoperate();
                         break;
-                    case R.id.img_play_mes:
-                        mess();
-                        break;
                 }
             }else{
                 ToastUtil.toast(getContext(),"还没有登录哟");
@@ -195,17 +191,6 @@ public class FragmentPlay extends Fragment {
 
         }
     }
-
-    private void mess() {
-//        OkHttpUtils.get(comPath)
-//                .execute(new StringCallback() {
-//                    @Override
-//                    public void onSuccess(String s, Call call, Response response) {
-//                        Log.e("----",s);
-//                    }
-//                });
-    }
-
     private void musicoperate() {
         myDialog = new AlertDialog.Builder(getContext()).create();
         myDialog.show();
@@ -216,31 +201,70 @@ public class FragmentPlay extends Fragment {
         myDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         myDialog.getWindow().setContentView(R.layout.play_item_operation);
         RelativeLayout rlAdd= (RelativeLayout) myDialog.getWindow().findViewById(R.id.rl_add);
+        rlAdd.setVisibility(View.GONE);
         RelativeLayout rlMv= (RelativeLayout) myDialog.getWindow().findViewById(R.id.rl_mv);
+        RelativeLayout rlDown= (RelativeLayout) myDialog.getWindow().findViewById(R.id.rl_down);
+        rlDown.setVisibility(View.GONE);
         TextView tvSinger= (TextView) myDialog.getWindow().findViewById(R.id.t_singer);
         TextView tvAlbum= (TextView) myDialog.getWindow().findViewById(R.id.t_album);
         TextView tvName= (TextView) myDialog.getWindow().findViewById(R.id.tv_sn);
         tvAlbum.setText(lastMusic.getAlbum());
         tvSinger.setText(lastMusic.getSinger());
         tvName.setText(lastMusic.getName());
-
+        rlMv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(music.getMvPath()!=null){
+                    if(!music.getMvPath().equals("暂无")&&!music.getMvPath().equals("")){
+                        Intent intent = new Intent(getContext(), MVPlayActivity.class);
+                        ArrayList<String> data = new ArrayList<>();
+                        data.add(music.getMvPath());
+                        intent.putExtra("data",data);
+                        intent.putExtra("pos",0);
+                        startActivity(intent);
+                    }else{
+                        ToastUtil.toast(getContext(),"音乐MV文件暂无");
+                    }
+                }else{
+                    ToastUtil.toast(getContext(),"音乐MV文件暂无");
+                }
+            }
+        });
     }
 
     /**
      * 添加下载
      */
     private void download() {
-        Intent intent = new Intent(getContext(), DownLoadService.class);
-        intent.putExtra("path",music.getFileUrl());
-        intent.putExtra("name",music.getName());
-        intent.putExtra("type",0);
-        getActivity().startService(intent);
+        if(MyService.flag==1){
+            boolean isxiazai = DataBase.getDb(getActivity()).isxiazai(music.getName());
+            if(isxiazai){
+                Intent it = new Intent(getContext(), DownLoadService.class);
+                it.putExtra("music",music);
+                getActivity().startService(it);
+            }else{
+                ToastUtil.toast(getContext(),"已下载");
+            }
+        }else{
+            ToastUtil.toast(getContext(),"已经是本地文件呢");
+        }
     }
 
     /**
      * 添加喜欢
      */
     private void like() {
-
+        ShouCangDbhelper instance = ShouCangDbhelper.getInstance(getContext());
+        boolean isshouchang = DataBase.getDb(getActivity()).isshouchang(music.getName());
+        if(isshouchang){
+            instance.shoucang(music);
+            if(music!=null){
+                Intent intent = new Intent(PlayListActivity.FLAG);
+                intent.putExtra("add",music);
+                getActivity().sendBroadcast(intent);
+            }
+        }else{
+            ToastUtil.toast(getContext(),"已收藏");
+        }
     }
 }

@@ -1,13 +1,18 @@
 package com.gdm.musicplayer.download;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.transition.Visibility;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.bean.Music;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.FileCallback;
 
@@ -34,6 +39,8 @@ public class DownLoadService extends Service{
     private ExecutorService service;
     private DataBase db;
     private File root=new File(Environment.getExternalStorageDirectory(),"gdm");
+    private Notification notification;
+    private NotificationManager manager;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -44,23 +51,35 @@ public class DownLoadService extends Service{
     public void onCreate() {
         super.onCreate();
         service = Executors.newFixedThreadPool(3);
+        manager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         db=DataBase.getDb(this);
         if (!root.exists()) {
             root.mkdirs();
         }
     }
-
+    private synchronized void showNotify(){
+        if (notification!=null) {
+            manager.cancelAll();
+        }
+        Notification.Builder bd = new Notification.Builder(this);
+        bd.setContentTitle("音悦下载中");
+        bd.setContentText("当前共有"+count+"首歌正在下载");
+        bd.setVisibility(Notification.VISIBILITY_PUBLIC);
+        bd.setSmallIcon(R.drawable.ic_launcher);
+        notification=bd.build();
+        manager.notify("download",1,notification);
+    }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG,"收到指令");
-        String path = intent.getStringExtra("path");
-        String name=intent.getStringExtra("name");
-        Integer type=intent.getIntExtra("type",0);
-        int i = db.insertData(name,type,0);
-        new Thread(new DownLoadThread(path,name,0,i)).start();
+        Music m= (Music) intent.getSerializableExtra("music");
+        if(m!=null){
+            int i = db.insertMusic(m);
+            new Thread(new DownLoadThread(m.getFileUrl(),m.getName(),0,m.getId())).start();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
-
+    private int count=0;
     class DownLoadThread implements Runnable{
         public DownLoadThread(String path, String name, int type,int id) {
             this.path = path;
@@ -71,23 +90,26 @@ public class DownLoadService extends Service{
         private int id;
         private String path;
         private String name;
-        private int type;//0.表示音乐文件,1.表示MV文件
+        private int type;//0.表示音乐文件
         @Override
         public void run() {
             Log.e(TAG,"下载开始");
-            db.update(id,1);
+            count++;
+            showNotify();
+            db.update(name,1,path);
             OkHttpUtils.get(path).execute(new FileCallback(root.getAbsolutePath(),name+".mp3") {
                 @Override
                 public void onSuccess(File file, Call call, Response response) {
                     Log.e(TAG,"下载完成"+file.getAbsolutePath());
-                    Toast.makeText(DownLoadService.this, "下载完成", Toast.LENGTH_SHORT).show();
-                    db.update(id,2);
+                    count--;
+                    db.update(name,2,file.getAbsolutePath());
+                    showNotify();
                 }
 
                 @Override
                 public void onError(Call call, Response response, Exception e) {
                     super.onError(call, response, e);
-                    db.update(id,0);
+                    db.update(id,0,path);
                     Log.e(TAG,"下载错误"+e.getMessage());
                 }
             });

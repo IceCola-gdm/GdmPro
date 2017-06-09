@@ -19,6 +19,7 @@ import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.bean.Music;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -47,6 +48,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     public static boolean isPlay=false;
     private SharedPreferences sp;
     private ArrayList<Music> temp=new ArrayList<>();
+    public static int flag=1;
     public static void setType(int type) {
         MyService.type = type;
     }
@@ -82,6 +84,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                         intent.putExtra("music",bean);
                         intent.putExtra("state", "play");
                         intent.putExtra("pos", pos);
+                        intent.putExtra("data",musicList);
                         if (bean.getSinger()!=null) {
                             intent.putExtra("author",bean.getSinger());
                         }else {
@@ -147,6 +150,7 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                 intent.putExtra("state", "next");
                 intent.putExtra("pos", pos);
                 intent.putExtra("music",musicList.get(pos));
+
                 intent.putExtra("total", player.getDuration());
                 intent.putExtra("now", 0);
                 intent.putExtra("title", bean.getName());
@@ -164,7 +168,6 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
     public static String mAction="com.gdm.player";
     public static final String PLAY_ACTION="com.gdm.playinfo";
     class MediaCommend extends BroadcastReceiver{
-
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(mAction)) {
@@ -179,7 +182,6 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                             play();
                         }
                     }else if(cmd.equals("pause")){//暂停命令
-//                    ToastUtil.toast(MyService.this,"pause");
                         pause();
                     }else if(cmd.equals("stop")){//停止命令
                         stop();
@@ -198,8 +200,13 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                     }else if(cmd.equals("chose_pos")){//从列表位置开始播放
                         stop();
                         int pos = intent.getIntExtra("pos", 0);
-                        musicList=((MyApplication)getApplication()).getMusics();
+//                        musicList=((MyApplication)getApplication()).getMusics();
+                        ArrayList<Music> data = (ArrayList<Music>) intent.getSerializableExtra("data");
+                        musicList.clear();
+                        musicList.addAll(data);
                         MyService.this.pos=pos;
+                        int f = intent.getIntExtra("flag", 1);
+                        flag=f;
                         play();
                     }
                 }
@@ -317,6 +324,5 @@ public class MyService extends Service implements MediaPlayer.OnBufferingUpdateL
                 break;
         }
         play();
-
     }
 }

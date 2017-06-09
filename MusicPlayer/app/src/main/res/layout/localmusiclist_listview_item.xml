@@ -4,7 +4,6 @@
     android:layout_height="70dp">
     <RelativeLayout
         android:id="@+id/contentview"
-        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView

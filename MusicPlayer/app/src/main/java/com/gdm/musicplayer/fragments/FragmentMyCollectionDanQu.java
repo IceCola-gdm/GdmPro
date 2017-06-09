@@ -16,6 +16,7 @@ import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.activities.PlayListActivity;
 import com.gdm.musicplayer.adapter.MyLocalDanquAdapter;
 import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.download.ShouCangDbhelper;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ import java.util.ArrayList;
  * Created by Administrator on 2017/4/11 0011.
  */
 public class FragmentMyCollectionDanQu extends Fragment {
+    public static final String ACTION="COLLECTION";
     private MyAddMusicReceiver receiver;
     private ArrayList<Music> musics=new ArrayList<>();
     private ListView listView;
@@ -40,14 +42,21 @@ public class FragmentMyCollectionDanQu extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mycollection_danqu, container, false);
         listView= (ListView) view.findViewById(R.id.fragment_mycollection_danqu_listview);
+        initData();
         return view;
+    }
+
+    private void initData() {
+        ShouCangDbhelper instance = ShouCangDbhelper.getInstance(getContext());
+        musics.addAll(instance.getAllShoucang());
+        adapter=new MyLocalDanquAdapter(musics,getContext());
+        listView.setAdapter(adapter);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        adapter=new MyLocalDanquAdapter(musics,getContext());
-        listView.setAdapter(adapter);
+
     }
 
     @Override
@@ -64,6 +73,10 @@ public class FragmentMyCollectionDanQu extends Fragment {
                 Log.e("FragmentMyCol",music.getName());
                 musics.add(music);
                 adapter.notifyDataSetChanged();
+
+                Intent intent1 = new Intent(ACTION);
+                intent1.putExtra("data",music);
+                getActivity().sendBroadcast(intent);
             }
         }
     }

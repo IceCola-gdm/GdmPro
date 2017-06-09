@@ -15,6 +15,7 @@ import cn.sharesdk.framework.ShareSDK;
  * Created by Administrator on 2017/4/27 0027.
  */
 public class MyApplication extends Application {
+    public static boolean playFlag=false;
     private boolean isLogin=false;
     private ArrayList<Music> musics;
     public static final String CHANGELIST="com.gdm.listchange";

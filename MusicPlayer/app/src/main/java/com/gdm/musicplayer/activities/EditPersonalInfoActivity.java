@@ -1,8 +1,11 @@
 package com.gdm.musicplayer.activities;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -13,7 +16,9 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.gdm.musicplayer.application.MyApplication;
@@ -27,11 +32,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import okhttp3.Call;
 import okhttp3.Response;
+
+import static android.R.attr.bitmap;
 
 public class EditPersonalInfoActivity extends AppCompatActivity {
     private ImageView imgBackgroubd;
@@ -57,6 +65,7 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
     private static final String BASEPORTRAIT="http://120.24.220.119:8080/music/image/port/";
     private static final String URI="http://120.24.220.119:8080/music/user/updateUser";
     private MyApplication app;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +76,6 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
         initView();
         initData();
     }
-
     private void initData() {
         Glide.with(EditPersonalInfoActivity.this).load(BASEBACKGROUND+user.getBackground()).error(R.drawable.afc).into(imgBackgroubd);
         tvSex.setText(user.getSex());
@@ -75,16 +83,14 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
         tvLocation.setText(user.getAddress());
         tvUniversity.setText(user.getDaxue());
     }
-
     private void initView() {
-        imgBackgroubd= (ImageView) findViewById(R.id.img_edit_personalinfo_background);
+        imgBackgroubd= (ImageView) findViewById(R.id.img_background);
         tvSex= (TextView) findViewById(R.id.tv_edit_personalinfo_sex);
         tvBirthday= (TextView) findViewById(R.id.tv_edit_personalinfo_birthday);
         tvLocation= (TextView) findViewById(R.id.tv_edit_personalinfo_location);
         tvUniversity= (TextView) findViewById(R.id.tv_edit_personalinfo_university);
         editText= (EditText) findViewById(R.id.ed_heart);
     }
-
     public void MyEditClick(View view){
         switch (view.getId()){
             case R.id.img_edit_personalinfo_back:
@@ -93,7 +99,7 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
             case R.id.btn_edit_personalinfo_submit:
                 submit();
                 break;
-            case R.id.rl_background:
+            case R.id.rl_ground:
                 resetBackground();
                 break;
             case R.id.rl_sex:
@@ -102,7 +108,6 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
                 startActivityForResult(intent2,200);
                 break;
             case R.id.rl_birthday:
-//                ToastUtil.toast(EditPersonalInfoActivity.this,"还没写");
                 showDialog();
                 break;
             case R.id.rl_location:
@@ -117,9 +122,10 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
                 break;
         }
     }
-
     private void submit() {
         heart=editText.getText().toString();
+        dialog = new ProgressDialog(EditPersonalInfoActivity.this);
+        dialog.setMessage("提交中，请稍后...");
         OkHttpUtils.post(URI)
                 .params("id",user.getId())
                 .params("birthday",birthday)
@@ -132,21 +138,22 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         parse(s);
+                        dialog.cancel();
                         finish();
                     }
-
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        Log.e("---","修改个人信息请求出错");
+                        ToastUtil.toast(EditPersonalInfoActivity.this,"修改出错");
+                        dialog.cancel();
                     }
                 });
     }
-
     private void parse(String s) {
         try {
             JSONObject job = new JSONObject(s.trim());
             if(job.getString("message").equals("修改成功")){
+                ToastUtil.toast(EditPersonalInfoActivity.this,job.optString("message"));
                 user.setBackground(backgroundPath);
                 user.setSex(sex);
                 user.setHeart(heart);
@@ -154,6 +161,10 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
                 user.setBirthday(birthday);
                 user.setDaxue(university);
                 app.setUser(user);
+                Intent intent = getIntent();
+                intent.putExtra("newBackground",backgroundPath);
+                intent.putExtra("user",user);
+                setResult(RESULT_OK,intent);
             }else{
                 ToastUtil.toast(EditPersonalInfoActivity.this,"修改失败");
             }
@@ -161,7 +172,6 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
             Log.e("EditPersonalInfo","解析数据出错");
         }
     }
-
     private void showDialog() {
         final Calendar ca = Calendar.getInstance();
         mYear = ca.get(Calendar.YEAR);
@@ -170,14 +180,11 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
         DatePickerDialog dialog = new DatePickerDialog(EditPersonalInfoActivity.this, new MyDatePickerListener(), mYear, mMonth, mDay);
         dialog.show();
     }
-
     private void resetBackground() {
         tag="background";
-        Intent intent= new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent= new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent,100);
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -199,10 +206,6 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
             tag="";
         }else if(requestCode==200&&resultCode==RESULT_OK){
             switch (tag){
-//                case "nickname":
-//                    nickname=data.getStringExtra("newNickName");
-//                    tvNickname.setText(nickname);
-//                    break;
                 case "sex":
                     sex=data.getStringExtra("newSex");
                     tvSex.setText(sex);
@@ -219,7 +222,6 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
             tag="";
         }
     }
-
     private class MyDatePickerListener implements DatePickerDialog.OnDateSetListener {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {

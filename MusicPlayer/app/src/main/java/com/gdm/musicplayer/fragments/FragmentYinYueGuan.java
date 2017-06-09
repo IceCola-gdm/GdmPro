@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class FragmentYinYueGuan extends Fragment {
     private TabLayout tabLayout;
     private ChildViewPager viewPager;
-    private String[] titles={"个性推荐","歌单","排行榜"};
+    private String[] titles={"个性推荐","全部音乐","音悦热歌"};
     private MyPagerAdapter adapter;
     private ArrayList<Fragment> fgs=new ArrayList<>();
     private ArrayList<Music> musics=new ArrayList<>();

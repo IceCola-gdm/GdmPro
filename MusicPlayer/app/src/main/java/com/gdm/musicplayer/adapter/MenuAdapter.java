@@ -43,10 +43,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         holder.tvSinger.setText(music.getSinger());
         holder.tvName.setTextColor(Color.BLACK);
         holder.tvSinger.setTextColor(Color.BLACK);
-        holder.imgDelete.setOnClickListener(new MyListener());
-//        if (itemClickListener!=null){
-//            itemClickListener.itemClick(position);
-//        }
+        holder.imgDelete.setVisibility(View.INVISIBLE);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,12 +77,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
             tvSinger= (TextView) itemView.findViewById(R.id.tv_singer);
             tvName= (TextView) itemView.findViewById(R.id.tv_menu_songname);
             imgDelete= (ImageView) itemView.findViewById(R.id.img_delete);
-        }
-    }
-    private class MyListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            ToastUtil.toast(context,"还没写");
         }
     }
     public interface OnMyItemClickListener{

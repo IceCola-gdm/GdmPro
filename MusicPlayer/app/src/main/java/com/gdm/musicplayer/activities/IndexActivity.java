@@ -16,43 +16,44 @@ public class IndexActivity extends AppCompatActivity {
     private ImageView imgJump;
     private int[] imgs={R.drawable.timg,R.drawable.timg1,R.drawable.timg2,R.drawable.timg3};
     private int index=-1;
-    private RelativeLayout rl;
+    private boolean flag=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
         imgAds= (ImageView) findViewById(R.id.imgAds);
         imgJump= (ImageView) findViewById(R.id.img_jump);
-        rl= (RelativeLayout) findViewById(R.id.rlIndex);
         imgJump.setOnClickListener(new MyListener());
         imgAds.setOnClickListener(new MyListener());
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(3000);
-                    handler.sendEmptyMessage(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                while(flag){
+                    try {
+                        Thread.sleep(3000);
+                        handler.sendEmptyMessage(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+
             }
         }).start();
     }
     Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
             switch (msg.what){
                 case 100:
-                    rl.setVisibility(View.INVISIBLE);
-                    imgAds.setVisibility(View.VISIBLE);
                     index++;
-                    if(index!=imgs.length-1){
+                    if(index!=imgs.length){
                         imgAds.setImageResource(imgs[index]);
                     }else{
-//                        Intent intent = new Intent(IndexActivity.this, MainActivity.class);
-//                        startActivity(intent);
-//                        finish();
+                        Intent intent = new Intent(IndexActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        index=0;
+                        flag=false;
+                        finish();
                     }
                     break;
             }

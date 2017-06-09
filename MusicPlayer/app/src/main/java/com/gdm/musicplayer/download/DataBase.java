@@ -8,11 +8,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.gdm.musicplayer.bean.Music;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.FileCallback;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import okhttp3.Call;
@@ -38,16 +40,39 @@ public class DataBase  {
 
     /**
      * 插入数据
-     * @param name 名称
      */
-    public int insertData(String name,Integer type,Integer state){
+    public int insertMusic(Music m){
         ContentValues values = new ContentValues();
-        values.put("name", name);
-        values.put("type",type);
-        values.put("state",state);
-        long l = wdatabase.insert("down", 0+"", values);
+        values.put("name", m.getName());
+        values.put("type",0);
+        values.put("state",0);
+        if (m.getSinger()!=null) {
+            values.put("singer",m.getSinger());
+        }
+
+        if (m.getAlbum()!=null) {
+            values.put("album",m.getAlbum());
+        }
+
+        values.put("fileUrl",m.getFileUrl());
+        if (m.getSize()!=null) {
+            values.put("size",m.getSize());
+        }
+
+        if (m.getImgPath()!=null) {
+            values.put("imgPath",m.getImgPath());
+        }
+
+        if (m.getMvPath()!=null) {
+            values.put("mvPath",m.getMvPath());
+        }
+        if (m.getLrc()!=null){
+            values.put("lrc",m.getLrc());
+        }
+
+        long l = wdatabase.insert("down", null, values);
         Log.e(TAG,"插入数据成功"+l);
-        return (int) l;
+        return m.getId();
     }
 
     /**
@@ -55,8 +80,7 @@ public class DataBase  {
      * @param id id
      * @param state 状态 0.等待 1.下载中 2.下载完成
      */
-    public void update(Integer id,Integer state){
-
+    public void update(Integer id,Integer state,String path){
         if (state!=null) {
             ContentValues values = new ContentValues();
             values.put("state",state);
@@ -67,124 +91,62 @@ public class DataBase  {
     public void delete(Integer id){
 
     }
-    /**
-     * 查询
-     * @param id
-     * @return
-     */
-    public ArrayList<Down> selectDown(@Nullable Integer id){
-        ArrayList<Down> downs = new ArrayList<>();
-        if (id!=null) {
-            Cursor cursor = rdatabase.rawQuery("select * from down where id=?", new String[]{id + ""});
-            if (cursor.moveToFirst()) {
-                int mid = cursor.getInt(0);
-                String name = cursor.getString(1);
-                int type = cursor.getInt(2);
-                int state = cursor.getInt(3);
-                Down down = new Down();
-                down.setId(mid);
-                down.setName(name);
-                down.setState(state);
-                down.setType(type);
-                downs.add(down);
-
-            }
+    public void update(String name,Integer state,String path){
+        if (state!=null) {
+            ContentValues values = new ContentValues();
+            values.put("state",state);
+            wdatabase.execSQL("update down set state="+'"'+state+'"'+"where name="+'"'+name+'"');
         }
-        Log.e(TAG,"查询成功"+downs.size());
-        return downs;
+        Log.e(TAG,"UPDATE");
     }
-    public ArrayList<Down> getAllByType(Integer type){
-        ArrayList<Down> downs = new ArrayList<>();
-        Cursor cursor = rdatabase.rawQuery("select * from down where type="+type,null);
+
+    public List<Music> selectMusic(int mtype){
+        Cursor cursor = rdatabase.rawQuery("select * from down where state=?", new String[]{mtype+""});
+        List<Music> list=new ArrayList<>();
         if (cursor.moveToFirst()) {
-           do {
-               int mid = cursor.getInt(0);
-               String name = cursor.getString(1);
-               int state = cursor.getInt(3);
-               Down down = new Down();
-               down.setId(mid);
-               down.setName(name);
-               down.setState(state);
-               down.setType(type);
-               downs.add(down);
-           }while (cursor.moveToNext());
-        }
-        return downs;
-    }
-    public Down selectDown(String name){
-        Cursor cursor = rdatabase.rawQuery("select * from down where name=?", new String[]{name});
-        if (cursor.moveToFirst()) {
-            int mid = cursor.getInt(0);
-            int type = cursor.getInt(2);
-            int state = cursor.getInt(3);
-            Down down = new Down();
-            down.setId(mid);
-            down.setName(name);
-            down.setState(state);
-            down.setType(type);
-            return down;
-        }
-        return null;
-    }
-    public class Down{
-        private int id;
-        private int state;
-        private int type;
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String msuciname = cursor.getString(cursor.getColumnIndex("name"));
+                int type = cursor.getInt(cursor.getColumnIndex("type"));
+                String singer = cursor.getString(cursor.getColumnIndex("singer"));
+                String album = cursor.getString(cursor.getColumnIndex("album"));
+                String fileUrl = cursor.getString(cursor.getColumnIndex("fileUrl"));
+                String size = cursor.getString(cursor.getColumnIndex("size"));
+                String imgPath = cursor.getString(cursor.getColumnIndex("imgPath"));
+                String mvPath = cursor.getString(cursor.getColumnIndex("mvPath"));
+                String lrc = cursor.getString(cursor.getColumnIndex("lrc"));
+                String state = cursor.getString(cursor.getColumnIndex("state"));
+                Music m = new Music(msuciname, id, 0, singer, album, fileUrl, size, imgPath, mvPath, lrc, false);
+                list.add(m);
+            } while (cursor.moveToNext());
 
-        public int getState() {
-            return state;
         }
-
-        public void setState(int state) {
-            this.state = state;
-        }
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-
-        private String name;
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return "Down{" +
-                    "id=" + id +
-                    ", state=" + state +
-                    ", type=" + type +
-                    ", name='" + name + '\'' +
-                    '}';
-        }
-
-        public Down() {
-        }
+        Log.e("down","音悦数+"+list.size());
+        return list;
     }
     private static DataBase db;
-
+    public boolean isxiazai(String name){
+        Cursor cursor = rdatabase.rawQuery("select * from down where name=?", new String[]{name});
+        if (cursor.moveToFirst()) {
+            do {
+                return false;
+            } while (cursor.moveToNext());
+        }
+        return true;
+    }
+    public boolean isshouchang(String name){
+        Cursor cursor = rdatabase.rawQuery("select * from shoucang where name=?", new String[]{name});
+        if (cursor.moveToFirst()) {
+            do {
+                return false;
+            } while (cursor.moveToNext());
+        }
+        return true;
+    }
     public static DataBase getDb(Context context) {
         if (db==null) {
             db=new DataBase(context);
         }
         return db;
     }
-
 }

@@ -3,8 +3,27 @@
     <string name="title_activity_choose_to_login_or_register">ChooseToLoginOrRegister</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="creat_table">CREATE TABLE down(
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-name TEXT not NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT not NULL,
         type INTEGER,
+        singer TEXT DEFAULT 暂无,
+        album TEXT DEFAULT 暂无,
+        fileUrl TEXT DEFAULT 暂无,
+        size TEXT DEFAULT 暂无,
+        imgPath TEXT DEFAULT 暂无,
+        mvPath TEXT DEFAULT 暂无,
+        lrc TEXT DEFAULT 暂无,
         state INTEGER)</string>
+    <string name="create_shoucang">
+        CREATE TABLE shoucang(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT not NULL,
+        singer TEXT DEFAULT 暂无,
+        album TEXT DEFAULT 暂无,
+        fileUrl TEXT DEFAULT 暂无,
+        size TEXT DEFAULT 暂无,
+        imgPath TEXT DEFAULT 暂无,
+        mvPath TEXT DEFAULT 暂无,
+        lrc TEXT DEFAULT 暂无)
+    </string>
 </resources>

@@ -3,6 +3,7 @@ package com.gdm.musicplayer.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -33,37 +34,16 @@ public class AlbumListActivity extends AppCompatActivity {
         initView();
         initData();
         setAdapter();
-        setListener();
     }
 
     private void initData() {
         albumName.setText(album.getName());
         count.setText("共（"+musics.size()+"）首");
     }
-
-    private void setListener() {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent1 = new Intent(MyService.mAction);
-                intent1.putExtra("cmd","chose_pos");
-                intent1.putExtra("pos",position);
-                intent1.putExtra("data",musics);
-                sendBroadcast(intent1);
-
-                Intent intent = new Intent(AlbumListActivity.this, PlayActivity.class);
-                intent.putExtra("data",musics);
-                intent.putExtra("position",position);
-                intent.putExtra("state","play");
-                startActivity(intent);
-                finish();
-            }
-        });
-    }
-
     private void setAdapter() {
         adapter=new MySingerListAdapter(AlbumListActivity.this,musics);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new MyListener());
     }
 
     private void initView() {
@@ -76,9 +56,44 @@ public class AlbumListActivity extends AppCompatActivity {
             case R.id.img_albumname_back:
                 finish();
                 break;
-            case R.id.rl_all2:
-
+            case R.id.rl_all2:   //全部播放
+                allPlay();
                 break;
+        }
+    }
+
+    private void allPlay() {
+        Intent intent1 = new Intent(MyService.mAction);
+        intent1.putExtra("cmd","chose_pos");
+        intent1.putExtra("pos",0);
+        intent1.putExtra("data",musics);
+        intent1.putExtra("flag",0);   //0为本地音乐
+        sendBroadcast(intent1);
+
+        Intent intent = new Intent(AlbumListActivity.this, PlayActivity.class);
+        intent.putExtra("data",musics);
+        intent.putExtra("position",0);
+        intent.putExtra("state","play");
+        startActivity(intent);
+    }
+
+    private class MyListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent1 = new Intent(MyService.mAction);
+            intent1.putExtra("cmd","chose_pos");
+            intent1.putExtra("pos",position);
+            intent1.putExtra("data",musics);
+            intent1.putExtra("flag",0);
+            sendBroadcast(intent1);
+
+            Intent intent = new Intent(AlbumListActivity.this, PlayActivity.class);
+            intent.putExtra("data",musics);
+            intent.putExtra("position",position);
+            intent.putExtra("state","play");
+            intent.putExtra("state","play");
+            startActivity(intent);
+            finish();
         }
     }
 }

@@ -12,10 +12,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.activities.MVPlayActivity;
+import com.gdm.musicplayer.activities.PlayActivity;
+import com.gdm.musicplayer.activities.PlayListActivity;
 import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.bean.MV;
 import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.download.DataBase;
+import com.gdm.musicplayer.download.DownLoadService;
+import com.gdm.musicplayer.download.ShouCangDbhelper;
 import com.gdm.musicplayer.service.MyService;
+import com.gdm.musicplayer.utils.ToastUtil;
+
 import java.util.ArrayList;
 
 
@@ -28,6 +35,7 @@ public class MyLocalDanquAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private RelativeLayout rlMV;
     private RelativeLayout rlAdd;
+    private RelativeLayout rlDown;
 
     public MyLocalDanquAdapter(ArrayList<Music> musics, Context context) {
         this.musics = musics;
@@ -75,7 +83,16 @@ public class MyLocalDanquAdapter extends BaseAdapter {
                 Intent intent = new Intent(MyService.mAction);
                 intent.putExtra("cmd","chose_pos");
                 intent.putExtra("pos",position);
+                intent.putExtra("data",musics);
+                intent.putExtra("flag",0);   //0为本地音乐
                 context.sendBroadcast(intent);
+
+                Intent intent2 = new Intent(context, PlayActivity.class);
+                intent2.putExtra("data",musics);
+                intent2.putExtra("position",position);
+                intent2.putExtra("state","play");
+                intent2.putExtra("anim","start");
+                context.startActivity(intent2);
             }
         });
         holder.tvTitle.setText(music.getName());
@@ -105,20 +122,21 @@ public class MyLocalDanquAdapter extends BaseAdapter {
             TextView tvAlbumName = (TextView) dialog.getWindow().findViewById(R.id.t_album);
             rlAdd= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_add);
             rlMV= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_mv);
+
             if(m.getMvPath()==null||m.getMvPath().equals("暂无")) {
                 rlMV.setClickable(false);
             }else{
                 rlMV.setClickable(true);
             }
-            RelativeLayout rlDown= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_down);
-            rlDown.setClickable(false);
+            rlDown= (RelativeLayout) dialog.getWindow().findViewById(R.id.rl_down);
             rlAdd.setTag(pos);
             rlMV.setTag(pos);
+            rlDown.setTag(pos);
             tvName.setText(musics.get(pos).getName());
             tvAlbumName.setText(musics.get(pos).getAlbum());
             tvSingerName.setText(musics.get(pos).getSinger());
             rlAdd.setOnClickListener(new MyItemListener());
-//            rlDown.setOnClickListener(new MyItemListener());
+            rlDown.setOnClickListener(new MyItemListener());
             rlMV.setOnClickListener(new MyItemListener());
         }
     }
@@ -128,31 +146,59 @@ public class MyLocalDanquAdapter extends BaseAdapter {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.rl_add:
-                    int tag = (int) rlAdd.getTag();
+                    addCollect();
                     break;
                 case R.id.rl_mv:
-                    ArrayList<MV> mvs = new ArrayList<>();
-                    int tag2 = (int) rlMV.getTag();
-                    Music music = musics.get(tag2);
-                    if(music.getMvPath()!=null){
-                        if(!music.getMvPath().equals("暂无")){
-                            MV mv = new MV();
-                            mv.setSinger(music.getSinger());
-                            mv.setUrl(music.getMvPath());
-                            mv.setImg(music.getImgPath());
-                            mv.setName(music.getName());
-                            mv.setDuration(music.getDuration()+"");
-                            mv.setAlbum(music.getAlbum());
-                            mvs.add(mv);
-                            Intent intent = new Intent(context, MVPlayActivity.class);
-                            intent.putExtra("pos",tag2);
-                            intent.putExtra("data",mvs);
-                            context.startActivity(intent);
-                        }
-                    }
-
+                    mvPlay();
+                    break;
+                case R.id.rl_down:
+                    ToastUtil.toast(context,"已经是本地数据了");
                     break;
             }
+        }
+    }
+
+    private void mvPlay() {
+        ArrayList<MV> mvs = new ArrayList<>();
+        int tag2 = (int) rlMV.getTag();
+        Music music = musics.get(tag2);
+        if(music.getMvPath()!=null){
+            if(!music.getMvPath().equals("暂无")&&!music.getMvPath().equals("")&&!music.getMvPath().endsWith("暂无")){
+                MV mv = new MV();
+                mv.setSinger(music.getSinger());
+                mv.setUrl(music.getMvPath());
+                mv.setImg(music.getImgPath());
+                mv.setName(music.getName());
+                mv.setDuration(music.getDuration()+"");
+                mv.setAlbum(music.getAlbum());
+                mvs.add(mv);
+                Intent intent = new Intent(context, MVPlayActivity.class);
+                intent.putExtra("pos",tag2);
+                intent.putExtra("data",mvs);
+                context.startActivity(intent);
+            }else{
+                ToastUtil.toast(context,"没有该MV文件");
+            }
+        }else{
+            ToastUtil.toast(context,"没有该MV文件");
+        }
+    }
+
+    private void addCollect() {
+        int tag = (int) rlAdd.getTag();
+        Music music1 = musics.get(tag);
+        ShouCangDbhelper instance = ShouCangDbhelper.getInstance(context);
+        boolean isshouchang = DataBase.getDb(context).isshouchang(music1.getName());
+        if(isshouchang){
+            instance.shoucang(music1);
+            if(music1!=null){
+                Intent intent = new Intent(PlayListActivity.FLAG);
+                intent.putExtra("add",music1);
+                context.sendBroadcast(intent);
+                ToastUtil.toast(context,"收藏成功");
+            }
+        }else{
+            ToastUtil.toast(context,"已收藏");
         }
     }
 }

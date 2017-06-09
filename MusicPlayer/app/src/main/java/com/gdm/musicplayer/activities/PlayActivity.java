@@ -28,6 +28,13 @@ import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.utils.TimeUtil;
 import com.gdm.musicplayer.utils.ToastUtil;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.tencent.qzone.QZone;
 
 public class PlayActivity extends AppCompatActivity  {
     private ImageView imgBack;
@@ -58,6 +65,9 @@ public class PlayActivity extends AppCompatActivity  {
     private TextView tvCount;
     private String anim="";
     private String singer;
+    private RecyclerView recyclerView;
+    private AlertDialog dialog;
+    private int flag=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,37 +88,40 @@ public class PlayActivity extends AppCompatActivity  {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(MyService.PLAY_ACTION)) {
                 state=intent.getStringExtra("state");
-                if (state.equals("play")) {
-                    total = intent.getIntExtra("total", 0);
-                    now = intent.getIntExtra("now", 0);
-                    tvCurrentTime.setText(TimeUtil.parse(now));
-                    seekBar.setMax(total);
-                    seekBar.setProgress(now);
-                    tvTotalTime.setText(TimeUtil.parse(total));
-                    pos = intent.getIntExtra("pos", 0);
-                    title = intent.getStringExtra("title");
-                    tvSongName.setText(title);
-                    singer=intent.getStringExtra("author");
-                    tvSongSinger.setText(singer);
-                    musics=MyService.getMusicList();
-                    if (adapter2!=null) {
-                        adapter2.notifyDataSetChanged();
-                    }
-                }else if(state.equals("stop")){
-                    pos=intent.getIntExtra("pos", 0);
-                }else if(state.equals("next")){
-                    int p=intent.getIntExtra("pos",0);
-                    tvTotalTime.setText(TimeUtil.parse(intent.getIntExtra("total",0)));
-                    tvSongName.setText(intent.getStringExtra("title"));
-                    tvSongSinger.setText(musics.get(p).getSinger());
-                    seekBar.setMax(intent.getIntExtra("total",0));
-                    seekBar.setProgress(0);
-                }else if (state.equals("changeList")){
-                    musics=MyService.getMusicList();
-                    if (adapter2!=null) {
-                        adapter2.notifyDataSetChanged();
+                if(state!=null&&state!=""){
+                    if (state.equals("play")) {
+                        total = intent.getIntExtra("total", 0);
+                        now = intent.getIntExtra("now", 0);
+                        tvCurrentTime.setText(TimeUtil.parse(now));
+                        seekBar.setMax(total);
+                        seekBar.setProgress(now);
+                        tvTotalTime.setText(TimeUtil.parse(total));
+                        pos = intent.getIntExtra("pos", 0);
+                        title = intent.getStringExtra("title");
+                        tvSongName.setText(title);
+                        singer=intent.getStringExtra("author");
+                        tvSongSinger.setText(singer);
+                        musics=MyService.getMusicList();
+                        if (adapter2!=null) {
+                            adapter2.notifyDataSetChanged();
+                        }
+                    }else if(state.equals("stop")){
+                        pos=intent.getIntExtra("pos", 0);
+                    }else if(state.equals("next")){
+                        int p=intent.getIntExtra("pos",0);
+                        tvTotalTime.setText(TimeUtil.parse(intent.getIntExtra("total",0)));
+                        tvSongName.setText(intent.getStringExtra("title"));
+                        tvSongSinger.setText(musics.get(p).getSinger());
+                        seekBar.setMax(intent.getIntExtra("total",0));
+                        seekBar.setProgress(0);
+                    }else if (state.equals("changeList")){
+                        musics=MyService.getMusicList();
+                        if (adapter2!=null) {
+                            adapter2.notifyDataSetChanged();
+                        }
                     }
                 }
+
             }else if(intent.getAction().equals(MyApplication.CHANGELIST)){
                 MyApplication ap= (MyApplication) getApplication();
                 musics=ap.getMusics();
@@ -126,6 +139,7 @@ public class PlayActivity extends AppCompatActivity  {
         ArrayList<Music> m = (ArrayList<Music>) intent.getSerializableExtra("data");
         anim = intent.getStringExtra("anim");
         String state1 = intent.getStringExtra("state");
+//        flag=intent.getIntExtra("flag",1);  //0为本地   1为在线
         if(state1!=null){
             state=state1;
         }
@@ -188,7 +202,6 @@ public class PlayActivity extends AppCompatActivity  {
         Intent intent = new Intent("palyactivity");
         intent.putExtra("state",state);
         sendBroadcast(intent);
-
     }
     public void playClick(View view){
         Intent intent = new Intent(MyService.mAction);
@@ -219,9 +232,9 @@ public class PlayActivity extends AppCompatActivity  {
                 intent.putExtra("cmd","last");
                 state="play";
                 imgPlay.setImageResource(R.drawable.a_3);
-                tvSongName.setText(musics.get(pos).getName());
-                tvSongSinger.setText(musics.get(pos).getSinger());
-                tvTotalTime.setText(TimeUtil.parse(musics.get(pos).getDuration()));
+//                tvSongName.setText(musics.get(pos).getName());
+//                tvSongSinger.setText(musics.get(pos).getSinger());
+//                tvTotalTime.setText(TimeUtil.parse(musics.get(pos).getDuration()));
                 seekBar.setMax(musics.get(pos).getDuration());
                 break;
             case R.id.img_play_play:
@@ -244,9 +257,9 @@ public class PlayActivity extends AppCompatActivity  {
                 intent.putExtra("cmd","next");
                 state="play";
                 imgPlay.setImageResource(R.drawable.a_3);
-                tvSongSinger.setText(musics.get(pos).getSinger());
-                tvSongName.setText(musics.get(pos).getName());
-                tvTotalTime.setText(TimeUtil.parse(musics.get(pos).getDuration()));
+//                tvSongSinger.setText(musics.get(pos).getSinger());
+//                tvSongName.setText(musics.get(pos).getName());
+//                tvTotalTime.setText(TimeUtil.parse(musics.get(pos).getDuration()));
                 seekBar.setMax(musics.get(pos).getDuration());
                 break;
         }
@@ -258,7 +271,8 @@ public class PlayActivity extends AppCompatActivity  {
                 finish();
                 break;
             case R.id.img_play_share:
-                ToastUtil.toast(PlayActivity.this,"还没写");
+               // ToastUtil.toast(PlayActivity.this,"还没写");
+                showShare();
                 break;
             case R.id.img_play_menu:
                 show();
@@ -266,10 +280,10 @@ public class PlayActivity extends AppCompatActivity  {
         }
     }
     private void show() {
-        AlertDialog dialog = new AlertDialog.Builder(PlayActivity.this).create();
+        dialog = new AlertDialog.Builder(PlayActivity.this).create();
         dialog.show();
         dialog.getWindow().setContentView(R.layout.activity_menu2);
-        RecyclerView recyclerView = (RecyclerView) dialog.getWindow().findViewById(R.id.mListView_menu2);
+        recyclerView = (RecyclerView) dialog.getWindow().findViewById(R.id.mListView_menu2);
         imgType2 = (ImageView) dialog.getWindow().findViewById(R.id.img_mode2);
         tvType= (TextView) dialog.getWindow().findViewById(R.id.tv_mode2);
         tvCount= (TextView) dialog.getWindow().findViewById(R.id.tv_account2);
@@ -290,13 +304,15 @@ public class PlayActivity extends AppCompatActivity  {
         tvCount.setText("("+musics.size()+"首)");
         recyclerView.setAdapter(adapter2);
         recyclerView.setLayoutManager(new LinearLayoutManager(PlayActivity.this));
-        adapter2.setListener(new MyItemClickListener());
+        if(adapter2!=null){
+            adapter2.setListener(new MyItemClickListener());
+        }
         imgType2.setOnClickListener(new MyClickListener());
         rlDelete.setOnClickListener(new MyClickListener());
-
     }
     private class MyListener implements SeekBar.OnSeekBarChangeListener {
         Intent intent = new Intent(MyService.mAction);
+        Intent intent1 = new Intent(MyService.PLAY_ACTION);
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser){
@@ -305,17 +321,18 @@ public class PlayActivity extends AppCompatActivity  {
                 intent.putExtra("cmd","seek_pos");
                 intent.putExtra("pos",progress);
                 sendBroadcast(intent);
+                intent1.putExtra("music",music);
+                intent1.putExtra("now",progress);
+                sendBroadcast(intent1);
             }else{
                 tvCurrentTime.setText(TimeUtil.parse(progress));
             }
         }
-
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
             intent.putExtra("cmd","seek_stop");
             sendBroadcast(intent);
         }
-
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
             imgPlay.setImageResource(R.drawable.a_3);
@@ -355,13 +372,9 @@ public class PlayActivity extends AppCompatActivity  {
                 case R.id.img_mode2:
                     sendBroadcastwithType();
                     break;
-                case R.id.rl_delete2:
-
-                    break;
             }
         }
     }
-
     private void sendBroadcastwithType() {
         Intent intent = new Intent(MyService.mAction);
         if(type==MyService.LIST_PLAY){  //顺序播放
@@ -385,4 +398,26 @@ public class PlayActivity extends AppCompatActivity  {
         intent.putExtra("type",type);
         sendBroadcast(intent);
     }
+    private void showShare() {
+        ShareSDK.initSDK(this);
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+        oks.setTitle(music.getName());
+        oks.setTitleUrl(music.getFileUrl());
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText(music.getSinger()+"-"+music.getAlbum());
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        oks.setImagePath(music.getImgPath());//确保SDcard下面存在此张图片
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl(music.getFileUrl());
+        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+        oks.setComment("我是测试评论文本");
+        // site是分享此内容的网站名称，仅在QQ空间使用
+        oks.setSite(getString(R.string.app_name));
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl(music.getFileUrl());
+        // 启动分享GUI
+        oks.show(this);
+       }
 }

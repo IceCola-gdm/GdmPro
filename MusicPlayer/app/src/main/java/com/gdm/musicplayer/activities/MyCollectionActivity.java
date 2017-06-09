@@ -1,29 +1,17 @@
 package com.gdm.musicplayer.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.adapter.MyPagerAdapter;
 import com.gdm.musicplayer.bean.Music;
-import com.gdm.musicplayer.fragments.FragmentAlbum;
-import com.gdm.musicplayer.fragments.FragmentDanQu;
-import com.gdm.musicplayer.fragments.FragmentDir;
 import com.gdm.musicplayer.fragments.FragmentMyCollectionAlbum;
 import com.gdm.musicplayer.fragments.FragmentMyCollectionDanQu;
-import com.gdm.musicplayer.fragments.FragmentMyCollectionMv;
 import com.gdm.musicplayer.fragments.FragmentMyCollectionSinger;
-import com.gdm.musicplayer.fragments.FragmentSinger;
-
 import java.util.ArrayList;
 
 /**
@@ -33,22 +21,17 @@ public class MyCollectionActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private MyPagerAdapter adapter;
-    private MyAddMusicReceiver receiver;
-    private String[] titles={"单曲","专辑","歌手","MV"};
+    private String[] titles={"单曲","专辑","歌手"};
     private ArrayList<Fragment> fgs=new ArrayList<>();
     private ArrayList<Music> musics=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_collection);
-        receiver=new MyAddMusicReceiver();
-        IntentFilter filter=new IntentFilter(PlayListActivity.FLAG);
-        registerReceiver(receiver,filter);
         initView();
         initData();
         setAdapter();
     }
-
     private void setAdapter() {
         adapter=new MyPagerAdapter(getSupportFragmentManager(),fgs);
         adapter.setTitles(titles);
@@ -64,8 +47,6 @@ public class MyCollectionActivity extends AppCompatActivity {
         fgs.add(new FragmentMyCollectionDanQu());
         fgs.add(new FragmentMyCollectionAlbum());
         fgs.add(new FragmentMyCollectionSinger());
-        fgs.add(new FragmentMyCollectionMv());
-
     }
 
     /**
@@ -80,17 +61,6 @@ public class MyCollectionActivity extends AppCompatActivity {
             case R.id.img_mycollection_back:
                 finish();
                 break;
-        }
-    }
-    private class MyAddMusicReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(PlayListActivity.FLAG)){
-                Music music = (Music) intent.getSerializableExtra("add");
-                Log.e("activiMyCol",music.getName());
-                musics.add(music);
-                adapter.notifyDataSetChanged();
-            }
         }
     }
 }

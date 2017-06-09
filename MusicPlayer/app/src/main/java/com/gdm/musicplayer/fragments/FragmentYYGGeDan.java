@@ -25,6 +25,7 @@ import com.gdm.musicplayer.adapter.YYGGeDanListViewAdapter;
 import com.gdm.musicplayer.adapter.YYGGeDanRecycleViewAdapter;
 import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.bean.Music;
+import com.gdm.musicplayer.listener.MyRevScrollListener;
 import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.lzy.okhttputils.OkHttpUtils;
@@ -42,7 +43,7 @@ import okhttp3.Response;
  * Created by Administrator on 2017/4/17 0017.
  */
 public class FragmentYYGGeDan extends Fragment implements YYGGeDanRecycleViewAdapter.onItemListener {
-    private RecyclerView listView;
+    private RecyclerView recyclerView;
     private ArrayList<Music> musics=new ArrayList<>();
     private YYGGeDanRecycleViewAdapter adapter;
     private Music music=null;
@@ -65,15 +66,15 @@ public class FragmentYYGGeDan extends Fragment implements YYGGeDanRecycleViewAda
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_yyg_gedan, container, false);
-        listView= (RecyclerView) view.findViewById(R.id.yyg_gedan_listview);
+        recyclerView= (RecyclerView) view.findViewById(R.id.yyg_gedan_listview);
         setAdapter();
         refreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.yyg_gedan_fresh);
         refreshLayout.setOnRefreshListener(new MyRefreshListener());
-        getData();
+        getData(1);
         return view;
     }
 
-    private void getData() {
+    private void getData(final int page) {
         dialog.show();
         OkHttpUtils.get(PATH)
                 .params("pageNum",page)
@@ -82,9 +83,8 @@ public class FragmentYYGGeDan extends Fragment implements YYGGeDanRecycleViewAda
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         dialog.dismiss();
-                        parse(s);
+                        parse(s,page);
                     }
-
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
@@ -94,36 +94,49 @@ public class FragmentYYGGeDan extends Fragment implements YYGGeDanRecycleViewAda
                 });
     }
 
-    private void parse(String s) {
+    private void parse(String s,int page) {
         try {
             JSONObject job = new JSONObject(s.trim());
             if(job.optString("message").equals("查询成功")){
-                ToastUtil.toast(getContext(),job.optString("message"));
-                JSONArray data = job.optJSONArray("data");
-                musics=new ArrayList<>();
-                for(int i=0;i<data.length();i++){
-                    JSONObject obj = data.optJSONObject(i);
-                    music=new Music();
-                    music.setId(obj.optInt("musicid"));
-                    music.setName(obj.optString("name"));
-                    if(obj.optString("path")!=null&&obj.optString("path")!=""){
-                        music.setFileUrl(baseMusicPath+obj.optString("path"));
-                    }
-                    music.setSinger(obj.optString("author"));
-                    music.setAlbum(obj.optString("album"));
-                    music.setSize(obj.optString("size"));
-                    if(obj.optString("imgpath")!=null&&obj.optString("imgpath")!=""){
-                        music.setImgPath(baseMusicImgPath+obj.optString("imgpath"));
-                    }
-                    if(obj.optString("mvpath")!=null&&obj.optString("mvpath")!=""){
-                        music.setMvPath(baseMvPath+obj.optString("mvpath"));
-                    }
-                    if(obj.optString("lrcfile")!=null&&obj.optString("lrcfile")!=""){
-                        music.setLrc(baseLrcPath+obj.optString("lrcfile"));
-                    }
-                    musics.add(music);
+                if (page!=1) {
+                    ToastUtil.toast(getContext(), job.optString("message"));
+                }else{
+                    ToastUtil.toast(getContext(),"刷新数据成功");
                 }
-                setAdapter();
+                JSONArray data = job.optJSONArray("data");
+                if(data.length()!=0){
+                    for(int i=0;i<data.length();i++){
+                        JSONObject obj = data.optJSONObject(i);
+                        music=new Music();
+                        music.setId(obj.optInt("musicid"));
+                        music.setName(obj.optString("name"));
+                        if(obj.optString("path")!=null&&obj.optString("path")!=""){
+                            music.setFileUrl(baseMusicPath+obj.optString("path"));
+                        }
+                        music.setSinger(obj.optString("author"));
+                        music.setAlbum(obj.optString("album"));
+                        music.setSize(obj.optString("size"));
+                        if(obj.optString("imgpath")!=null&&obj.optString("imgpath")!=""){
+                            music.setImgPath(baseMusicImgPath+obj.optString("imgpath"));
+                        }
+                        if(obj.optString("mvpath")!=null&&obj.optString("mvpath")!=""){
+                            music.setMvPath(baseMvPath+obj.optString("mvpath"));
+                        }
+                        if(obj.optString("lrcfile")!=null&&obj.optString("lrcfile")!=""){
+                            music.setLrc(baseLrcPath+obj.optString("lrcfile"));
+                        }
+                        musics.add(music);
+                    }
+                    if(page==1){
+                        setAdapter();
+                        ToastUtil.toast(getContext(),"刷新数据成功！");
+                    }else {
+                        adapter.notifyDataSetChanged();
+                        Log.e("-----",musics.toString()+"");
+                    }
+                }else{
+                    ToastUtil.toast(getContext(),"没有更多数据咯");
+                }
             }else{
                 ToastUtil.toast(getContext(),job.optString("message"));
             }
@@ -139,9 +152,18 @@ public class FragmentYYGGeDan extends Fragment implements YYGGeDanRecycleViewAda
 
     private void setAdapter() {
         adapter=new YYGGeDanRecycleViewAdapter(musics,getActivity());
-        listView.setAdapter(adapter);
-        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        adapter.setListener(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter.setListener(this);
+        recyclerView.setOnScrollListener(new MyRevScrollListener(){
+            @Override
+            public void bottom() {
+                super.bottom();
+                page++;
+                getData(page);
+                Log.e("-------","底部了"+page);
+            }
+        });
     }
 
     @Override
@@ -158,17 +180,18 @@ public class FragmentYYGGeDan extends Fragment implements YYGGeDanRecycleViewAda
         intent.putExtra("cmd","chose_pos");
         intent.putExtra("pos",pos);
         intent.putExtra("data",musics);
+        intent.putExtra("flag",1);
         getActivity().sendBroadcast(intent);
     }
 
     private class MyRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
-            page++;
-            if(page>10){
-                page=1;
-            }
-            getData();
+//            page++;
+//            if(page>10){
+//                page=1;
+//            }
+            getData(0);
             refreshLayout.setRefreshing(false);
         }
     }
@@ -178,4 +201,5 @@ public class FragmentYYGGeDan extends Fragment implements YYGGeDanRecycleViewAda
         super.onDestroy();
         dialog.cancel();
     }
+
 }

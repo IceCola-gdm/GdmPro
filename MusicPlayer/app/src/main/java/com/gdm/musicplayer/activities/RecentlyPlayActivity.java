@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gdm.musicplayer.R;
@@ -23,6 +24,7 @@ public class RecentlyPlayActivity extends AppCompatActivity {
     private TextView tvCount;
     private ListView listView;
     private MyLocalDanquAdapter adapter;
+    private RelativeLayout rlAll;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,7 @@ public class RecentlyPlayActivity extends AppCompatActivity {
                 intent1.putExtra("cmd","chose_pos");
                 intent1.putExtra("pos",position);
                 intent1.putExtra("data",musics);
+                intent1.putExtra("flag",0);
                 sendBroadcast(intent1);
 
                 Intent intent = new Intent(RecentlyPlayActivity.this, PlayActivity.class);
@@ -61,6 +64,7 @@ public class RecentlyPlayActivity extends AppCompatActivity {
     private void initView() {
         tvCount= (TextView) findViewById(R.id.tv_recently_count);
         listView= (ListView) findViewById(R.id.recentlyplay_listview);
+        rlAll= (RelativeLayout) findViewById(R.id.rl_aa);
         tvCount.setText("（共"+musics.size()+"首）");
     }
 
@@ -69,12 +73,24 @@ public class RecentlyPlayActivity extends AppCompatActivity {
             case R.id.img_recentlyplay_back:   //返回
                 finish();
                 break;
-            case R.id.tv_recentlyplay_clear:   //清空
-
-                break;
-            case R.id.img_recentlyplay_icon:   //全部播放
-
+            case R.id.rl_aa:   //全部播放
+                allPlay();
                 break;
         }
+    }
+
+    private void allPlay() {
+        Intent intent1 = new Intent(MyService.mAction);
+        intent1.putExtra("cmd","chose_pos");
+        intent1.putExtra("pos",0);
+        intent1.putExtra("data",musics);
+        intent1.putExtra("flag",0);   //0为本地音乐
+        sendBroadcast(intent1);
+
+        Intent intent = new Intent(RecentlyPlayActivity.this, PlayActivity.class);
+        intent.putExtra("data",musics);
+        intent.putExtra("position",0);
+        intent.putExtra("state","play");
+        startActivity(intent);
     }
 }

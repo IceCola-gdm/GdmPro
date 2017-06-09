@@ -1,6 +1,7 @@
 package com.gdm.musicplayer.activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,9 @@ import com.gdm.musicplayer.bean.MList;
 import com.gdm.musicplayer.bean.MV;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.User;
+import com.gdm.musicplayer.download.DataBase;
+import com.gdm.musicplayer.download.DownLoadService;
+import com.gdm.musicplayer.download.ShouCangDbhelper;
 import com.gdm.musicplayer.service.MyService;
 import com.gdm.musicplayer.utils.ToastUtil;
 import com.lzy.okhttputils.OkHttpUtils;
@@ -60,12 +64,22 @@ public class PlayListActivity extends AppCompatActivity {
 
     private void initData() {
         list=new ArrayList<>();
+        final ProgressDialog dialog = new ProgressDialog(PlayListActivity.this);
+        dialog.setMessage("玩命加载中，请稍后。。。");
+        dialog.show();
         OkHttpUtils.get(musicpath2)
                 .params("listid",data.getId())
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         parse(s);
+                        dialog.cancel();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dialog.cancel();
                     }
                 });
     }
@@ -79,8 +93,10 @@ public class PlayListActivity extends AppCompatActivity {
                     JSONObject obj = data.getJSONObject(i);
                     String musicname = obj.getString("musicname");
                     String path = obj.getString("path");
+                    String lrc=obj.optString("lrcfile");
                     Music music = new Music();
                     music.setName(musicname);
+                    music.setLrc(lrc);
                     music.setFileUrl(musicpath+path);
                     music.setSinger(obj.getString("author"));
                     list.add(music);
@@ -97,7 +113,6 @@ public class PlayListActivity extends AppCompatActivity {
         show= (RecyclerView) findViewById(R.id.list);
     }
     class ListContentAdt extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType==1) {
@@ -107,9 +122,7 @@ public class PlayListActivity extends AppCompatActivity {
                 View v = getLayoutInflater().inflate(R.layout.tuijian_listview_item, null, false);
                 return new ContentHolder(v);
             }
-//            return null;
         }
-
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             if (holder instanceof TitleHolder) {
@@ -135,7 +148,9 @@ public class PlayListActivity extends AppCompatActivity {
                         show(pos);
                     }
                 });
-                h.itemView.setOnClickListener(new View.OnClickListener() {
+                h.name.setText(music.getName());
+                h.singer.setText(music.getSinger()+"-"+music.getAlbum());
+                h.contentview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent1 = new Intent(PlayListActivity.this, PlayActivity.class);
@@ -143,7 +158,6 @@ public class PlayListActivity extends AppCompatActivity {
                         intent1.putExtra("position",position-1);
                         intent1.putExtra("anim","start");
                         startActivity(intent1);
-                        finish();
 
                         MyApplication ap= (MyApplication) getApplication();
                         ap.setMusics(list);
@@ -151,11 +165,11 @@ public class PlayListActivity extends AppCompatActivity {
                         intent.putExtra("cmd","chose_pos");
                         intent.putExtra("pos",position-1);
                         intent.putExtra("data",list);
+                        intent.putExtra("flag",1);
                         sendBroadcast(intent);
+                        finish();
                     }
                 });
-                h.name.setText(music.getName());
-                h.singer.setText(music.getSinger()+"-"+music.getAlbum());
             }
         }
 
@@ -188,11 +202,13 @@ public class PlayListActivity extends AppCompatActivity {
         class ContentHolder extends RecyclerView.ViewHolder{
             private TextView name,singer;
             private ImageView imgSetting;
+            private RelativeLayout contentview;
             public ContentHolder(View itemView) {
                 super(itemView);
                 name= (TextView) itemView.findViewById(R.id.tv_song_name);
                 singer= (TextView) itemView.findViewById(R.id.tv_song_singer);
                 imgSetting= (ImageView) itemView.findViewById(R.id.img_song_set);
+                contentview= (RelativeLayout) itemView.findViewById(R.id.contentview);
             }
         }
     }
@@ -238,14 +254,19 @@ public class PlayListActivity extends AppCompatActivity {
             }else{
                 ToastUtil.toast(PlayListActivity.this,"亲，还没有登录哟");
             }
-
         }
     }
-
     private void down(int pos) {
-
+        Music music = list.get(pos);
+        boolean isxiazai = DataBase.getDb(PlayListActivity.this).isxiazai(music.getName());
+        if(isxiazai){
+            Intent it = new Intent(PlayListActivity.this, DownLoadService.class);
+            it.putExtra("music",music);
+            startService(it);
+        }else{
+            ToastUtil.toast(PlayListActivity.this,"已下载");
+        }
     }
-
     private void mv(int pos) {
         ArrayList<MV> mvs = new ArrayList<>();
         Music music = list.get(pos);
@@ -259,7 +280,7 @@ public class PlayListActivity extends AppCompatActivity {
             mv.setDuration(music.getDuration()+"");
             mvs.add(mv);
             Intent intent = new Intent(PlayListActivity.this, MVPlayActivity.class);
-            intent.putExtra("pos",pos);
+            intent.putExtra("pos",0);
             intent.putExtra("data",mvs);
             startActivity(intent);
 
@@ -270,11 +291,18 @@ public class PlayListActivity extends AppCompatActivity {
 
     private void add(int pos) {
         Music music = list.get(pos);
-        if(music!=null){
-            Intent intent = new Intent(PlayListActivity.FLAG);
-            intent.putExtra("add",music);
-            sendBroadcast(intent);
-            Log.e("---","添加完成");
+        ShouCangDbhelper instance = ShouCangDbhelper.getInstance(PlayListActivity.this);
+        boolean isshouchang = DataBase.getDb(PlayListActivity.this).isshouchang(music.getName());
+        if(isshouchang){
+            instance.shoucang(music);
+            if(music!=null){
+                Intent intent = new Intent(PlayListActivity.FLAG);
+                intent.putExtra("add",music);
+                sendBroadcast(intent);
+                ToastUtil.toast(PlayListActivity.this,"收藏成功");
+            }
+        }else{
+            ToastUtil.toast(PlayListActivity.this,"已收藏");
         }
     }
 }

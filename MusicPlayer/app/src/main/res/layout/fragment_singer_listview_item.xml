@@ -35,13 +35,5 @@
             android:layout_below="@+id/tv_singer_name"
             />
     </RelativeLayout>
-    <ImageView
-        android:id="@+id/img_singer_edit"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:layout_centerVertical="true"
-        android:src="@drawable/edit"/>
 
 </RelativeLayout>

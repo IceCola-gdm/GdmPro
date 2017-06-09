@@ -80,8 +80,6 @@ public class MusicUtil {
             album.setMusics(musics);
             albums.add(album);
         }
-
-
         if(type.equals("song")){
             return songs;
         }else if(type.equals("singer")){

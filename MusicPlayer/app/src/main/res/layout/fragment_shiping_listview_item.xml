@@ -2,11 +2,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="280dp"
     android:orientation="vertical">
 <FrameLayout
     android:layout_width="match_parent"
-    android:layout_height="250dp">
+    android:layout_height="270dp">
     <ImageView
         android:id="@+id/img_shiping_cover"
         android:layout_width="match_parent"
@@ -34,118 +34,7 @@
             android:layout_centerInParent="true"
             android:src="@drawable/a2k"
             android:clickable="true"/>
-        <TextView
-            android:id="@+id/tv_shiping_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:text="04:34"
-            android:layout_margin="10dp"
-            android:textColor="#fff"
             />
     </RelativeLayout>
 </FrameLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/img_shiping_zan"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_margin="10dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/zan1"
-                android:clickable="true"/>
-            <TextView
-                android:id="@+id/tv_shipping_zan_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/img_shiping_zan"
-                android:layout_centerVertical="true"
-                android:text="0"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/img_shiping_collect"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_margin="10dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/collect1"
-                android:clickable="true"/>
-            <TextView
-                android:id="@+id/tv_shipping_collect_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/img_shiping_collect"
-                android:layout_centerVertical="true"
-                android:text="0"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/img_shiping_like"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_margin="10dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/like1"/>
-            <TextView
-                android:id="@+id/tv_shipping_like_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/img_shiping_like"
-                android:layout_centerVertical="true"
-                android:text="0"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/img_shiping_download"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_margin="10dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/download1"/>
-            <TextView
-                android:id="@+id/tv_shipping_download_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/img_shiping_download"
-                android:layout_centerVertical="true"
-                android:text="0"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/img_shiping_share"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_margin="10dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/share"/>
-            <TextView
-                android:id="@+id/tv_shipping_share_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/img_shiping_share"
-                android:layout_centerVertical="true"
-                android:text="0"/>
-        </RelativeLayout>
-    </LinearLayout>
 </LinearLayout>

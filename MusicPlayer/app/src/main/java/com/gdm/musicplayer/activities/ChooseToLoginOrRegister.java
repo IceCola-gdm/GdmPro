@@ -62,10 +62,10 @@ public class ChooseToLoginOrRegister extends AppCompatActivity {
                 Platform twb = ShareSDK.getPlatform(TencentWeibo.NAME);
                 plogin(twb);
                 break;
-            case R.id.img_login_wangyi_icon:
-                Platform swb = ShareSDK.getPlatform(SinaWeibo.NAME);
-                plogin(swb);
-                break;
+//            case R.id.img_login_wangyi_icon:
+//                Platform swb = ShareSDK.getPlatform(SinaWeibo.NAME);
+//                plogin(swb);
+//                break;
 
         }
     }

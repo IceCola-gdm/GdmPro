@@ -49,14 +49,6 @@ public class PaihangbangListActivity extends AppCompatActivity {
         View view = LayoutInflater.from(PaihangbangListActivity.this).inflate(R.layout.yinyuebang_header, null);
         imgBack= (ImageView) view.findViewById(R.id.img_bangdan_back);
         imgBG= (RelativeLayout) view.findViewById(R.id.rl_bg);
-        RelativeLayout rlAdd= (RelativeLayout) view.findViewById(R.id.rl_phb_add);
-        RelativeLayout rlLike= (RelativeLayout) view.findViewById(R.id.rl_phb_like);
-        RelativeLayout rlShare= (RelativeLayout) view.findViewById(R.id.rl_phb_share);
-        RelativeLayout rlDown= (RelativeLayout) view.findViewById(R.id.rl_phb_down);
-        TextView tvAddCount = (TextView) view.findViewById(R.id.tv_bangdan_collect_count);
-        TextView tvLikeCount = (TextView) view.findViewById(R.id.tv_bangdan_like_count);
-        TextView tvShareCount = (TextView) view.findViewById(R.id.tv_bangdan_share_count);
-        TextView tvDownCount = (TextView) view.findViewById(R.id.tv_bangdan_down_count);
         imgBG.setBackgroundResource(paiHangBang.getImg());
         listView.addHeaderView(view);
         imgBack.setOnClickListener(new View.OnClickListener() {

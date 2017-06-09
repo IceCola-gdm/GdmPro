@@ -41,6 +41,7 @@ public class FragmentDanQu extends Fragment {
         rl_all= (RelativeLayout) view.findViewById(R.id.rl_all);
         tvMusicCount= (TextView) view.findViewById(R.id.tv_danqu_count);
         listView= (ListView) view.findViewById(R.id.fragment_danqu_listview);
+        rl_all.setOnClickListener(new MyClickListener());
         return view;
     }
 
@@ -55,23 +56,22 @@ public class FragmentDanQu extends Fragment {
         adapter=new MyLocalDanquAdapter(musics,getContext());
         listView.setAdapter(adapter);
         tvMusicCount.setText("("+musics.size()+")");
-        listView.setOnItemClickListener(new MyListener());
     }
-
-    private class MyListener implements android.widget.AdapterView.OnItemClickListener {
+    private class MyClickListener implements View.OnClickListener {
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        public void onClick(View v) {
             Intent intent1 = new Intent(MyService.mAction);
             intent1.putExtra("cmd","chose_pos");
-            intent1.putExtra("pos",position);
+            intent1.putExtra("pos",0);
             intent1.putExtra("data",musics);
+            intent1.putExtra("flag",0);   //0为本地音乐
             getContext().sendBroadcast(intent1);
 
             Intent intent = new Intent(getContext(), PlayActivity.class);
             intent.putExtra("data",musics);
-            intent.putExtra("position",position);
+            intent.putExtra("position",0);
             intent.putExtra("state","play");
-            startActivity(intent);
+            getContext().startActivity(intent);
         }
     }
 }

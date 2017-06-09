@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gdm.musicplayer.activities.PlayListActivity;
+import com.gdm.musicplayer.adapter.MyLocalViewPagerAdapter;
 import com.gdm.musicplayer.application.MyApplication;
 import com.gdm.musicplayer.R;
 import com.gdm.musicplayer.activities.DownLoadManageActivity;
@@ -27,7 +29,9 @@ import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.bean.MusicList;
 import com.gdm.musicplayer.bean.User;
 import com.gdm.musicplayer.download.DataBase;
+import com.gdm.musicplayer.download.ShouCangDbhelper;
 import com.gdm.musicplayer.utils.MusicUtil;
+import com.gdm.musicplayer.view.MyLocalViewPager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,10 +46,12 @@ import java.util.ArrayList;
 public class FragmentMy extends Fragment {
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter adapter;
+    private MyLocalViewPager viewPager;
+    private MyLocalViewPagerAdapter localViewPagerAdapter;
+    private int[] pics={R.drawable.p1,R.drawable.p2,R.drawable.p3,R.drawable.p4};
     private ArrayList<MusicList> musicLists=new ArrayList<>();
     private MusicList musicList=null;
     private String[] titles={"本地音乐","最近播放","下载管理","我的收藏"};
-    private ArrayList<MusicList> content;
     private Class[] classes={LocalMusicListActivity.class, RecentlyPlayActivity.class, DownLoadManageActivity.class, MyCollectionActivity.class};
     private int[] icons={R.drawable.local,R.drawable.w1,R.drawable.downmanage,R.drawable.collectmanage};
     private ArrayList<Music> musicsLocal=new ArrayList<>();  //数据源1 本地音乐
@@ -58,7 +64,6 @@ public class FragmentMy extends Fragment {
     private SharedPreferences sp;
     private String musicsJson;
     private MyAddMusicReceiver receiver;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +76,6 @@ public class FragmentMy extends Fragment {
         getActivity().registerReceiver(receiver,filter);
         initData();
     }
-
     private void getRecentlyData(String musicsJson) {
         try {
             JSONArray array = new JSONArray(musicsJson.trim());
@@ -102,6 +106,8 @@ public class FragmentMy extends Fragment {
         if(!musicsJson.equals("")){
             getRecentlyData(musicsJson);
         }
+        initDownMusic();
+        initShoucang();
         data.add(musicsLocal);
         data.add(musicsRently);
         data.add(musicsDown);
@@ -117,30 +123,27 @@ public class FragmentMy extends Fragment {
             musicList.setM(data.get(i));
             musicLists.add(musicList);
         }
-        content=new ArrayList<>();
-        adapter=new MyRecyclerViewAdapter(getContext(),musicLists,content,application);
+        adapter=new MyRecyclerViewAdapter(getContext(),musicLists,application);
     }
-    private File root=new File(Environment.getExternalStorageDirectory(),"gdm");
+
+    private void initShoucang() {
+        ShouCangDbhelper instance = ShouCangDbhelper.getInstance(getContext());
+        musicsCollect.addAll(instance.getAllShoucang());
+    }
     private DataBase db;
     private void initDownMusic() {
-        db=DataBase.getDb(getActivity());
-        ArrayList<DataBase.Down> downs = db.getAllByType(1);
-        for (int i = 0; i < downs.size(); i++) {
-            Music music = new Music();
-            DataBase.Down down = downs.get(i);
-            music.setName(down.getName());
-            File f = new File(root, down.getName() + ".mp3");
-            music.setFileUrl(f.getAbsolutePath());
-            musicsDown.add(music);
-        }
+        db = DataBase.getDb(getContext());
+        musicsDown.addAll(db.selectMusic(2));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my, container, false);
         mRecyclerView= (RecyclerView) view.findViewById(R.id.fragment_my_recyclerview);
+        viewPager= (MyLocalViewPager) view.findViewById(R.id.viewPager_my);
+        localViewPagerAdapter=new MyLocalViewPagerAdapter(getContext(),pics);
+        viewPager.setAdapter(localViewPagerAdapter);
         return view;
-
     }
 
     @Override
@@ -155,15 +158,15 @@ public class FragmentMy extends Fragment {
         super.onDestroy();
         getActivity().unregisterReceiver(receiver);
     }
-
     private class MyAddMusicReceiver extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(PlayListActivity.FLAG)){
                 Music music = (Music) intent.getSerializableExtra("add");
                 musicsCollect.add(music);
+                data.remove(3);
+                data.add(musicsCollect);
                 adapter.notifyDataSetChanged();
-                Log.e("--FragmentMy-","收到广播--"+musicsCollect.size());
             }
         }
     }

@@ -32,7 +32,6 @@ import io.vov.vitamio.widget.VideoView;
 public class MVPlayActivity extends Activity {
 
     /** 当前视频路径 */
-//    private String path = Environment.getExternalStorageDirectory() + "/FXXK IT.mp4";
     private String path;
     private int current=-1;
     private ArrayList<MV> mvs=new ArrayList<>();
@@ -46,7 +45,6 @@ public class MVPlayActivity extends Activity {
     private int finNum = 0;
     /** 当前进度 */
     private long mProgress = 0;
-
     private View mVolumeBrightnessLayout;
     private ImageView mOperationBg;
     private ImageView mOperationPercent;
@@ -132,7 +130,6 @@ public class MVPlayActivity extends Activity {
         mBrightness = -1f;
         finNum = 0;
         mProgress = -2;
-
         // 隐藏
         mDismissHandler.removeMessages(0);
         mDismissHandler.sendEmptyMessageDelayed(0, 500);
@@ -147,7 +144,6 @@ public class MVPlayActivity extends Activity {
 
     /**
      * 声音大小
-     *
      * @param percent
      */
     public void changeVolume(float percent) {
@@ -177,7 +173,6 @@ public class MVPlayActivity extends Activity {
 
     /**
      * 亮度大小
-     *
      * @param percent
      */
     public void changeBrightness(float percent) {
@@ -207,7 +202,6 @@ public class MVPlayActivity extends Activity {
 
     /**
      * 播放进度
-     *
      * @param percent
      */
     public void changePregress(float percent) {
@@ -215,11 +209,9 @@ public class MVPlayActivity extends Activity {
             mVideoView.pause();
             mProgress = mVideoView.getCurrentPosition();
         }
-
         if (Math.abs(percent) > 0.1) {
             percent = (float) (percent / Math.abs(percent) * 0.1);
         }
-
         long index = (long) (percent * mVideoView.getDuration()) + mProgress;
         if (index > mVideoView.getDuration()) {
             index = mVideoView.getDuration();
@@ -231,9 +223,7 @@ public class MVPlayActivity extends Activity {
 
     /**
      * 单点触屏
-     *
      * @author jin
-     *
      */
     private class SingleGestureListener implements
             android.view.GestureDetector.OnGestureListener {
@@ -264,12 +254,10 @@ public class MVPlayActivity extends Activity {
             if (2 == finNum) {
                 return false;
             }
-
             float moldX = e1.getX();
             float moldY = e1.getY();
             float y = e2.getY();
             float X = e2.getX();
-
             Log.d("onf", distanceX);
             if (moldX > screenBean.getsWidth() * 9.0 / 10)// 右边滑动
                 changeVolume((moldY - y) / screenBean.getsHeight());
@@ -293,7 +281,6 @@ public class MVPlayActivity extends Activity {
 
     /**
      * 多点缩放
-     *
      * @author jin
      *
      */

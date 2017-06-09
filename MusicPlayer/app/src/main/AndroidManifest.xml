@@ -35,6 +35,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.IndexActivity" />
         <activity android:name=".activities.EditPersonalInfoActivity" />
         <activity android:name=".activities.EditSexActivity" />
         <activity android:name=".activities.EditLocationActivity" />
@@ -47,11 +48,9 @@
         <activity android:name=".activities.DownLoadManageActivity" />
         <activity android:name=".activities.RecentlyPlayActivity" />
         <activity android:name=".activities.MyCollectionActivity" />
-        <activity android:name=".activities.HuanfuActivity" />
         <activity android:name=".activities.YinyueBangActivity" />
         <activity android:name=".activities.PlayActivity" />
         <activity android:name=".activities.ManageGedanActivity" />
-        <activity android:name=".activities.IndexActivity" />
         <activity android:name=".activities.ResetPwdActivity" />
         <activity android:name=".activities.PlayListActivity" />
         <activity android:name=".activities.SingerListActivity" />

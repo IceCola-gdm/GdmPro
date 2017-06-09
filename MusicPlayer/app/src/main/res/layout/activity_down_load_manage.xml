@@ -2,42 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#D33B30">
-        <ImageView
-            android:id="@+id/img_downloadmanage_back"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_centerVertical="true"
-            android:layout_margin="10dp"
-            android:src="@drawable/arrow_left"
-            android:onClick="downloadClick"
-            android:clickable="true"/>
-        <TextView
-            android:id="@+id/tv_downloadmanage_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="下载管理"
-            android:textColor="#fff"
-            android:textSize="20sp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/img_downloadmanage_back" />
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/arrow_left"
+        android:clickable="true"
+        android:onClick="downloadClick"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="下载管理"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/back"
+        />
     </RelativeLayout>
-    <android.support.design.widget.TabLayout
-        android:id="@+id/downloadmanage_tablelayout"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        app:tabIndicatorColor="@android:color/holo_red_dark"
-        app:tabSelectedTextColor="@android:color/holo_red_dark"
-        app:tabTextColor="@android:color/black"/>
-    <android.support.v4.view.ViewPager
-        android:id="@+id/downloadmanage_viewpager"
+    <ListView
+        android:id="@+id/mListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
-
+        android:layout_weight="1"></ListView>
 </LinearLayout>

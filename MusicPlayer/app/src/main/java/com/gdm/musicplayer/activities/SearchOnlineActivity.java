@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gdm.musicplayer.R;
+import com.gdm.musicplayer.adapter.MyLocalDanquAdapter;
 import com.gdm.musicplayer.adapter.YYGGeDanListViewAdapter;
 import com.gdm.musicplayer.bean.Music;
 import com.gdm.musicplayer.service.MyService;
@@ -41,7 +42,7 @@ public class SearchOnlineActivity extends AppCompatActivity {
     private EditText editText;
     private TextView tv_count;
     private ListView listView;
-    private YYGGeDanListViewAdapter adapter=null;
+    private MyLocalDanquAdapter adapter=null;
     private ImageView imageView;
     private ImageView search;
     private TextView tv1,tv2,tv3,tv4,tv5,tv6,tv7,tv8;
@@ -151,7 +152,7 @@ public class SearchOnlineActivity extends AppCompatActivity {
                         }
                         musics.add(music);
                     }
-                    adapter = new YYGGeDanListViewAdapter(SearchOnlineActivity.this, musics);
+                    adapter = new MyLocalDanquAdapter(musics,SearchOnlineActivity.this);
                     listView.setAdapter(adapter);
                     tv_count.setText("共(" + musics.size() + ")首");
                     listView.setOnItemClickListener(new MyItemListener());

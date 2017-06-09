@@ -50,6 +50,7 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/delete"
                 android:layout_marginRight="10dp"
+                android:visibility="invisible"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -59,6 +60,7 @@
                 android:textSize="14sp"
                 android:layout_toRightOf="@+id/img_delete_all"
                 android:layout_centerVertical="true"
+                android:visibility="invisible"
                 />
         </RelativeLayout>
     </RelativeLayout>

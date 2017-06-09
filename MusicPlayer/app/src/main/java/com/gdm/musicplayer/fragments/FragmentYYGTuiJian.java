@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,7 +48,7 @@ import okhttp3.Response;
  * Created by Administrator on 2017/4/17 0017.
  */
 public class FragmentYYGTuiJian extends Fragment {
-
+    private SwipeRefreshLayout mRefresh;
     private ArrayList<MList> data;
     private RecyclerView listview;
     private ListAdapter listAdapter;
@@ -59,6 +60,8 @@ public class FragmentYYGTuiJian extends Fragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tuijian_fragment, container, false);
         listview= (RecyclerView) view.findViewById(R.id.list);
+        mRefresh= (SwipeRefreshLayout) view.findViewById(R.id.mRefresh);
+        mRefresh.setOnRefreshListener(new MyListener());
         initMusicData();
         return view;
     }
@@ -74,6 +77,7 @@ public class FragmentYYGTuiJian extends Fragment {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         dialog.dismiss();
+                        mRefresh.setRefreshing(false);
                         parse(s);
                     }
 
@@ -81,6 +85,7 @@ public class FragmentYYGTuiJian extends Fragment {
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         dialog.dismiss();
+                        mRefresh.setRefreshing(false);
                         ToastUtil.toast(getContext(),e.getMessage());
                     }
                 });
@@ -251,5 +256,12 @@ public class FragmentYYGTuiJian extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         dialog.cancel();
+    }
+
+    private class MyListener implements SwipeRefreshLayout.OnRefreshListener {
+        @Override
+        public void onRefresh() {
+            initMusicData();
+        }
     }
 }

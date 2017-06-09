@@ -8,19 +8,28 @@
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:background="@drawable/a1x">
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/rl_first"
         android:layout_width="300dp"
-        android:layout_height="180dp"
-        android:background="@drawable/afc">
+        android:layout_height="180dp">
+        <ImageView
+            android:id="@+id/img_b"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/afc"
+            android:scaleType="fitXY"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <ImageView
             android:id="@+id/img_main_portrait"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@drawable/pp"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:clickable="true"
+            android:scaleType="fitXY"
             android:onClick="clickInMain"/>
         <FrameLayout
             android:layout_width="match_parent"
@@ -30,8 +39,8 @@
                 android:id="@+id/rl_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:visibility="invisible">
+                android:visibility="invisible"
+                android:clickable="true">
                 <TextView
                     android:id="@+id/tv_nickname"
                     android:layout_width="wrap_content"
@@ -40,22 +49,66 @@
                     android:layout_margin="10dp"
                     android:layout_centerVertical="true"
                     android:textColor="#fff"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    android:layout_marginTop="80dp"/>
                 <ImageView
                     android:id="@+id/img_sex"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:src="@drawable/ab2"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/tv_nickname"/>
+                    android:layout_toRightOf="@+id/tv_birthday"/>
+                <TextView
+                    android:id="@+id/tv_birthday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="未填写"
+                    android:layout_toRightOf="@+id/tv_nickname"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/tv_loc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="未填写"
+                    android:layout_below="@+id/tv_nickname"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="#fff"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--"
+                    android:layout_below="@+id/tv_nickname"
+                    android:layout_toRightOf="@+id/tv_loc"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/tv_univer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="未填写"
+                    android:layout_below="@+id/tv_nickname"
+                    android:layout_toRightOf="@+id/tv"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
                 <TextView
                     android:id="@+id/tv_heart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="暂无"
-                    android:layout_below="@+id/tv_nickname"
+                    android:layout_below="@+id/tv_loc"
                     android:textColor="#fff"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="10dp"/>
             </RelativeLayout>
             <TextView
@@ -70,7 +123,8 @@
                 android:onClick="clickInMain"
                 android:layout_marginLeft="10dp"/>
             </FrameLayout>
-    </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
     <LinearLayout
         android:id="@+id/ll_second"
         android:layout_width="300dp"
